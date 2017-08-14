@@ -1,0 +1,18 @@
+
+{	"data":{
+		"userId":"1001111",
+		"userName":"啦啦啦",
+		"realName":"菜心",
+		"roleName":"高级管理员",
+		"type":"管理者",
+		"sex":"男",
+		"phone":"12345678900",
+		"email":"123@163.com",
+		"createTime":"2012-11-12",
+		"lastLoginTime":"",
+		"lastLoginIp":"168.190.23",
+		"count":"11",
+		"limit":"全部",
+		"remark":"是备注"
+	}
+}

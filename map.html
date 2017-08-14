@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="resources/img/favicon.png">
+
+    <title>deviceMap</title>
+
+    <!-- Icons -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+	
+    <!-- Main styles for this application -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/public.css" rel="stylesheet">
+    
+</head>
+
+
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <!-- topNav -->
+    <header class="app-header navbar" id="navbar"></header>
+
+    <div class="app-body">
+    	<!-- sidebar menu -->
+        <div class="sidebar" id="sidebar"></div>
+        <!-- Main content -->
+        <main class="main">          
+            <div class="col-lg-3 col-xs-4" id="mapSearch">
+                <div class="input-group">
+                    <input type="text" name="keyWord" placeholder="关键词" class="form-control" value="">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary btn-flat" id="btn_search">查询</button>
+                      </span>
+                </div>
+            </div>
+   					<div id="mapContainer" tabindex="0" style="height: 100%;"></div>
+            <!-- /.conainer-fluid -->
+        </main>
+
+
+    </div>
+	<!-- footer -->
+    <footer class="app-footer" id="footer"></footer>
+	
+	<!-- Bootstrap and necessary plugins -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/tether.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/pace.min.js"></script>
+	<!-- Plugins and scripts required by all views -->
+	<!-- amap -->
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key=5fddf63aea9270e71b492e952fa81304"></script>
+	<!-- GenesisUI main scripts -->
+	<script src="js/app.js"></script>
+	<!-- Plugins and scripts required by this views -->
+	<!-- Custom scripts required by this view -->
+	<script src="js/views/map.js"></script>
+	
+</body>
+</html>

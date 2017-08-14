@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="resources/img/favicon.png">
+
+    <title>Login</title>
+
+    <!-- Icons -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+	<link href="css/bootstrap-table.css" rel="stylesheet" >
+	<!-- animate.css -->
+    <link rel="stylesheet" href="plugins/animate/animate.css">
+    <!-- Main styles for this application -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/public.css" rel="stylesheet" >
+
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <div class="app-body">      
+        <!-- Main content -->
+        <main class="main" style="margin-left:0">
+            <div class="container-fluid">
+
+               <div class="row" id="login_wrapper">
+				   <div class="col-sm-4" style="margin:0 auto">
+					   <div class="card animated slidInRight">				   	
+					   		<div class="card-header"></div>
+					   		<div class="card-block">
+					   			<div class="col-sm-8" style="margin:0 auto">
+					   				<ul class="nav nav-tabs" role="tablist">
+					   					<li class="nav-item">
+					   						<a class="nav-link active" data-toggle="tab" href="#user" role="tab" aria-controls="user">用户名</a>
+					   					</li>
+					   					<li class="nav-item">
+					   						<a class="nav-link" data-toggle="tab" href="#email" role="tab" aria-controls="email">邮箱或手机号码</a>
+					   					</li>
+					   				</ul>
+					   				<div class="tab-content">
+					   					<div class="tab-pane active" id="user" role="tabpane1">
+					   			   			<form id="loginform_username">						   		    
+					   			   			    <div class="form-group">
+					   			   			        <div class="input-group">
+					   			   			            <input type="text" id="username" name="username" class="form-control" placeholder="用户名" value="">
+					   			   			            <span class="input-group-addon"><i class="fa fa-user"></i>
+					   			   			            </span>
+					   			   			        </div>
+					   			   			        <div class="status"></div>
+					   			   			        <div class="back_error"></div>
+					   			   			        
+					   			   			    </div>
+					   			   			    <div class="form-group">
+					   			   			        <div class="input-group">
+					   			   			            <input type="password" id="password" name="password" class="form-control" placeholder="密码" value="">
+					   			   			            <span class="input-group-addon"><i class="fa fa-asterisk"></i>
+					   			   			            </span>
+					   			   			        </div>
+					   			   			        <div class="status"></div>
+					   			   			        <div class="back_error"></div>
+					   			   			    </div>
+					   			   			    <div class="form-group">
+					   			   			        <div class="input-group">
+					   			   			            <input type="text" id="code" name="code" class="form-control col-sm-8" placeholder="验证码" value="">
+					   			   			            <span class="col-sm-4 imgCode">
+					   				   			           <a href="javavoid(0)">
+					   				   			            <img src="http://127.0.0.1:8080/checkCode" title="换一张" style="width:120%;height:100%">  
+					   				   			            </a>
+					   			   			            </span>
+					   			   			        </div>
+					   			   			        <div class="status"></div>
+					   			   			        <div class="back_error"></div>
+					   			   			    </div>
+					   			   			    <div class="form-group form-actions">
+					   			   			        <button type="submit" class="col-sm-4 btn btn-info" id="login_submit">登录</button>
+					   			   			    </div>
+					   			   			    
+					   			   			</form>
+					   					</div>
+					   					<div class="tab-pane" id="email" role="tabpane1">
+		   						   			<form id="loginform_email">						   		    
+		   						   			    <div class="form-group">
+		   						   			        <div class="input-group">
+		   						   			            <input type="text" id="email" name="email" class="form-control" placeholder="邮箱或手机号码" value="">
+		   						   			            <span class="input-group-addon"><i class="fa fa-envelope"></i>
+		   						   			            </span>
+		   						   			        </div>
+		   						   			        <div class="status"></div>
+		   						   			        
+		   						   			    </div>
+		   						   			    <div class="form-group">
+		   						   			        <div class="input-group">
+		   						   			            <input type="password" id="password" name="password" class="form-control" placeholder="密码" value="">
+		   						   			            <span class="input-group-addon"><i class="fa fa-asterisk"></i>
+		   						   			            </span>
+		   						   			        </div>
+		   						   			        <div class="status"></div>
+		   						   			    </div>
+		   						   			    <div class="form-group">
+		   						   			        <div class="input-group">
+		   						   			            <input type="text" id="code" name="code" class="form-control col-sm-8" placeholder="验证码" value="">
+		   						   			            <span class="col-sm-4 imgCode" >
+		   							   			           <a href="javavoid(0)">
+		   							   			            <img src="http://127.0.0.1:8080/checkCode" title="换一张" style="width:120%;height:100%">  
+		   							   			            </a>
+		   						   			            </span>
+		   						   			        </div>
+		   						   			        <div class="status"></div>
+		   						   			    </div>
+		   						   			    <div class="form-group form-actions">
+		   						   			        <button type="submit" class="col-sm-4 btn btn-info">登录</button>
+		   						   			    </div>
+		   						   			    
+		   						   			</form>
+					   					</div>
+					   					<!-- tab-pane end -->
+					   				</div>
+									<!-- /. tab-content end -->								    
+						   			
+					   			</div>
+					   		</div>
+					   	</div>
+					</div>
+				   
+               	   
+               </div>
+               <div class="row">
+					 <p style="margin:0 auto">©2017 All Rights Reserved. Handlinks!</p>
+				</div>
+
+            </div>
+            <!-- /.conainer-fluid -->
+        </main>
+    </div>
+	<!-- Bootstrap and necessary plugins -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/tether.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="plugins/jquery-validate/jquery.validate.js"></script>
+	<script>
+		$(function(){
+
+			$('.card:eq(0)').addClass('slideInDown');
+
+			var validator = $('#loginform_email').validate({
+				rules:{
+					email:{
+						required:true,
+						email:true,
+						remote:"emails.action"
+					},
+					password:{
+						required:true
+					},
+					code:{
+						required:true
+					}
+
+				},
+				messages:{
+					email:{
+						required:"邮箱不能为空",
+						email: "请输入正确的邮箱地址",
+						remote: jQuery.validator.format("{0} is already in use")//使用ajax方式调用
+					},
+					password:{
+						required:"密码不能为空"
+					},
+					code:{
+						required:"验证码不能为空"
+					}
+
+				},
+				errorPlacement: function(error, element) {				
+					error.appendTo(element.parent().next());				
+				},
+				submitHandler:function(){
+					alert('submitted!');
+
+				}
+			})
+			
+			var validator = $('#loginform_username').validate({
+				focusInvalid:false,
+				rules:{
+					username:{
+						required:true
+					},
+					password:{
+						required:true
+					},
+					code:{
+						required:true,
+						number:true
+					}
+
+				},
+				messages:{
+					username:{
+						required:"用户名不能为空"
+					},
+					password:{
+						required:"密码不能为空"
+					},
+					code:{
+						required:"验证码不能为空",
+						number:"验证码格式不正确"
+					}
+
+				},
+				errorPlacement: function(error, element) {
+					//console.log(error,element)
+					
+					if(element.parent().next().next().html() != ""  ){//.back_error
+
+						element.parent().next().next().html("");
+						error.appendTo(element.parent().next());
+					}else{
+						error.appendTo(element.parent().next());
+					}	
+									
+				},
+				submitHandler:function(){
+					alert('submitted!');
+
+					//方法一	
+					// var param = $("#loginform_username").serialize();
+					// param = param.split('&');					
+					// console.log(param[0].split('=')[1])
+					// console.log(param)
+					// var data = {
+					// 	userName:param[0].split('=')[1],
+					// 	passWord:param[1].split('=')[1],
+					// 	checkCode:param[2].split('=')[1]
+					// };
+					
+					//方法二
+					var param = $('#loginform_username input').map(function(){
+							//console.log($(this).val());
+							return $(this).val();
+						}).get()
+					console.log(param)
+					var data = {
+						userName:param[0],
+						passWord:param[1],
+						checkCode:param[2]
+					}
+
+					$.ajax({
+						url:'/manage/user/login',
+						type:"post",
+						cache:false,
+						dataType:"json",
+						data:data,
+						success:function(result){
+							console.log(result)
+							var message = result.message;
+							var tip="";
+							if(result.returnCode == 1 ){								
+								switch(message){
+									case "0":
+										tip = "账号不存在";
+										$('#username').parent().next().next().html(tip)
+										break;
+									case "1":
+										tip = "验证码错误";
+										$('#code').parent().next().next().html(tip)
+										break;	
+									case "2":
+										tip = "用户名或密码错误";
+										$('#username').parent().next().next().html(tip)
+										break;
+								}
+								
+							}
+							if(result.returnCode == 0){
+								window.location.href="index.html"  ;
+							}
+						},
+						error:function(){
+							alert("提交异常！")
+						}
+					})
+				}
+			})
+
+			var clear = function(){
+				$('input').each(function(){
+					$(this).on("focus",function(){
+						$(this).parent().siblings().html("");
+					})
+				})
+			}()
+			
+		})
+	</script>
+	
+</body>
+</html>

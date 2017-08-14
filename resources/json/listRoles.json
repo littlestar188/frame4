@@ -1,0 +1,29 @@
+	{
+		"returnCode":0,
+		"message":"",
+		"rows":[{
+				"roleId":"123456789658745632145698",
+				"roleName":"菜心",
+				"createTime":"2015-5-7",
+				"menu_ids":[
+					{					
+					"id":"100001",
+					"permission":[1,2,3]
+					},
+					{					
+					"id":"100002",
+					"permission":[1,2,3,4]
+					}
+				]
+				
+			},
+			{
+				"roleId":"123456789658745632145690",
+				"roleName":"大胖",
+				"createTime":"2015-5-7",
+				"menu_ids":""
+				
+			}
+	],
+		"total":1
+	}

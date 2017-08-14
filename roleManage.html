@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="resources/img/favicon.png">
+
+    <title>RoleManage</title>
+
+    <!-- Icons -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+	  <link href="css/bootstrap-table.css" rel="stylesheet" >
+    <!-- animate.css -->
+    <link rel="stylesheet" href="plugins/animate/animate.css">
+    <!-- ztree -->
+    <link rel="stylesheet" href="plugins/zTree/css/zTreeStyle/zTreeStyle.css">
+    <!-- Main styles for this application -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/public.css" rel="stylesheet">
+
+</head>
+
+
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <!-- topNav -->
+    <header class="app-header navbar" id="navbar"></header>
+
+    <div class="app-body">
+    	<!-- sidebar menu -->
+        <div class="sidebar" id="sidebar"></div>
+        <!-- Main content -->
+        <main class="main">
+            <div class="container-fluid">
+
+               <div class="row">
+               		<div class="table_wrapper col-lg-12">
+               			<div class="card">
+               				<div class="card-header">
+               					<i class="fa fa-align-justify"></i>角色管理
+               				</div>
+               				<div class="card-block">
+               					<table id="roleTable"></table>
+                        <div class="option_box">
+                          <button type="button" class="btn btn-primary addBtn"><i class="fa fa-plus fa-lg"></i> 新增</button>
+                           <button type="button" class="btn btn-primary delGroupBtn"><i class="fa fa-trash-o fa-lg"></i> 批量删除</button>
+                        </div>
+               				</div>
+                      
+               			</div>
+                    
+               		</div>
+                  <!-- ztree -->
+                  <div class="card ztree_wrapper animated col-lg-2 " style="display:none;">
+                      <div class="ztree_content">                   
+                        <div class="row ztree_title"><b>新增</b></div>                    
+                        <div class="row inputWrapper">
+                          <input type="text" class="form-control ztree_roleInput" placeholder="角色名称" data-id>
+                          <div class="ztree_tip">
+                            <span class="correct" style="display:none;color:green"><i class="fa fa-check"></i></span>
+                            <span class="error"  style="display:none;color:#c33"><i class="fa fa-close"></i></span>
+                          </div>
+                        </div>
+
+                        <div class="ztree" id="treePermission"></div>
+                      </div>
+                      <div class="btn_wrapper">
+                        <button class="btn btn-primary tree_save">保存</button>
+                        <button class="btn btn-primary tree_cancel">取消</button>
+                      </div>
+                    
+                  </div>
+                  <!-- /.ztree end -->
+               </div>
+
+            </div>
+            <!-- /.conainer-fluid -->
+        </main>
+
+
+    </div>
+	<!-- footer -->
+    <footer class="app-footer" id="footer"></footer>
+	
+	<!-- Bootstrap and necessary plugins jqv3.1.0 bsv4.0.0 bs-tbv1.11.1-->
+	<script src="js/jquery.min.js"></script>
+  <script src="js/tether.min.js"></script>	
+	<script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap-table.js"></script>
+  <script src="js/bootstrap-table-locale-all.js"></script> 
+  <script src="js/bootstrap-dialog.js"></script> 
+	<script src="js/pace.min.js"></script>
+	<!-- Custom scripts required by this view -->
+	<script src="js/app.js"></script>
+  <script src="js/ztree.min.js"></script>
+  <script src="js/views/optShow.js"></script>
+  <script src="js/views/roleManage.js"></script>
+</body>
+</html>
