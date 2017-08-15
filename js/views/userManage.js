@@ -12,7 +12,7 @@ $(function(){
 	     	pagination: true,//设置True在表格底部显示分页工具栏
 	      	pageSize: 10,
 	      	pageList: [10, 25, 50, 100],
-	      	//toolbar:'#custom-toolbar',
+	      	toolbar:'#custom-toolbar',
 	      	columns: [
                 {field: 'state',checkbox: true},
                 {field: 'userName',title: '用户名称',align: 'center',valign: 'middle'},

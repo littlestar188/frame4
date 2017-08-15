@@ -1,14 +1,19 @@
 /* Created by caixx  */
+
 *:before, *:after{
 	-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-.row:before,.tab-content:before,.tab-pane:before,.form-horizontal .form-group:before,.form-horizontal .form-group:after{
+.row:before,.tab-content:before,.tab-pane:before,
+.form-horizontal .form-group:before,.form-horizontal .form-group:after,
+.form-inline .form-group:before,.form-inline .form-group:after{
 	display:table;
 	content:"";
 }
-.row:after,.tab-content:after,.tab-pane:after,.form-horizontal .form-group:after{
+.row:after,.tab-content:after,.tab-pane:after,
+.form-horizontal .form-group:after,
+.form-inline .form-group:after{
 	clear:both;
 }
 .clear:after{
@@ -19,6 +24,9 @@
 	clear:both;
 	visibility:hidden;
 	
+}
+.margin-auto{
+	margin:0 auto;
 }
 /* sidebar nav */
 #navbar{
@@ -124,8 +132,6 @@ header.navbar .navbar-brand{
 	margin-bottom:0;
 }
 /*param*/
-
-
 @media (min-width: 768px) {
 .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12{
 	float:left;
@@ -243,11 +249,17 @@ header.navbar .navbar-brand{
 }
 .form-horizontal .form-multiple .form-group{
 	display: inline-block;
-	padding-right:20px;
+	margin-right:20px;
 }
 .form-horizontal .form-multiple .form-group .input-group{
 	padding-left:0;
 }
+/*device*/
+.form-inline .form-group select.form-control,
+.form-inline .form-group .input-group input[type=text]
+{
+	width:120px;	
+} 
 /* end created */
 
 @media (min-width: 768px) {
@@ -272,6 +284,8 @@ header.navbar .navbar-brand{
     font-size: 12px;
   }
 }
+
+
 /* map */
 #mapSearch{
 	position: absolute;

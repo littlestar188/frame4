@@ -11,13 +11,15 @@
     <meta name="keyword" content="">
     <link rel="shortcut icon" href="resources/img/favicon.png">
 
-    <title>RoleManage</title>
+    <title>User Manage</title>
 
     <!-- Icons -->
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/simple-line-icons.css" rel="stylesheet">
-	<link href="css/bootstrap-table.css" rel="stylesheet" >
     <!-- Main styles for this application -->
+    <link href="css/bootstrap-modal.css" rel="stylesheet" >
+    <link href="css/bootstrap-table.css" rel="stylesheet" >
+    <link href="css/bootstrap-dialog.css" rel="stylesheet" >
     <link href="css/style.css" rel="stylesheet">
     <link href="css/public.css" rel="stylesheet">
 
@@ -43,7 +45,46 @@
                					<i class="fa fa-align-justify"></i>用户管理
                				</div>
                				<div class="card-block">
+                      <!-- search -->
+                          <form id="" class="form-inline">
+                          <div class="form-group"> 
+                            <div class="input-group col-sm-6" style="padding-left:0">  
+                                  <input type="text" id="max-temp" name="user_name" class="form-control" value="" placeholder="用户名称">
+                              </div>    
+                          </div>                          
+                          <div class="form-group"> 
+                            <div class="col-sm-6">   
+                                <select class="form-control">
+                                    <option>角色名称</option>
+                                    <option>管理员</option>
+                                    <option>销售员</option>  
+                                </select>
+                              </div>      
+                          </div>
+                          <div class="form-group"> 
+                            <div class="col-sm-6">   
+                                <select class="form-control">
+                                    <option>部门</option>
+                                    <option>xx部门</option>
+                                    <option>销售部门</option>  
+                                </select>
+                              </div>      
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-info" id="searchBtn">查询</button>
+                              </div>
+                          </div>                      
+                          <!--  -->                       
+                        </form>
+                        <!-- table -->
                					<table id="userTable"></table>
+                        <!-- option buttons -->
+                        <div class="option_box">
+                          <button type="button" class="btn btn-primary" id="addBtn"><i class="fa fa-plus fa-lg"></i> 新增</button>
+                           <button type="button" class="btn btn-primary" id="delGroupBtn"><i class="fa fa-trash-o fa-lg"></i> 批量删除</button>
+                        </div>
+                        <!-- /. option buttons end -->
                				</div>
                			</div>
                		</div>
@@ -61,7 +102,8 @@
 	<!-- Bootstrap and necessary plugins -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/tether.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-3.3.7.min.js"></script>
+  <script src="js/bootstrap-dialog.js"></script>
   <script src="js/bootstrap-table.js"></script>
   <script src="js/bootstrap-table-locale-all.js"></script>	
 	<script src="js/pace.min.js"></script>
@@ -72,6 +114,5 @@
 	<!-- Custom scripts required by this view -->
   <script src="js/views/optShow.js"></script>
 	<script src="js/views/userManage.js"></script>
-	
 </body>
 </html>

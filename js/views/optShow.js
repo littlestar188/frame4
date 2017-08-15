@@ -9,9 +9,9 @@ function optShow(id){
 	hash = hash.substring(1,hash.length);
 
 	var htmlwrap = $('<span></span>');
-	var $addBtn = $('.addBtn');
-	var $searchBtn = $('.searchBtn');
-	var $delGroupBtn = $('.delGroupBtn');
+	var $addBtn = $('#addBtn');
+	var $searchBtn = $('#searchBtn');
+	var $delGroupBtn = $('#delGroupBtn');
 	var $editBtn = createOptBtn(id,'btn-edit','修改','btn-info');
 	
 	var $watchBtn = createOptBtn(id,'btn-watch','详情');
@@ -84,6 +84,11 @@ function optShow(id){
 function createOptBtn(id,btnType,btnName,btnClass){
 	var $optBtn = $("<button type='button' class='btn btn-success btn-sm' id='' data-id="+id+" title=''></button>")
 	btnClass = btnClass || "btn-success" ;
-	var $newOptBtn = $optBtn.clone().attr('id',btnType).attr('title',btnName).removeClass('btn-success').addClass(btnClass).text(btnName);
+	var $newOptBtn = $optBtn.clone()
+					.attr('id',btnType)
+					.attr('title',btnName)
+					.removeClass('btn-success')
+					.addClass(btnClass)
+					.text(btnName);
 	return $newOptBtn;
 }

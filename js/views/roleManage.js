@@ -12,7 +12,7 @@ $(function(){
 	     	pagination: true,//设置True在表格底部显示分页工具栏
 	      	pageSize: 10,
 	      	pageList: [10, 25, 50, 100],
-	      	//toolbar:'#custom-toolbar',
+	      	toolbar:'#custom-toolbar',
 	      	paginationDetailHAlign: 'left',
 	      	columns: [
                 {field: 'state',checkbox: true,formatter:function(row,value,index){
@@ -29,7 +29,7 @@ $(function(){
 		})
 	}()
 	var addRoleTree = function(){
-		$('.addBtn').click(function(event){
+		$('#addBtn').click(function(event){
 			
 			falshZtree('新增');
 			initZtree('resources/json/listNewTree.json','get','123');
