@@ -1,37 +1,26 @@
-<form id="" class="form-horizontal">
-	<div class="form-multiple">
+<form id="deviceEdit" class="form-horizontal">
     <div class="form-group">						   				       
-	<label class="control-label col-sm-6">设备型号</label>
+	<label class="control-label col-sm-3">设备型号</label>
 	<div class="input-group col-sm-6">
-            <input type="text" id="min-temp" name="min-temp" class="form-control" value="-40.0">
+            <input type="text" id="device-type" name="nullCheck" class="form-control" value="">
+            <div class="status"></div>
         </div>   	
     </div>
     <div class="form-group">    
-	<label class="control-label col-sm-6">传感器最大温度(℃)</label>
+	<label class="control-label col-sm-3">设备SN码</label>
 	<div class="input-group col-sm-6">	
-            <input type="text" id="max-temp" name="max-temp" class="form-control" value="-15.0">
+            <input type="text" id="max-temp" name="nullCheck" class="form-control" value="">
+            <div class="status"></div>
         </div>     	
     </div>
-    <div class="form-group">    
-	<label class="control-label col-sm-6">传感器最大温度(℃)</label>
-	<div class="input-group col-sm-6">	
-            <input type="text" id="max-temp" name="max-temp" class="form-control" value="-15.0">
-        </div>     	
-    </div>
-</div>
-<!--  -->
-<div class="form-multiple">
-    <div class="form-group">    
-	<label class="control-label col-sm-6">传感器最大温度(℃)</label>
-	<div class="input-group col-sm-6">	
-            <input type="text" id="max-temp" name="max-temp" class="form-control" value="-15.0">
-        </div>     	
-    </div>
-    <div class="form-group">    
-	<label class="control-label col-sm-6">传感器最大温度(℃)</label>
-	<div class="input-group col-sm-6">	
-            <input type="text" id="max-temp" name="max-temp" class="form-control" value="-15.0">
-        </div>     	
-    </div>
+    <div class="form-group">
+    <label class="control-label col-sm-3">在线状态</label>    
+	<div class="input-group col-sm-6">
+		<select class="form-control">
+            <option value="">离心机</option>
+            <option value="">空压机</option>  
+        </select>
+	</div>
+
 </div>
 </form>

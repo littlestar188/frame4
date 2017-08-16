@@ -26,6 +26,10 @@
   float: right;
   opacity: 0.9;
   filter: alpha(opacity=90);
+  /*created by caixx on 20170816*/
+  position:absolute;
+  right:20px;
+  /*end*/
 }
 .bootstrap-dialog .bootstrap-dialog-close-button:hover {
   cursor: pointer;
@@ -43,6 +47,9 @@
 }
 .bootstrap-dialog.type-primary .modal-header {
   background-color: #20a8d8;
+  /*created by caixx on 20170816*/
+  position:relative;
+  /*end*/
 }
 .bootstrap-dialog.type-success .modal-header {
   background-color: #5cb85c;
