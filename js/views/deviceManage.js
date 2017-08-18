@@ -74,71 +74,7 @@ $(function(){
 				title:"新增",
 				type:BootstrapDialog.TYPE_PRIMARY,
                 size: BootstrapDialog.SIZE_NORMAL,
-                message:function(dialog){
-                	var $content = $("<div></div>").load('resources/forms/deviceEdit.html');
-                	var $footerButton = dialog.getButton('btn-ok');
-
-       //          	$content.find("#deviceEdit input").each(function(){
-       //          		$(this).focus({$footerButton: $footerButton},function(event){
-	      //           		event.data.$footerButton.enable();
-		     //            	$('#deviceEdit').validate({
-							// 	debug:true,//只验证 不提交表单
-							// 	onsubmit:false,//提交验证
-							// 	onfocusout:true,//失焦时验证
-							// 	rules:{
-							// 		nullCheck:{
-							// 			required:true
-							// 		}
-							// 	},
-							// 	message:{
-							// 		nullCheck:{
-							// 			required:"不能为空"
-							// 		}
-							// 	},
-							// 	errorPlacement: function(error, element) {								
-							// 		error.appendTo(element.parent().next());									
-							// 	},
-							// 	// 每个字段验证通过执行函数
-							// 	success:function(){
-
-							// 	}
-							// })
-		     //            	dialog.setClosable(true);
-	      //           	})
-                		
-       //          	})
-       				
-       				// var $deviceEdit ;
-       				// console.log( $content)
-       				// console.log($content.find('#deviceEdit'))
-       				// // $content.find(".form-wrapper").on('focus','input',function(){
-       				//  $content.find('#device-type').focus({$footerButton: $footerButton}, function(event){
-       				// 	event.data.$footerButton.enable();
-       				// 	dialog.setClosable(true);
-
-       				// })
-           //      	return $content;
-                	
-                },
-                buttons:[
-                	{
-                		label:"取消",
-                		action:function(dialog){
-                			dialog.close();
-                		}
-                	},
-                	{
-                	id:"btn-ok",
-                	label:"确定",
-                	cssClass: 'btn-info',
-                	hotkey:13,//Enter
-                	action:function(dialog){
-                		var $button = this;
-                		$button.disable();            		
-                		dialog.setClosable(false);
-                	}
-
-                }],               
+                message:$('<form id="deviceEdit" class="form-horizontal"></form>').load('resources/forms/deviceEdit.html'),
                 callback:function(res){
 
                 	//returnBack("add");
@@ -154,7 +90,7 @@ $(function(){
 				title:"修改",
 				type:BootstrapDialog.TYPE_PRIMARY,
                 size: BootstrapDialog.SIZE_NORMAL,
-				message:$("<div data-id="+$(this).attr("data-id")+"></div>").load('resources/forms/deviceEdit.html'),
+				message:$("<form data-id="+$(this).attr("data-id")+"></form>").load('resources/forms/deviceEdit.html'),
 				
 			});							
 		
