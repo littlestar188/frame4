@@ -42,31 +42,31 @@ function optShow(id){
 
 	//增
 	if(hash.indexOf("1")!= -1 ){
-		$addBtn.removeAttr("disabled");
+		$addBtn.show();//removeAttr("disabled");
 	}else{
-		$addBtn.attr("disabled","true");
+		$addBtn.hide();//attr("disabled","true");
 	}
 	//删
 	if(hash.indexOf("2")!= -1 ){
-		$delBtn.removeAttr("disabled")
-		$delGroupBtn.removeAttr("disabled");
+		$delBtn.show()//removeAttr("disabled")
+		$delGroupBtn.show();//removeAttr("disabled");
 	}else{	
-		$delBtn.attr("disabled","true")		
-		$delGroupBtn.attr("disabled","true");
+		$delBtn.hide();//attr("disabled","true")		
+		$delGroupBtn.hide();//attr("disabled","true");
 	}
 	//改
 	if(hash.indexOf("3")!= -1){
-		$editBtn.removeAttr("disabled");
+		$editBtn.show();//removeAttr("disabled");
 		
 	}else{
-		$editBtn.attr("disabled","true");
+		$editBtn.hide();//attr("disabled","true");
 	}
 	
 	//查
 	if(hash.indexOf("4")!= -1 ){
-		$searchBtn.removeAttr("disabled");
+		$searchBtn.show();//removeAttr("disabled");
 	}else{
-		$searchBtn.attr("disabled","true");
+		$searchBtn.hide();//attr("disabled","true");
 	}
 	
 	html = $watchBtn[0].outerHTML+"&nbsp;&nbsp;"+$editBtn[0].outerHTML+"&nbsp;&nbsp;"+$delBtn[0].outerHTML
@@ -91,4 +91,14 @@ function createOptBtn(id,btnType,btnName,btnClass){
 					.addClass(btnClass)
 					.text(btnName);
 	return $newOptBtn;
+}
+
+var initshow = function(){
+	console.info("initshow")
+	var worker = new Worker('js/views/permission.js');
+
+	worker.onmessage = function(event){
+		document.getElementById("result").innerHTML += 
+                event.data+"<br/>"; 
+	}
 }

@@ -29,4 +29,48 @@ $(function(){
 			]
 		})
 	}();
+
+	/*table中的按键功能实现
+
+	*/
+	var optPerform = function(){
+		$('#roleTable').on('click','.btn.btn-sm',function(){
+
+			//判断是否为【详情】
+			if($(this).is('#btn-watch')){
+				alert('watch')
+			}
+
+			//判断是否为【修改】
+			if($(this).is('#btn-edit')){
+				
+			}
+
+			//判断是否为【删除】
+			if($(this).is('#btn-del')){
+				BootstrapDialog.confirm({
+					title:"",
+					type:BootstrapDialog.TYPE_DANGER,
+					size: BootstrapDialog.SIZE_SMALL,
+					message:"确定删除吗？",
+					callback:function(res){
+
+					}
+				});	
+			}	
+
+		})
+
+	}();
+
+	/*新增用户
+		
+	*/
+	var addUser = function(){
+		$('#addBtn').click(function(){
+			
+				
+			
+		})
+	}();
 });

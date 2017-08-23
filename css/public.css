@@ -96,6 +96,12 @@ header.navbar .navbar-brand{
 .ztree_wrapper .btnWrapper,.ztree_content:after{
 	height:35px;
 }
+.ztree_wrapper .ztree_content .ztree_tip{
+  position:absolute;
+  top:55px;
+  right:10px;
+  font-size: 10px;
+}
 /*modal dialog*/
 .modal-dialog{
 	top:100px;
