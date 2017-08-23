@@ -1794,7 +1794,27 @@ fieldset[disabled] a.btn {
     background-color: #1985ac;
     background-image: none;
     border-color: #187fa3; }
-
+/* created by caixx on 20170823 */
+.btn-black {
+  color: #fff;
+  background-color: #11171a;
+  border-color: #11171a; }
+  .btn-black:hover {
+    color: #11171a;
+    background-color: #ddd;
+    border-color: #666; }
+  .btn-black:focus, .btn-black.focus {
+    box-shadow:none; }
+  .btn-black.disabled, .btn-black:disabled {
+    background-color: #11171a;
+    border-color: #11171a; }
+  .btn-black:active, .btn-black.active,
+  .show > .btn-black.dropdown-toggle {
+    color: #11171a;
+    background-color: #fff;
+    background-image: none;
+    border-color: #555; }
+  /* end created */
 .btn-secondary {
   color: #263238;
   background-color: #fff;

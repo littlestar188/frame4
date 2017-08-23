@@ -125,6 +125,7 @@ $(function(){
 	function searchRole(){
 		
 		$('#searchBtn').click(function(){
+			
 			$.ajax({
 				url:"/manage/role/selectRoles",
 				dataType:"json",

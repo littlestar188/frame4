@@ -19,7 +19,8 @@ function optShow(id){
 		$watchBtn = createOptBtn(id,'btn-watch','重置密码');
 	}
 
-	var $delBtn = createOptBtn(id,'btn-del','删除','btn-danger'); 
+	var $delBtn = createOptBtn(id,'btn-del','删除','btn-danger');
+	var $limitBtn = createOptBtn(id,'btn-limit','黑名单','btn-black');
 	//console.log($editBtn)
 
 	// var btnPerJudge = function(){
@@ -68,8 +69,18 @@ function optShow(id){
 	}else{
 		$searchBtn.hide();//attr("disabled","true");
 	}
+
+	if(hash.indexOf("5")!= -1 ){
+		$limitBtn.show();
+	}else{
+		$limitBtn.hide();
+	}
 	
-	html = $watchBtn[0].outerHTML+"&nbsp;&nbsp;"+$editBtn[0].outerHTML+"&nbsp;&nbsp;"+$delBtn[0].outerHTML
+	html = $watchBtn[0].outerHTML+"&nbsp;&nbsp;"
+		+$editBtn[0].outerHTML+"&nbsp;&nbsp;"
+		+$delBtn[0].outerHTML+"&nbsp;&nbsp;"
+		+$limitBtn[0].outerHTML;
+
 	html = htmlwrap.append(html)[0].outerHTML;
 	//console.log(html)
 	return html;
@@ -93,7 +104,9 @@ function createOptBtn(id,btnType,btnName,btnClass){
 	return $newOptBtn;
 }
 
-var initshow = function(){
+
+
+/*var initshow = function(){
 	console.info("initshow")
 	var worker = new Worker('js/views/permission.js');
 
@@ -101,4 +114,4 @@ var initshow = function(){
 		document.getElementById("result").innerHTML += 
                 event.data+"<br/>"; 
 	}
-}
+}*/
