@@ -178,65 +178,6 @@ $(function(){
 	}
 
 
-	/*新增角色名验证
-	  @param elem      输入框对象$('')
-	  @param ajaxURL   /addCheck
-
-	*/
-	function checkAddRole(elem,ajaxURL){
-		
-		elem.off('blur');
-		elem.on('blur',function(){
-			valueName = elem.val();	
-			var postData = {"roleName":valueName};
-			console.log(ajaxURL,postData)
-
-			sendCheck(ajaxURL,postData);
-		})
-
-		// elem.change(function(){
-		// 	var valueName = elem.val();	
-		// 	var postData = {"roleName":valueName};
-		// 	console.log(ajaxURL,postData)
-
-		// 	sendCheck(ajaxURL,postData);
-		// })
-
-	}
-
-	/* 修改角色名验证
-		@param  elem       $('.ztree_roleInput')     
-		@param  ajaxURL    /updataCheck
-		@param  editId      
-	*/
-	function checkEditRole(elem,ajaxURL,editId){
-		
-		elem.change(function(){
-			var valueName = elem.val();	
-			var postData = {"roleName":valueName,"roleId":editId};
-			sendCheck(ajaxURL,postData);
-			console.log(postData)			
-		})		
-
-		//角色名称有修改 
-		// elem.off('blur');
-		// elem.on('blur',function(){
-		// 	//that.valueName = $(this).val();
-		// 	var valueName = elem.val();	
-		// 	var postData = {"roleName":valueName,"roleId":editId};
-
-		// 	sendCheck(valueName,ajaxURL,postData);
-		// 	console.log(postData)
-		// 	//console.log(valueName,'editcheck1111111111111111111')
-			
-		// })
-		
-		elem.on("focus",function(){
-			$('.correct').hide();
-			$('.error').hide();
-		})
-	}
-
 	/*发送角色名
 	  @param valueName
 	  @param ajaxURL
@@ -244,7 +185,7 @@ $(function(){
 	*/
 	function sendCheck(ajaxURL,postData){
 
-		console.log(postData)		
+		console.log(ajaxURL,postData)		
 		if(postData.roleName != ""){
 			$.ajax({
     			//url:"resources/json/addCheck.json",
@@ -342,7 +283,7 @@ $(function(){
 		   		$.ajax($.extend(ajaxObj,params))
 		    }
 		   
-		   	console.log($.extend(ajaxObj,params))
+		   	//console.log($.extend(ajaxObj,params))
 
 		    $.fn.zTree.init($('#treePermission'), setting, zNodes); 
 
@@ -367,11 +308,14 @@ $(function(){
         	var znodes = ztreeObj.getCheckedNodes(true);
         	
         	//角色名验证结果 判断retrunCode
-        	var status = $('.ztree_tip .correct').css("display");
+        	var status1 = $('.ztree_tip .correct').css("display");
+        	var status2 = $('.ztree_tip .error').css("display")
         	
         	console.log(name,status)
         	console.log(znodes)
-        	if( (status != "none" && znodes.length != 0) ){
+
+        	//1.name值变化并通过验证  2.name未变化
+        	if( (status1 != "none" && znodes.length != 0) || (status1 == "none" && status2 == "none" && name !="")){
 
         		//所选的权限菜单数组 id
         		var per = [];
@@ -432,6 +376,7 @@ $(function(){
 	*/
 	function ztreeShow(title){
 		$('.ztree_title').html(title);
+		$('.ztree_tip').children().css('display','none');
 		$('.ztree_wrapper').removeClass('fadeOutRight')
 		$('.table_wrapper').removeClass('col-lg-12').addClass('col-lg-9');
 		$('.ztree_wrapper').addClass('slideInRight').fadeIn();
