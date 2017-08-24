@@ -8,7 +8,7 @@
     {
         "pId": "100",
         "id": "101",
-        "link":"/frame/userManage.html",
+        "code":"userManage",
         "name": "用户管理"
     },
     {
@@ -34,7 +34,7 @@
      {
         "pId": "100",
         "id": "102",
-        "link":"/frame/roleManage.html",
+        "code":"roleManage",
         "name": "角色管理"
     },
     {
@@ -45,6 +45,7 @@
     {
         "pId": "200",
         "id": "201",
+        "code":"stock",
         "name": "出库"
     },
     {

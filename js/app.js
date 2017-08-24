@@ -30,7 +30,7 @@
 */
 var loadLayout = function(){
 
-  $('#sidebar').load('resources/layout/sidebar.html')
+  // $('#sidebar').load('resources/layout/sidebar.html')
   $('#navbar').load('resources/layout/topNav.html')
   $('#footer').load('resources/layout/footer.html')
  // $('#aside').load('layout/aside.html')

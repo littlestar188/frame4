@@ -69,7 +69,85 @@ header.navbar .navbar-brand{
 .card-block .option_box{
 	padding-top:15px;
 }
-/*ztree*/
+
+/* ztree nav */
+#leftTreeNav{
+  width:200px;
+  padding:0;
+  background-color:#263238;
+  color:#fff;
+}
+
+.ztree li {
+    position:relative;
+    line-height: 48px;
+  
+  } 
+.ztree li ul{
+    padding-left:0;
+}
+
+.ztree li a{
+  padding-left:15px;
+  height:48px;
+  line-height:48px;
+  width:100%;
+}
+.ztree li>a>i{
+    display: inline-block;
+    width: 20px; 
+    margin-right: 0.5rem;
+    font-family: 'simple-line-icons';
+    color:#b0bec5;
+    vertical-align:middle;
+    text-align: center;
+   
+}
+.ztree li>ul>li>a{
+  padding-left:45px;
+}
+.ztree li a:hover{
+   color: #fff !important;
+   background: #304047 !important;
+}
+
+ .ztree li span.button{
+  position:absolute;
+  top:15px;
+  right:16px;
+ }  
+ /*.ztree li a.level0::before{
+    position: absolute;
+    top: 0.96875rem;
+    right: 1rem;
+    display: block;
+    width: 0.875rem;
+    height: 0.875rem;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 0.65625rem;
+    text-align: center;
+    content: "\2039";
+    transition: .3s;
+ }*/
+
+ 
+ /*.ztree li a.level0.curSelectedNode.open::before{
+      transform: rotate(-90deg);
+ }*/
+.ztree li a.curSelectedNode {
+   
+    background-color: #20a8d8 !important;
+    color: #fff;
+    width:100%;
+    height: 48px;
+    line-height: 48px;
+    border:none;
+    opacity: 1;
+}
+
+
+/*ztree permission*/
 .ztree_wrapper{
 	margin-left:4.3%;
 	padding-bottom:20px;
@@ -102,6 +180,7 @@ header.navbar .navbar-brand{
   right:10px;
   font-size: 10px;
 }
+
 /*modal dialog*/
 .modal-dialog{
 	top:100px;

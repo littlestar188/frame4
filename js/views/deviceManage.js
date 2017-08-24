@@ -74,9 +74,9 @@ $(function(){
 				title:"新增",
 				type:BootstrapDialog.TYPE_PRIMARY,
                 size: BootstrapDialog.SIZE_NORMAL,
-                message:$('<form id="deviceEdit" class="form-horizontal"></form>').load('resources/forms/deviceEdit.html'),
+                message:$('<div></div>').load('resources/forms/deviceEdit.html'),
                 callback:function(res){
-
+               		//postMessage 	
                 	//returnBack("add");
                 }
 			})
