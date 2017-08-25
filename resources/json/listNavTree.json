@@ -9,64 +9,36 @@
         "pId": "100",
         "id": "101",
         "code":"userManage",
+        "url":"userManage.html",
         "name": "用户管理"
     },
-    {
-        "pId": "101",
-        "id": "1010",
-        "name": "增"
-    },
-    {
-        "pId": "101",
-        "id": "1011",
-        "name": "删"
-    },
-    {
-        "pId": "101",
-        "id": "1012",
-        "name": "改"
-    },
-    {
-        "pId": "101",
-        "id": "1013",
-        "name": "查"
-    },
+    
      {
         "pId": "100",
         "id": "102",
         "code":"roleManage",
+        "url":"roleManage.html",      
         "name": "角色管理"
+    },
+    {
+        "pId": "100",
+        "id": "103",
+        "code":"param",
+        "url":"param.html",      
+        "name": "参数设置"
     },
     {
         "pId": "0",
         "id": "200",
-        "name": "库存管理"
+        "name": "设备管理"
     },
     {
         "pId": "200",
         "id": "201",
-        "code":"stock",
-        "name": "出库"
-    },
-    {
-        "pId": "201",
-        "id": "2010",
-        "name": "增"
-    },
-    {
-        "pId": "201",
-        "id": "2011",
-        "name": "删"
-    },
-    {
-        "pId": "201",
-        "id": "2012",
-        "name": "改"
-    },
-    {
-        "pId": "201",
-        "id": "2013",
-        "name": "查"
+        "code":"deviceList",
+        "url":"device.html",
+        "name": "设备列表"
     }
+
 ]
 }

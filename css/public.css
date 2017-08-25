@@ -92,6 +92,10 @@ header.navbar .navbar-brand{
   height:48px;
   line-height:48px;
   width:100%;
+  color:#fff;
+}
+.ztree li a:hover{
+  text-decoration: none;
 }
 .ztree li>a>i{
     display: inline-block;
@@ -104,7 +108,7 @@ header.navbar .navbar-brand{
    
 }
 .ztree li>ul>li>a{
-  padding-left:45px;
+  padding-left:60px;
 }
 .ztree li a:hover{
    color: #fff !important;
