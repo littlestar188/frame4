@@ -2,11 +2,57 @@
 	Createed by caixx on 2017-08
 */
 
+var perArr,navArr;
+
+$(function(){
+	
+	perArr = JSON.parse(getStorage("permission"));
+	navArr = JSON.parse(getStorage("nav"));
+	console.log(navArr)
+})
+
+var pathname = location.pathname;
+pathname = pathname.split('/')[2];
+console.log(pathname);
+
+
+function navId(){
+  for(var i=0;i<navArr.length;i++){
+    if(navArr[i].url != undefined){
+      console.log(navArr[i].url)
+      console.log()
+      if(navArr[i].url == pathname){         
+        return navArr[i].id
+      }
+    }       
+  }
+}
+
+
+var per = function(){
+  var navid = navId(); 
+  console.log(navid)
+  var newPerArr = [];
+  for(var j=0;j<perArr.length;j++){
+  
+    if(perArr[j].pId != undefined && perArr[j].pId == navid){
+
+      newPerArr.push(perArr[j].id)
+    }
+  }
+  console.log(newPerArr)
+  return newPerArr;
+}
+
+
+/*
+*@param id 角色id
+*/
 function optShow(id){
+
 	//获取hash值
-	var hash = location.hash;
-	var pathname = location.pathname;
-	hash = hash.substring(1,hash.length);
+	// var hash = location.hash;	
+	// hash = hash.substring(1,hash.length);
 
 	var htmlwrap = $('<span></span>');
 	var $addBtn = $('#addBtn');
@@ -39,42 +85,38 @@ function optShow(id){
 	// 	console.log(opts,[$addBtn,$delBtn,$editBtn])
 	// }()
 	
+	var perFunArr = per();	
+	for(var key=0;key<perFunArr.length;key++){
 
+			//增
+			if(perFunArr[key].indexOf("1010")!= -1 ){
+				$addBtn.show();
+			}
 
-	//增
-	if(hash.indexOf("1")!= -1 ){
-		$addBtn.show();//removeAttr("disabled");
-	}else{
-		$addBtn.hide();//attr("disabled","true");
+			//删
+			if(perFunArr[key].indexOf("1011")!= -1 ){
+				$delBtn.show()
+				$delGroupBtn.show();				
+			}
+
+			//改
+			if(perFunArr[key].indexOf("1012")!= -1){
+				$editBtn.show();
+				
+			}
+			
+			//查
+			if(perFunArr[key].indexOf("1013")!= -1 ){
+				$searchBtn.show();
+
+			}
+
+			if(perFunArr[key].indexOf("1014")!= -1 ){
+				$limitBtn.show();
+			}
 	}
-	//删
-	if(hash.indexOf("2")!= -1 ){
-		$delBtn.show()//removeAttr("disabled")
-		$delGroupBtn.show();//removeAttr("disabled");
-	}else{	
-		$delBtn.hide();//attr("disabled","true")		
-		$delGroupBtn.hide();//attr("disabled","true");
-	}
-	//改
-	if(hash.indexOf("3")!= -1){
-		$editBtn.show();//removeAttr("disabled");
-		
-	}else{
-		$editBtn.hide();//attr("disabled","true");
-	}
+
 	
-	//查
-	if(hash.indexOf("4")!= -1 ){
-		$searchBtn.show();//removeAttr("disabled");
-	}else{
-		$searchBtn.hide();//attr("disabled","true");
-	}
-
-	if(hash.indexOf("5")!= -1 ){
-		$limitBtn.show();
-	}else{
-		$limitBtn.hide();
-	}
 	
 	html = $watchBtn[0].outerHTML+"&nbsp;&nbsp;"
 		+$editBtn[0].outerHTML+"&nbsp;&nbsp;"
@@ -100,7 +142,8 @@ function createOptBtn(id,btnType,btnName,btnClass){
 					.attr('title',btnName)
 					.removeClass('btn-success')
 					.addClass(btnClass)
-					.text(btnName);
+					.text(btnName)
+					.css("display","none");
 	return $newOptBtn;
 }
 
@@ -115,3 +158,5 @@ function createOptBtn(id,btnType,btnName,btnClass){
                 event.data+"<br/>"; 
 	}
 }*/
+
+

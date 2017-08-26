@@ -1,14 +1,15 @@
 /*created by caixx on 20170823*/
 $(function(){
-	var data2;
-	var initNavZtree = function(data1){
-			var zNodes,
-				zNodes_per = [];
+	var navigation,permission;
 
-			zNodes = data1;
-			console.log(data1,data2)
-			
-			
+	var initNavZtree = function(navData,perData){
+			var zNodes = [];
+			var newNodes = [];
+			zNodes = navData;
+			newNodes = perData;
+
+			console.log(zNodes,newNodes) 
+					
 		    //ajax获取数据 模拟数据
 		    var setting = {
 		   		view:{
@@ -38,39 +39,37 @@ $(function(){
 
 		   
 		    function onClick(e,treeId, treeNode) {
-		     	var treeObj = $.fn.zTree.getZTreeObj("leftTreeNav");		
+		     	var treeObj = $.fn.zTree.getZTreeObj("leftTreeNav");
+
 				treeObj.expandNode(treeNode);
+
+				
+				
 
 			}
 
 			/*自定义一级导航icon*/
-			function addDiyDom(treeId, treeNode){
-				
-
+			function addDiyDom(treeId, treeNode){				
+				var treeObj = $.fn.zTree.getZTreeObj("leftTreeNav");
 				if (treeNode.parentNode && treeNode.parentNode.id!=0) return;
 				console.log(treeNode)
+
 				var aObj = $("#" + treeNode.tId + '_a');
 				var bObj = $("#" + treeNode.tId + '_a.level0')
 
 
+				if(treeNode.id != undefined && treeNode.id !=null){					
+					aObj.removeAttr("target");
+				}
 
+				//添加icon 
 				bObj.each(function(){
 					var iconHtml = '<i class="icon-star"></i>';
 					$(this).prepend(iconHtml)
 				})
 				
 				//console.log(bObj)
-				//console.log(treeNode.children())
-				//console.log(treeNode,treeNode.id)
-				if(treeNode.id != undefined && treeNode.id !=null){
-					
-					aObj.removeAttr("target");
-
-				}
-				
-				
-				
-
+				//console.log(treeNode,treeNode.id)				
 			}
 
 			
@@ -81,6 +80,8 @@ $(function(){
 				
 
 		    	var treeObj = $.fn.zTree.init($('#leftTreeNav'), setting, zNodes);
+		    	
+		    	
 
 		    	var firstNodes = treeObj.getNodesByParam("level","0");
 		    	
@@ -93,7 +94,8 @@ $(function(){
 		    	// 	}
 		    	// })
 
-
+		    	//newNodes = treeObj.addNodes(,newNodes);	
+		    	console.log(newNodes)
 				console.log(secondNodes)
 					
 
@@ -104,6 +106,8 @@ $(function(){
 		   
 		
 	};
+
+	
 
 	/*获取导航树*/
 	function getNav(){
@@ -147,18 +151,18 @@ $(function(){
 			
 		})
 	}
-	
+
 	/*第一步：判断当前浏览器是否存在某数据缓存
 	*@param name
 	*/
 	var judgeStorage = function (name){
+		
 
 		if(name == "nav"){
 			if(getStorage(name)!= undefined){
-    			 var data1 = getStorage("nav");
-    	 		
-    	 		initNavZtree(JSON.parse(data1));
-
+    			var data1 = getStorage("nav");
+    			navigation = JSON.parse(data1)
+   				
 			}else{
 			 	getNav();
 			 
@@ -167,14 +171,14 @@ $(function(){
 		
 	    if(name == "permission"){
 	    	if(getStorage(name)!= undefined){
-    		   data2 = getStorage("permission");	
-    	 		//initNavZtree(JSON.parse(data2));
-
+    		  var data3 = getStorage("permission");	
+    	 	  permission = JSON.parse(data3);
+    	 	  	
 			}else{
 			 	getPermission();
 			 
 			}
-	    }
+	    }	    
 
 	   	if(name == "username"){
 			if(getStorage(name)!= undefined && getStorage(name)!= null){
@@ -185,58 +189,59 @@ $(function(){
 		 		publicFun.getUserInfo();
 			} 
 	    }
+
+	    if(navigation && permission){
+
+	    	initNavZtree(navigation,permission);
+	    }
+	   
+	    
 	};
 	judgeStorage("nav");
 	judgeStorage("permission");
 
-	/*写入本地存储数据
-	* @param name  命名
-	* @param data  
-	*/
-	function setStorage(name,data){
-		//判断json结构不严谨 
-		var value = typeof(data) == "object" ? JSON.stringify(data):data;
+	
+	
+	
+})	
 
-		console.log('set localStorage----')
-		//console.log(typeof(value))
-		if(window.localStorage){
-			localStorage.setItem(name,value);	
-		}else{
-			alert('浏览器不支持localStorage');
-			return
-		}	
+/*写入本地存储数据
+* @param name  命名
+* @param data  
+*/
+function setStorage(name,data){
+	//判断json结构不严谨 
+	var value = typeof(data) == "object" ? JSON.stringify(data):data;
+
+	console.log('set localStorage----')
+	//console.log(typeof(value))
+	if(window.localStorage){
+		localStorage.setItem(name,value);	
+	}else{
+		alert('浏览器不支持localStorage');
+		return
+	}	
+}
+/*获取本地存储的数据
+*@param name 命名
+*/
+function getStorage(name){
+
+	if(! window.localStorage){
+		alert('浏览器不支持localStorage');
+		return	
 	}
-	/*获取本地存储的数据
-	*@param name 命名
-	*/
-	function getStorage(name){
-
-		if(! window.localStorage){
-			alert('浏览器不支持localStorage');
-			return	
-		}
-		if(localStorage.length>0 && localStorage.getItem(name) ){
-			var value = localStorage.getItem(name);
-			//console.log('get---'+typeof(value))
-			//console.log(value)
-			return value;
-		}
+	if(localStorage.length>0 && localStorage.getItem(name) ){
+		var value = localStorage.getItem(name);
+		//console.log('get---'+typeof(value))
+		//console.log(value)
+		return value;
 	}
+}
 
-	//localStorage.clear();
-	/*判断当前页面刷新或离开或关闭*/
-	window.onbeforeunload = function(){
-		alert(1)
-		BootstrapDialog.confirm({
-			title:"提示",
-			type:BootstrapDialog.TYPE_DANGER,
-			size: BootstrapDialog.SIZE_SMALL,
-			message:"确定离开此页面吗？",
-			callback:function(res){
-
-			}
-		});	
-	}
-
-})
-
+/*判断当前页面刷新或离开或关闭*/
+// window.onbeforeunload = function(event){
+// 	event.returnValue = "leave?";
+// 	localStorage.removeItem("nav");
+// 	localStorage.removeItem("permission");
+// }

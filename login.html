@@ -282,7 +282,8 @@
 								
 							}
 							if(result.returnCode == 0){
-								localStorage.clear();
+								localStorage.removeItem("nav");
+								localStorage.removeItem("permission");
 								window.location.href="index.html"  ;
 							}
 						},
