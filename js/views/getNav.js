@@ -40,12 +40,7 @@ $(function(){
 		   
 		    function onClick(e,treeId, treeNode) {
 		     	var treeObj = $.fn.zTree.getZTreeObj("leftTreeNav");
-
 				treeObj.expandNode(treeNode);
-
-				
-				
-
 			}
 
 			/*自定义一级导航icon*/
@@ -240,8 +235,8 @@ function getStorage(name){
 }
 
 /*判断当前页面刷新或离开或关闭*/
-// window.onbeforeunload = function(event){
-// 	event.returnValue = "leave?";
-// 	localStorage.removeItem("nav");
-// 	localStorage.removeItem("permission");
-// }
+/*window.onbeforeunload = function(event){
+	event.returnValue = "leave?";
+	// localStorage.removeItem("nav");
+	// localStorage.removeItem("permission");
+}*/

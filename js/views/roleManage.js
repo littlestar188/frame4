@@ -67,7 +67,7 @@ $(function(){
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
 				BootstrapDialog.confirm({
-					title:"",
+					title:"提示",
 					type:BootstrapDialog.TYPE_DANGER,
 					size: BootstrapDialog.SIZE_SMALL,
 					message:"确定删除吗？",
@@ -97,7 +97,7 @@ $(function(){
 				checkRole("/manage/role/addCheck",valueName);
 			})
 	    	
-	    	ztreeDateSave();	
+	    	ztreeDateSave("resources/json/updateRole.json");	
 			
 		})
 	}
@@ -117,7 +117,7 @@ $(function(){
 			checkRole("/manage/role/updateCheck",valueName,editId)
 		})
 		
-		ztreeDateSave();
+		ztreeDateSave("resources/json/addRole.json");
 		
 	}
 
@@ -295,8 +295,10 @@ $(function(){
 		    },500);		
 	}
 
-	/* 保存新增/修改权限树*/
-	function ztreeDateSave(){
+	/* 保存新增/修改权限树
+	@param ajaxURL 
+	*/
+	function ztreeDateSave(ajaxURL){
 
 		$('.btn_wrapper .tree_save').off("click");
 		$('.btn_wrapper .tree_save').click(function(){
@@ -330,32 +332,46 @@ $(function(){
 	            }
 	            console.log(param)
 
-	            /*$.ajax({
-	            	url:"resources/json/addRole.json",
+	            $.ajax({
+	            	url:ajaxURL,
 	            	dataType:"json",
 	            	data:param,
-	            	success:function(){
-	            		BootstrapDialog.confirm({
-	            			type:BootstrapDialog.TYPE_SUCCESS,
-	            			size: BootstrapDialog.SIZE_SMALL,
-	            			message:"保存成功！",
-	            			callback:function(res){
-	            				if(res){
-	            					$("#roleTable").bootstrapTable('refresh', {url:'/manage/role/listRoles'});
-	            					ztreeLeave();
+	            	success:function(res){
+	            		if(res.returnCode == 0){
+	            			BootstrapDialog.alert({
+	            				title:"提示",
+	            				type:BootstrapDialog.TYPE_SUCCESS,
+	            				size: BootstrapDialog.SIZE_SMALL,
+	            				message:res.message,
+	            				callback:function(res){
+	            					if(res){
+	            						$("#roleTable").bootstrapTable('refresh', {url:'/manage/role/listRoles'});
+	            						ztreeSaveLeave();
+	            					}
 	            				}
-	            			}
-	            		});
+	            			});
+	            		}
+
+	            		if(res.returnCode == 1){
+	            			BootstrapDialog.alert({
+			        			title:"错误提示",
+			        			type:BootstrapDialog.TYPE_DANGER,
+			        			size: BootstrapDialog.SIZE_SMALL,
+			        			message:res.message
+			        		});	
+	            		}
+	            		
 
 	            	},
 	            	error:function(){
 
 	            	}
-	            })*/
-	            ztreeLeave();
+	            })
+
+	            
 
         	}else{
-        		BootstrapDialog.confirm({
+        		BootstrapDialog.alert({
         			title:"错误提示",
         			type:BootstrapDialog.TYPE_DANGER,
         			size: BootstrapDialog.SIZE_SMALL,
@@ -364,12 +380,10 @@ $(function(){
         	}
 
             //console.log(name)
-            //console.log(znodes)
-           
-			
-			
-			
+            //console.log(znodes)			
 		})
+		
+		ztreeCancelLeave();
 	}
 
 	/*右侧权限树显示		   
@@ -386,9 +400,9 @@ $(function(){
 	/*右侧权限树消失
 	  @param elem  btn-success/btn-cancel 
 	*/
-	function ztreeLeave(){
+	function ztreeSaveLeave(){
 
-		$('.btn_wrapper').on("click",".btn-primary",function(){
+		$('.btn_wrapper').on("click",".btn-primary.tree_save",function(){
 			setTimeout(function(){				
 				$('.table_wrapper').removeClass('col-lg-9').addClass('col-lg-12');
 			},1500)
@@ -397,6 +411,18 @@ $(function(){
 				$('.ztree_wrapper').removeClass('slideInRight').fadeOut();
 			},500)
 		})	
+	}
+
+	function ztreeCancelLeave(){
+		$('.btn_wrapper').on("click",".btn-primary.tree_cancel",function(){
+			setTimeout(function(){				
+				$('.table_wrapper').removeClass('col-lg-9').addClass('col-lg-12');
+			},1500)
+
+			setTimeout(function(){				
+				$('.ztree_wrapper').removeClass('slideInRight').fadeOut();
+			},500)
+		})
 	}
 
 });

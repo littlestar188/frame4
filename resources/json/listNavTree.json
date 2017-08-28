@@ -1,5 +1,10 @@
 {
 	"data":[
+     {
+        "pId": "0",
+        "id": "000",
+        "name": "首页"
+    },   
     {
         "pId": "0",
         "id": "100",
@@ -8,7 +13,6 @@
     {
         "pId": "100",
         "id": "101",
-        "code":"userManage",
         "url":"userManage.html",
         "name": "用户管理"
     },
@@ -16,14 +20,12 @@
      {
         "pId": "100",
         "id": "102",
-        "code":"roleManage",
         "url":"roleManage.html",      
         "name": "角色管理"
     },
     {
         "pId": "100",
         "id": "103",
-        "code":"param",
         "url":"param.html",      
         "name": "参数设置"
     },
@@ -35,10 +37,27 @@
     {
         "pId": "200",
         "id": "201",
-        "code":"deviceList",
         "url":"device.html",
         "name": "设备列表"
+    },
+    {
+        "pId": "0",
+        "id": "300",
+        "name": "文件管理"
+    },
+     {
+        "pId": "300",
+        "id": "301",
+        "url":"fileImport.html",
+        "name": "文件上传"
+    },
+     {
+        "pId": "0",
+        "id": "400",
+        "url":"limitBlack.html",
+        "name": "黑名单"
     }
+
 
 ]
 }

@@ -64,7 +64,7 @@ function optShow(id){
 	if(pathname.indexOf("userManage") != -1){
 		$watchBtn = createOptBtn(id,'btn-watch','重置密码');
 	}
-
+	$watchBtn.css("display","inline-block")
 	var $delBtn = createOptBtn(id,'btn-del','删除','btn-danger');
 	var $limitBtn = createOptBtn(id,'btn-limit','黑名单','btn-black');
 	//console.log($editBtn)
@@ -84,19 +84,19 @@ function optShow(id){
 	// 	//console.log(html)	
 	// 	console.log(opts,[$addBtn,$delBtn,$editBtn])
 	// }()
-	
 	var perFunArr = per();	
 	for(var key=0;key<perFunArr.length;key++){
 
 			//增
 			if(perFunArr[key].indexOf("1010")!= -1 ){
-				$addBtn.show();
+				$addBtn.removeClass("hide").addClass("show");
 			}
 
 			//删
 			if(perFunArr[key].indexOf("1011")!= -1 ){
-				$delBtn.show()
-				$delGroupBtn.show();				
+				$delBtn.show();			
+				$delGroupBtn.removeClass("hide").addClass("show");	
+							
 			}
 
 			//改
@@ -107,7 +107,7 @@ function optShow(id){
 			
 			//查
 			if(perFunArr[key].indexOf("1013")!= -1 ){
-				$searchBtn.show();
+				$searchBtn.removeClass("hide").addClass("show");	
 
 			}
 

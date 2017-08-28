@@ -34,22 +34,47 @@ $(function(){
 
 	*/
 	var optPerform = function(){
-		$('#roleTable').on('click','.btn.btn-sm',function(){
+		//判断是否存在【新增】		
+		if($('.main').find('#addBtn').length != 0){
+			addUser();
+		}
+
+		//判断是否存在【查询】
+		if($('.main').find('#searchBtn').length != 0){
+			searchUser();
+		}
+
+		$('#userTable').on('click','.btn.btn-sm',function(){
 
 			//判断是否为【详情】
 			if($(this).is('#btn-watch')){
-				alert('watch')
+				BootstrapDialog.confirm({
+					title:"重置密码",
+					type:BootstrapDialog.TYPE_PRIMARY,
+					size: BootstrapDialog.SIZE_SMALL,
+					message:$('<div></div>').load('resources/forms/passwordEdit.html'),
+					callback:function(res){
+
+					}
+				});	
 			}
 
 			//判断是否为【修改】
 			if($(this).is('#btn-edit')){
-				
+				BootstrapDialog.confirm({
+					title:"修改信息",
+					type:BootstrapDialog.TYPE_PRIMARY,
+					message:$('<div></div>').load('resources/forms/userEdit.html'),
+					callback:function(res){
+
+					}
+				});	
 			}
 
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
 				BootstrapDialog.confirm({
-					title:"",
+					title:"提示",
 					type:BootstrapDialog.TYPE_DANGER,
 					size: BootstrapDialog.SIZE_SMALL,
 					message:"确定删除吗？",
@@ -57,6 +82,10 @@ $(function(){
 
 					}
 				});	
+			}
+
+			if($(this).is("#btn-limit")){
+
 			}	
 
 		})
@@ -69,8 +98,51 @@ $(function(){
 	var addUser = function(){
 		$('#addBtn').click(function(){
 			
-				
+			BootstrapDialog.confirm({
+				title:"新增用户",
+				type:BootstrapDialog.TYPE_PRIMARY,
+				message:$('<div></div>').load('resources/forms/userEdit.html'),
+				callback:function(res){
+
+				}
+			});		
 			
 		})
-	}();
+	}
+
+	/*查询角色*/
+	function searchUser(){
+		
+		/*$('#searchBtn').click(function(){
+			
+			$.ajax({
+				//url:"/manage/role/selectRoles",
+				dataType:"json",
+				data:{
+					roleName:$('#roleSearch').val()
+				},
+				success:function(res){
+					console.log(res.returnCode)
+
+					if(res.returnCode == 0){						
+						$("#roleTable").bootstrapTable('refresh', {url:'/manage/role/listRoles'});						
+					}
+
+					if(res.returnCode == 1){
+						BootstrapDialog.alert({
+		        			title:"错误提示",
+		        			type:BootstrapDialog.TYPE_DANGER,
+		        			size: BootstrapDialog.SIZE_SMALL,
+		        			message:"查询失败！"
+		        		});	
+					}
+					
+				},
+				error:function(){
+					console.info('后台报错')
+				}
+			})
+		})*/
+
+	} 
 });
