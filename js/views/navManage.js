@@ -1,9 +1,9 @@
 $(function(){
 	'use strict';
-	var initUsers = function(){
-		$('#userTable').bootstrapTable({
+	var initNav = function(){
+		$('#navTable').bootstrapTable({
 			locale: 'zh-CN',
-			url:'resources/json/listUsers.json',
+			url:'resources/json/listNavs.json',
 	     	sidePagination:'server',
 	      	cache: false,//设置False禁用AJAX请求的缓存
 	      	height: '',
@@ -15,14 +15,8 @@ $(function(){
 	      	toolbar:'#custom-toolbar',
 	      	columns: [
                 {field: 'state',checkbox: true},
-                {field: 'userName',title: '用户名称',align: 'center',valign: 'middle'},
-                {field: 'roleName',title: '角色名称',align: 'center',valign: 'middle'},
-                {field: 'sex',title: '性别',align: 'center',valign: 'middle'},
-                {field: 'phone',title: '手机',align: 'center',valign: 'middle'},
-                {field: 'department',title: '部门',align: 'center',valign: 'middle'},
-                {field: 'app登录',title: 'app登录',align: 'center',valign: 'middle'},
-                {field: 'remark',title: '备注',align: 'center',valign: 'middle'},
-               	{field: 'userId',title: '操作',align: 'center',valign: 'middle',formatter:function(value){
+                {field: 'navName',title: '菜单名称',align: 'center',valign: 'middle'},
+               	{field: 'navId',title: '操作',align: 'center',valign: 'middle',formatter:function(value){
                 	return optShow(value);
                 }
                 }
@@ -36,38 +30,35 @@ $(function(){
 	var optPerform = function(){
 		//判断是否存在【新增】		
 		if($('.main').find('#addBtn').length != 0){
-			addUser();
+			addNav();
 		}
 
 		//判断是否存在【查询】
 		if($('.main').find('#searchBtn').length != 0){
-			searchUser();
+			//searchNav();
 		}
 
-		$('#userTable').on('click','.btn.btn-sm',function(){
-
-			var userId = $(this).attr("data-id");
+		$('#navTable').on('click','.btn.btn-sm',function(){
 
 			//判断是否为【详情】
 			if($(this).is('#btn-watch')){
-				BootstrapDialog.confirm({
-					title:"重置密码",
+				BootstrapDialog.show({
+					title:"详情",
 					type:BootstrapDialog.TYPE_PRIMARY,
 					size: BootstrapDialog.SIZE_SMALL,
-					message:$('<div></div>').load('resources/forms/passwordEdit.html'),
-					callback:function(res){
-
-					}
+					message:""
+					
 				});	
 			}
 
 			//判断是否为【修改】
 			if($(this).is('#btn-edit')){
 				BootstrapDialog.confirm({
-					title:"修改信息",
+					title:"修改",
 					type:BootstrapDialog.TYPE_PRIMARY,
-					message:$('<div></div>').load('resources/forms/userEdit.html'),
+					message:$('<div></div>').load('resources/forms/navEdit.html'),
 					callback:function(res){
+						
 
 					}
 				});	
@@ -75,6 +66,7 @@ $(function(){
 
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
+				var navId = $(this).attr("data-id");
 				BootstrapDialog.confirm({
 					title:"提示",
 					type:BootstrapDialog.TYPE_DANGER,
@@ -82,10 +74,10 @@ $(function(){
 					message:"确定删除吗？",
 					callback:function(res){
 						if(res){
-							console.log(roleId)
+							console.log(navId)
 							$.ajax({
 								url:"resources/json/returnBack.json",
-								data:userId,
+								data:navId,
 								success:function(res){
 									if(res.returnCode == 0){
 										successTip("删除成功！")
@@ -99,10 +91,7 @@ $(function(){
 				});	
 			}
 
-			if($(this).is("#btn-limit")){
-
-			}	
-
+			
 		})
 
 	}();
@@ -110,14 +99,33 @@ $(function(){
 	/*新增用户
 		
 	*/
-	var addUser = function(){
+	function addNav(){
 		$('#addBtn').click(function(){
 			
 			BootstrapDialog.confirm({
-				title:"新增用户",
+				title:"新增",
 				type:BootstrapDialog.TYPE_PRIMARY,
-				message:$('<div></div>').load('resources/forms/userEdit.html'),
+				message:$('<div></div>').load('resources/forms/navEdit.html'),
 				callback:function(res){
+					if(res){
+
+						console.log($("#navEdit").serialize())
+						$.ajax({
+							url:"resources/json/returnBack.json",							
+							data:$("#navEdit").serialize(),
+							success:function(res){
+								if(res.returnCode == 0){
+									successTip("新增成功！")
+								}else{
+									dangerTip("提示","新增失败！")
+								}
+							},
+							error:function(){
+								console.log("编辑菜单----后台报错")
+							}
+
+						})
+					}
 
 				}
 			});		

@@ -15,24 +15,26 @@
     {
         "pId": "101",
         "id": "1010",
-        "name": "增"
+        "name": "增",
+        "limit":"false"
     },
     {
         "pId": "101",
         "id": "1011",
         "name": "删",
-        "checked":true
+        "limit":"true"
     },
     {
         "pId": "101",
         "id": "1012",
-        "name": "改"
+        "name": "改",
+        "limit":"false"
     },
     {
         "pId": "101",
         "id": "1013",
         "name": "查",
-        "checked":true
+        "limit":"true"
     },
     {
         "pId": "0",
@@ -46,24 +48,27 @@
     },
     {
         "pId": "201",
-        "id": "2010",
+        "id": "1010",
         "name": "增",
-        "checked":true
+        "limit":"true"
     },
     {
         "pId": "201",
-        "id": "2011",
-        "name": "删"
+        "id": "1011",
+        "name": "删",
+        "limit":"false"
     },
     {
         "pId": "201",
-        "id": "2012",
-        "name": "改"
+        "id": "1012",
+        "name": "改",
+        "limit":"false"
     },
     {
         "pId": "201",
-        "id": "2013",
-        "name": "查"
+        "id": "1013",
+        "name": "查",
+        "limit":"false"
     }
 ]
 }

@@ -49,30 +49,45 @@ $(function(){
 		//表格中的操作
 		$('#roleTable').on('click','.btn.btn-sm',function(){
 
+			var roleId = $(this).attr('data-id');
 			//判断是否为【详情】
 			if($(this).is('#btn-watch')){
-				alert('watch')
+				detailTree();
 			}
 
 			//判断是否为【修改】
 			if($(this).is('#btn-edit')){
-				var editId = $(this).attr('data-id');
+				
 				var editName = $(this).parents('td').prev().html();
 				//console.log(editName)
 				$('.ztree_roleInput').val(editName)
 
-				editRoleTree(editId,editName);
+				editRoleTree(roleId,editName);
 			}
 
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
+				 
 				BootstrapDialog.confirm({
 					title:"提示",
 					type:BootstrapDialog.TYPE_DANGER,
 					size: BootstrapDialog.SIZE_SMALL,
 					message:"确定删除吗？",
 					callback:function(res){
-
+						if(res){
+							console.log(roleId)
+							$.ajax({
+								url:"resources/json/returnBack.json",
+								data:roleId,
+								success:function(res){
+									if(res.returnCode == 0){
+										successTip("删除成功！")
+									}else{
+										dangerTip("提示","删除失败！")
+									}
+								}
+							})
+						}
 					}
 				});	
 			}	
@@ -80,6 +95,54 @@ $(function(){
 		})
 
 	}();
+
+	/*角色详情*/
+	function detailTree(){
+		ztreeShow("详情");
+		//ajax获取数据 模拟数据
+		var zNodes=[];
+	    var setting = {
+	   		view:{
+	   			showIcon:false
+	   		},
+		   	data: {
+				simpleData: {
+					enable: true,
+					idKey: "id",
+					pIdKey: "pId",
+					rootPId: 0
+				}
+			}
+	    };
+	    
+	  	$.ajax({
+	   		url:'resources/json/listDetailTree.json',
+	   		dataType:"json",
+	   		async : false,//必写
+	   		success:function(res){
+	   			console.log(res)
+	   			zNodes = res.data	   		
+	   		},
+	   		error:function(){
+	   			console.log("获取详情---后台报错")
+	   		}
+	    })
+	   
+	   
+	   	//console.log($.extend(ajaxObj,params))
+
+	    $.fn.zTree.init($('#treePermission'), setting, zNodes); 
+
+	    var zTreeObj = $.fn.zTree.getZTreeObj('treePermission'); 
+	    // var allNodes = zTreeObj.getNodes();
+	    //  zTreeObj.hideNodes(allNodes);
+	    var checkedNodes = zTreeObj.getNodesByParam("limit","false",null);
+	    zTreeObj.hideNodes(checkedNodes);
+	    //必须有延迟才能实现初始化时全部展开
+	    setTimeout(function(){
+	    	zTreeObj.expandAll(true);
+	    },500);
+	}
 
 	/*新增角色*/
 	function addRoleTree(){
@@ -97,7 +160,7 @@ $(function(){
 				checkRole("/manage/role/addCheck",valueName);
 			})
 	    	
-	    	ztreeDateSave("resources/json/updateRole.json");	
+	    	ztreeDateSave("resources/json/addRole.json");	
 			
 		})
 	}
@@ -117,7 +180,7 @@ $(function(){
 			checkRole("/manage/role/updateCheck",valueName,editId)
 		})
 		
-		ztreeDateSave("resources/json/addRole.json");
+		ztreeDateSave("resources/json/updateRole.json");
 		
 	}
 
@@ -125,18 +188,23 @@ $(function(){
 	function searchRole(){
 		
 		$('#searchBtn').click(function(){
-			
-			$.ajax({
+			$("#roleTable").bootstrapTable('refreshOptions', {
+				url:'/manage/role/listRoles',
+				queryParams:queryParams
+			});	
+			/*$.ajax({
 				url:"/manage/role/selectRoles",
 				dataType:"json",
-				data:{
-					roleName:$('#roleSearch').val()
-				},
+				type:"get",
+				data:queryParams,
 				success:function(res){
 					console.log(res.returnCode)
 
 					if(res.returnCode == 0){						
-						$("#roleTable").bootstrapTable('refresh', {url:'/manage/role/listRoles'});						
+						$("#roleTable").bootstrapTable('refresh', {
+							url:'/manage/role/listRoles'
+							
+						});						
 					}
 
 					if(res.returnCode == 1){
@@ -152,10 +220,22 @@ $(function(){
 				error:function(){
 					console.info('后台报错')
 				}
-			})
+			})*/
 		})
 
 	} 
+	/*查询参数*/
+	function queryParams(params){
+
+		var value = $('#roleSearch input[type=text]').val();
+		var temp = {
+			roleName:value,
+			limit:params.limit,
+			offset:params.offset,
+							
+		}
+		return temp;
+	}
 	
 	/*输入框内容有变化 则验证
 	  @param  ajaxURL    /addCheck/updataCheck
@@ -338,45 +418,41 @@ $(function(){
 	            	data:param,
 	            	success:function(res){
 	            		if(res.returnCode == 0){
-	            			BootstrapDialog.alert({
+
+	            			BootstrapDialog.show({
 	            				title:"提示",
 	            				type:BootstrapDialog.TYPE_SUCCESS,
 	            				size: BootstrapDialog.SIZE_SMALL,
 	            				message:res.message,
-	            				callback:function(res){
-	            					if(res){
-	            						$("#roleTable").bootstrapTable('refresh', {url:'/manage/role/listRoles'});
+	            				buttons:[{
+	            					label:"确定",
+	            					action:function(dialog){
+	            						dialog.close();
 	            						ztreeSaveLeave();
+	            						$("#roleTable").bootstrapTable('refresh', {url:'/manage/role/listRoles'});
+	            						
+	            					
 	            					}
-	            				}
+	            				}]
 	            			});
+
 	            		}
 
 	            		if(res.returnCode == 1){
-	            			BootstrapDialog.alert({
-			        			title:"错误提示",
-			        			type:BootstrapDialog.TYPE_DANGER,
-			        			size: BootstrapDialog.SIZE_SMALL,
-			        			message:res.message
-			        		});	
+	            			dangerTip("错误提示","修改失败！")
 	            		}
 	            		
 
 	            	},
 	            	error:function(){
-
+	            		console.log("保存或修改----后台报错")
 	            	}
 	            })
 
 	            
 
         	}else{
-        		BootstrapDialog.alert({
-        			title:"错误提示",
-        			type:BootstrapDialog.TYPE_DANGER,
-        			size: BootstrapDialog.SIZE_SMALL,
-        			message:"新增内容不能为空！"
-        		});	
+        		dangerTip("错误提示","新增内容不能为空！")	
         	}
 
             //console.log(name)
@@ -391,6 +467,16 @@ $(function(){
 	*/
 	function ztreeShow(title){
 		$('.ztree_title').html(title);
+
+		if(title == "详情"){
+			$('.ztree_roleInput').hide();
+			$('.ztree_wrapper .tree_save').hide();
+		}else{
+			$('.ztree_roleInput').show();
+			$('.ztree_wrapper .tree_save').show();
+		}
+
+		
 		$('.ztree_tip').children().css('display','none');
 		$('.ztree_wrapper').removeClass('fadeOutRight')
 		$('.table_wrapper').removeClass('col-lg-12').addClass('col-lg-9');
@@ -401,8 +487,7 @@ $(function(){
 	  @param elem  btn-success/btn-cancel 
 	*/
 	function ztreeSaveLeave(){
-
-		$('.btn_wrapper').on("click",".btn-primary.tree_save",function(){
+		
 			setTimeout(function(){				
 				$('.table_wrapper').removeClass('col-lg-9').addClass('col-lg-12');
 			},1500)
@@ -410,7 +495,7 @@ $(function(){
 			setTimeout(function(){				
 				$('.ztree_wrapper').removeClass('slideInRight').fadeOut();
 			},500)
-		})	
+			
 	}
 
 	function ztreeCancelLeave(){

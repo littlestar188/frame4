@@ -9,26 +9,32 @@
         "pId": "0",
         "id": "100",
         "name": "系统管理"
-    },
+    },    
     {
         "pId": "100",
         "id": "101",
-        "url":"userManage.html",
-        "name": "用户管理"
+        "url":"navManage.html",      
+        "name": "菜单管理"
     },
-    
-     {
+    {
         "pId": "100",
         "id": "102",
+        "url":"funManage.html",      
+        "name": "功能管理"
+    },
+    {
+        "pId": "100",
+        "id": "103",
         "url":"roleManage.html",      
         "name": "角色管理"
     },
     {
         "pId": "100",
-        "id": "103",
-        "url":"param.html",      
-        "name": "参数设置"
+        "id": "104",
+        "url":"userManage.html",
+        "name": "用户管理"
     },
+    
     {
         "pId": "0",
         "id": "200",
@@ -39,6 +45,12 @@
         "id": "201",
         "url":"device.html",
         "name": "设备列表"
+    },
+    {
+        "pId": "200",
+        "id": "202",
+        "url":"param.html",      
+        "name": "参数设置"
     },
     {
         "pId": "0",

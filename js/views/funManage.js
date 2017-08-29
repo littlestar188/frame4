@@ -1,9 +1,9 @@
 $(function(){
 	'use strict';
-	var initUsers = function(){
-		$('#userTable').bootstrapTable({
+	var initFun = function(){
+		$('#funTable').bootstrapTable({
 			locale: 'zh-CN',
-			url:'resources/json/listUsers.json',
+			url:'resources/json/listFunction.json',
 	     	sidePagination:'server',
 	      	cache: false,//设置False禁用AJAX请求的缓存
 	      	height: '',
@@ -15,14 +15,8 @@ $(function(){
 	      	toolbar:'#custom-toolbar',
 	      	columns: [
                 {field: 'state',checkbox: true},
-                {field: 'userName',title: '用户名称',align: 'center',valign: 'middle'},
-                {field: 'roleName',title: '角色名称',align: 'center',valign: 'middle'},
-                {field: 'sex',title: '性别',align: 'center',valign: 'middle'},
-                {field: 'phone',title: '手机',align: 'center',valign: 'middle'},
-                {field: 'department',title: '部门',align: 'center',valign: 'middle'},
-                {field: 'app登录',title: 'app登录',align: 'center',valign: 'middle'},
-                {field: 'remark',title: '备注',align: 'center',valign: 'middle'},
-               	{field: 'userId',title: '操作',align: 'center',valign: 'middle',formatter:function(value){
+                {field: 'funName',title: '功能名称',align: 'center',valign: 'middle'},
+               	{field: 'funId',title: '操作',align: 'center',valign: 'middle',formatter:function(value){
                 	return optShow(value);
                 }
                 }
@@ -36,25 +30,23 @@ $(function(){
 	var optPerform = function(){
 		//判断是否存在【新增】		
 		if($('.main').find('#addBtn').length != 0){
-			addUser();
+			//addFun();
 		}
 
 		//判断是否存在【查询】
 		if($('.main').find('#searchBtn').length != 0){
-			searchUser();
+			//searchFun();
 		}
 
-		$('#userTable').on('click','.btn.btn-sm',function(){
-
-			var userId = $(this).attr("data-id");
+		$('#funTable').on('click','.btn.btn-sm',function(){
 
 			//判断是否为【详情】
 			if($(this).is('#btn-watch')){
-				BootstrapDialog.confirm({
-					title:"重置密码",
+				BootstrapDialog.show({
+					title:"查看详情",
 					type:BootstrapDialog.TYPE_PRIMARY,
 					size: BootstrapDialog.SIZE_SMALL,
-					message:$('<div></div>').load('resources/forms/passwordEdit.html'),
+					message:"",
 					callback:function(res){
 
 					}
@@ -81,20 +73,7 @@ $(function(){
 					size: BootstrapDialog.SIZE_SMALL,
 					message:"确定删除吗？",
 					callback:function(res){
-						if(res){
-							console.log(roleId)
-							$.ajax({
-								url:"resources/json/returnBack.json",
-								data:userId,
-								success:function(res){
-									if(res.returnCode == 0){
-										successTip("删除成功！")
-									}else{
-										dangerTip("提示","删除失败！")
-									}
-								}
-							})
-						}
+
 					}
 				});	
 			}
@@ -110,7 +89,7 @@ $(function(){
 	/*新增用户
 		
 	*/
-	var addUser = function(){
+	var addFun = function(){
 		$('#addBtn').click(function(){
 			
 			BootstrapDialog.confirm({

@@ -1,0 +1,21 @@
+	{
+		"returnCode":0,
+		"message":"",
+		"rows":[
+			{
+				"navId":"0",
+				"navId":"000",
+				"navName":"首页",
+				"detail":""
+				
+			},
+			{
+				"navpId":"0",
+				"navId":"100",
+				"navName":"系统管理",
+				"detail":""
+				
+			}
+		],
+		"total":1
+	}
