@@ -121,7 +121,7 @@ $(function(){
 								}
 							},
 							error:function(){
-								console.log("编辑菜单----后台报错")
+								console.log("新增菜单----后台报错")
 							}
 
 						})

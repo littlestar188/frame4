@@ -68,28 +68,7 @@ $(function(){
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
 				 
-				BootstrapDialog.confirm({
-					title:"提示",
-					type:BootstrapDialog.TYPE_DANGER,
-					size: BootstrapDialog.SIZE_SMALL,
-					message:"确定删除吗？",
-					callback:function(res){
-						if(res){
-							console.log(roleId)
-							$.ajax({
-								url:"resources/json/returnBack.json",
-								data:roleId,
-								success:function(res){
-									if(res.returnCode == 0){
-										successTip("删除成功！")
-									}else{
-										dangerTip("提示","删除失败！")
-									}
-								}
-							})
-						}
-					}
-				});	
+				delTip("roleTable",roleId,"resources/json/returnBack.json","/manage/role/listRoles");
 			}	
 
 		})

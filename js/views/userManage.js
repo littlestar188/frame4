@@ -75,28 +75,29 @@ $(function(){
 
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
-				BootstrapDialog.confirm({
-					title:"提示",
-					type:BootstrapDialog.TYPE_DANGER,
-					size: BootstrapDialog.SIZE_SMALL,
-					message:"确定删除吗？",
-					callback:function(res){
-						if(res){
-							console.log(roleId)
-							$.ajax({
-								url:"resources/json/returnBack.json",
-								data:userId,
-								success:function(res){
-									if(res.returnCode == 0){
-										successTip("删除成功！")
-									}else{
-										dangerTip("提示","删除失败！")
-									}
-								}
-							})
-						}
-					}
-				});	
+				delTip("userTable",userId,"resources/json/returnBack.json");
+				// BootstrapDialog.confirm({
+				// 	title:"提示",
+				// 	type:BootstrapDialog.TYPE_DANGER,
+				// 	size: BootstrapDialog.SIZE_SMALL,
+				// 	message:"确定删除吗？",
+				// 	callback:function(res){
+				// 		if(res){
+				// 			console.log(roleId)
+				// 			$.ajax({
+				// 				url:"resources/json/returnBack.json",
+				// 				data:userId,
+				// 				success:function(res){
+				// 					if(res.returnCode == 0){
+				// 						successTip("删除成功！")
+				// 					}else{
+				// 						dangerTip("提示","删除失败！")
+				// 					}
+				// 				}
+				// 			})
+				// 		}
+				// 	}
+				// });	
 			}
 
 			if($(this).is("#btn-limit")){
@@ -110,7 +111,7 @@ $(function(){
 	/*新增用户
 		
 	*/
-	var addUser = function(){
+	function addUser(){
 		$('#addBtn').click(function(){
 			
 			BootstrapDialog.confirm({
@@ -118,7 +119,24 @@ $(function(){
 				type:BootstrapDialog.TYPE_PRIMARY,
 				message:$('<div></div>').load('resources/forms/userEdit.html'),
 				callback:function(res){
+					if(res){
+						console.log($("#userEdit").serialize())
+						$.ajax({
+							url:"resources/json/returnBack.json",							
+							data:$("#userEdit").serialize(),
+							success:function(res){
+								if(res.returnCode == 0){
+									successTip("新增成功！")
+								}else{
+									dangerTip("提示","新增失败！")
+								}
+							},
+							error:function(){
+								console.log("新增用户----后台报错")
+							}
 
+						})
+					}
 				}
 			});		
 			
