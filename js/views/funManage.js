@@ -7,7 +7,7 @@ $(function(){
 	     	sidePagination:'server',
 	      	cache: false,//设置False禁用AJAX请求的缓存
 	      	height: '',
-	     	 //queryParams: role.queryParams,
+	     	 //queryParams: ,
 	     	striped: true,//使表格带有条纹
 	     	pagination: true,//设置True在表格底部显示分页工具栏
 	      	pageSize: 10,
@@ -78,9 +78,7 @@ $(function(){
 				});	
 			}
 
-			if($(this).is("#btn-limit")){
-
-			}	
+			
 
 		})
 
@@ -105,7 +103,7 @@ $(function(){
 	}
 
 	/*查询角色*/
-	function searchUser(){
+	function searchFun(){
 		
 		/*$('#searchBtn').click(function(){
 			

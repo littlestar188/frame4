@@ -69,3 +69,51 @@ function dangerTip(tle,msg){
 		}]
 	});	
 }
+
+/*右侧权限树显示		   
+  @param title 新增/修改
+*/
+function ztreeShow(title){
+	$('.ztree_title').html(title);
+
+	if(title == "详情"){
+		$('.ztree_roleInput').hide();
+		$('.ztree_wrapper .tree_save').hide();
+	}else{
+		$('.ztree_roleInput').show();
+		$('.ztree_wrapper .tree_save').show();
+	}
+
+	
+	$('.ztree_tip').children().css('display','none');
+	$('.ztree_wrapper').removeClass('fadeOutRight')
+	$('.table_wrapper').removeClass('col-lg-12').addClass('col-lg-9');
+	$('.ztree_wrapper').addClass('slideInRight').fadeIn();
+
+}
+/*右侧权限树消失
+  @param elem  btn-success/btn-cancel 
+*/
+function ztreeSaveLeave(){
+	
+		setTimeout(function(){				
+			$('.table_wrapper').removeClass('col-lg-9').addClass('col-lg-12');
+		},1500)
+
+		setTimeout(function(){				
+			$('.ztree_wrapper').removeClass('slideInRight').fadeOut();
+		},500)
+		
+}
+
+function ztreeCancelLeave(){
+	$('.btn_wrapper').on("click",".btn-primary.tree_cancel",function(){
+		setTimeout(function(){				
+			$('.table_wrapper').removeClass('col-lg-9').addClass('col-lg-12');
+		},1500)
+
+		setTimeout(function(){				
+			$('.ztree_wrapper').removeClass('slideInRight').fadeOut();
+		},500)
+	})
+}

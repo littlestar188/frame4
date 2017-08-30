@@ -393,13 +393,19 @@ header.navbar .navbar-brand{
 
 /* personal*/
 #person_table{
-	width:100%;
+	width:80%;
+  margin-left:2%;
 }
 #person_table tbody>tr>td{
-	width:10%;
-	height:32px;
-	line-height:32px;
-	float:left;
+  height:32px;
+  line-height:32px;
+  float:left;
+}
+#person_table tbody>tr>td:nth-child(1){
+	width:10%;	
+}
+#person_table tbody>tr>td:nth-child(2){
+  width:20%;
 }
 /* fileImport */
 .qq-gallery .qq-upload-button{

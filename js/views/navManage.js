@@ -102,34 +102,49 @@ $(function(){
 	function addNav(){
 		$('#addBtn').click(function(){
 			
-			BootstrapDialog.confirm({
-				title:"新增",
-				type:BootstrapDialog.TYPE_PRIMARY,
-				message:$('<div></div>').load('resources/forms/navEdit.html'),
-				callback:function(res){
-					if(res){
-
-						console.log($("#navEdit").serialize())
-						$.ajax({
-							url:"resources/json/returnBack.json",							
-							data:$("#navEdit").serialize(),
-							success:function(res){
-								if(res.returnCode == 0){
-									successTip("新增成功！")
-								}else{
-									dangerTip("提示","新增失败！")
-								}
-							},
-							error:function(){
-								console.log("新增菜单----后台报错")
-							}
-
-						})
+				ztreeShow("新增");
+				//ajax获取数据 模拟数据
+				var zNodes=[];
+			    var setting = {
+			   		view:{
+			   			showIcon:false
+			   		},
+				   	data: {
+						simpleData: {
+							enable: true,
+							idKey: "id",
+							pIdKey: "pId",
+							rootPId: 0
+						}
 					}
+			    };
+			    
+			  	$.ajax({
+			   		url:'resources/json/listNavTree.json',
+			   		dataType:"json",
+			   		async : false,//必写
+			   		success:function(res){
+			   			console.log(res)
+			   			zNodes = res.data	   		
+			   		},
+			   		error:function(){
+			   			console.log("获取新增---后台报错")
+			   		}
+			    })
+			   
+			   
+			   	//console.log($.extend(ajaxObj,params))
 
-				}
-			});		
-			
+			    $.fn.zTree.init($('#treeMenu'), setting, zNodes); 
+
+			    var zTreeObj = $.fn.zTree.getZTreeObj('treeMenu'); 
+			    
+			   
+			    
+			    //必须有延迟才能实现初始化时全部展开
+			    setTimeout(function(){
+			    	zTreeObj.expandAll(true);
+			    },500);
 		})
 	}
 

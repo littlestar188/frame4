@@ -3,7 +3,7 @@
 		"message":"",
 		"rows":[
 			{
-				"navId":"0",
+				"navpId":"0",
 				"navId":"000",
 				"navName":"首页",
 				"detail":""
@@ -15,7 +15,15 @@
 				"navName":"系统管理",
 				"detail":""
 				
+			},
+			{
+				"navpId":"100",
+				"navId":"101",
+				"navName":"菜单管理",
+				"detail":""
+				
 			}
+
 		],
 		"total":1
 	}

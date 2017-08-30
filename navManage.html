@@ -11,7 +11,7 @@
     <meta name="keyword" content="">
     <link rel="shortcut icon" href="resources/img/favicon.png">
 
-    <title>Role Manage</title>
+    <title>Navigation Manage</title>
 
     <!-- Icons -->
     <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -74,9 +74,33 @@
                         </div>
                				</div>
                       
-               			</div>
-                    
+               			</div>                  
                		</div>
+                  <!-- table_wrapper end -->
+                  <!-- ztree -->
+                  <div class="card ztree_wrapper animated col-lg-2 " style="display:none;">
+                      <div class="ztree_content">                   
+                        <div class="row ztree_title"><b>新增</b></div>                    
+                        <div class="row inputWrapper">
+                          <input type="text" class="form-control ztree_roleInput" placeholder="菜单名称" data-id>
+                          <div class="ztree_tip">
+                            <span class="correct" style="display:none;color:green"><i class="fa fa-check"></i></span>
+                            <span class="error"  style="display:none;color:#c33"><i class="fa fa-close"></i></span>
+                          </div>
+                          <!-- /. -->
+                          
+                          <label for="">父级</label><input type="text" class="form-control ztree_parentInput" placeholder="" data-id>
+                         
+                        </div>
+
+                        <div class="ztree" id="treeMenu"></div>
+                      </div>
+                      <div class="btn_wrapper">
+                        <button class="btn btn-primary tree_save">保存</button>
+                        <button class="btn btn-primary tree_cancel">取消</button>
+                      </div>                     
+                  </div>
+                  <!-- /.ztree end -->
                  
                </div>
 

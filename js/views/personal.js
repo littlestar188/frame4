@@ -2,7 +2,8 @@ $(function(){
 	'use strict';
 	function initPerson(){
 		$.ajax({
-			url:'resources/json/person.json',
+			//url:'resources/json/person.json',
+			url:"/manage/user/personInfo",
 			cache:false,
 			dataType:"json",
 			success:function(res){
@@ -12,18 +13,24 @@ $(function(){
 				var tr = $('<tr><td></td><td></td></tr>');
 				$.each(data,function(i,n){
 					var trc = tr.clone();
-					trc.find('td:nth-child(1)').text(i);						
-					trc.find('td:nth-child(2)').text(n);
-					//console.log(i,n)
-					trc.appendTo('#person_table>tbody');
+					trc.find('td:nth-child(1)').text(i);
+					if(n !== null && n !== undefined ){						
+						trc.find('td:nth-child(2)').text(n);
+						//console.log(i,n)
+					}
+					trc.appendTo('#person_table>tbody');//无序
 					//console.log(trc)
 				})
 
 				$('#person_table>tbody').find('tr>td:nth-child(1)').each(function(){
+
 					var txt = $(this).text();
-					var newTxt = redefine(txt);
-					$(this).text(newTxt+" :");
-					console.log(txt)
+					//if(txt !== "null" && txt !== undefined ){
+						var newTxt = redefine(txt);
+						$(this).text(newTxt+" :");
+					//}
+					
+					//console.log(txt)
 				})
 				
 
@@ -79,6 +86,8 @@ $(function(){
 			case "remark":
 				text = "备注"
 			    break;
+			 case "department":
+			 	text = "部门"
 			    
 		}
 		return text;
