@@ -75,7 +75,7 @@
                           </div>
                           <div class="form-group">
                             <div class="col-sm-6">
-                                <button type="submit" class="btn btn-info hide" id="searchBtn">查询</button>
+                                <button type="submit" class="btn btn-info" id="searchBtn">查询</button>
                               </div>
                           </div>                      
                           <!--  -->                       
@@ -84,8 +84,10 @@
                					<table id="userTable"></table>
                         <!-- option buttons -->
                         <div class="option_box">
-                          <button type="button" class="btn btn-primary hide" id="addBtn"><i class="fa fa-plus fa-lg"></i> 新增</button>
-                           <button type="button" class="btn btn-primary hide" id="delGroupBtn"><i class="fa fa-trash-o fa-lg"></i> 批量删除</button>
+                          <button type="button" class="btn btn-primary" id="addBtn" data-toggle="modal" data-target="#userModal">
+                          <i class="fa fa-plus fa-lg"></i> 新增
+                          </button>
+                           <button type="button" class="btn btn-primary" id="delGroupBtn"><i class="fa fa-trash-o fa-lg"></i> 批量删除</button>
                         </div>
                         <!-- /. option buttons end -->
                				</div>
@@ -95,6 +97,68 @@
 
             </div>
             <!-- /.conainer-fluid -->
+
+            <!-- .modal-->
+            <div class="modal fade bs-example-modal-md" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md modal-primary">
+                <div class="modal-content">
+                  <div class="modal-header">                    
+                    <h4 class="modal-title" id="userModalLabel">新增用户</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  </div>
+                  <div class="modal-body">
+                     <!-- 新增/修改 表单 -->
+                     <form class="form-horizontal" role="form" id="userForm">
+                       <div class="form-group">
+                           <label class="control-label col-sm-3"><font color="#c00">*</font>用户名:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="username" class="form-control" placeholder="请输入用户名">
+                           </div>
+                       </div>
+
+                       <div class="form-group">
+                           <label class="control-label col-sm-3"><font color="#c00">*</font>用户昵称:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="name" class="form-control" placeholder="请输入姓名">
+                           </div>
+                       </div>
+
+                       <div class="form-group">
+                           <label class="control-label col-sm-3"><font color="#c00">*</font>角色名称:</label>
+                           <div class="col-sm-6">
+                               <select class="form-control" id="rolename">
+                                   <option value="1">超级管理员</option>
+                                   <option value="0">普通管理员</option>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label class="control-label col-sm-3">&nbsp;手机号码:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="phone" class="form-control" placeholder="手机号码">
+                           </div>
+                       </div> 
+                       <div class="form-group">
+                           <label class="control-label col-sm-3">&nbsp;更新日期:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="updateDate" class="form-control" placeholder="更新日期">
+                           </div>
+                       </div>               
+                     </form>
+                     <!-- 详情列表 -->
+                     <table id="detailUser">
+                       <tbody></tbody>
+                     </table> 
+                   <!-- /form end -->
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- /.modal-->
         </main>
 
 

@@ -1,29 +1,80 @@
 	{
 		"returnCode":0,
 		"message":"",
-		"rows":[
+		"data":{
+		"list":[
 			{
-				"navpId":"0",
-				"navId":"000",
-				"navName":"首页",
-				"detail":""
-				
+				"pId": "0",
+				"id": "000",
+				"name": "首页"
 			},
 			{
-				"navpId":"0",
-				"navId":"100",
-				"navName":"系统管理",
-				"detail":""
-				
+				"pId": "0",
+				"id": "100",
+				"name": "系统管理"
 			},
 			{
-				"navpId":"100",
-				"navId":"101",
-				"navName":"菜单管理",
-				"detail":""
-				
+				"pId": "100",
+				"id": "101",
+				"url":"navManage.html",
+				"name": "菜单管理"
+			},
+			{
+				"pId": "100",
+				"id": "102",
+				"url":"funManage.html",
+				"name": "功能管理"
+			},
+			{
+				"pId": "100",
+				"id": "103",
+				"url":"roleManage.html",
+				"name": "角色管理"
+			},
+			{
+				"pId": "100",
+				"id": "104",
+				"url":"userManage.html",
+				"name": "用户管理"
+			},
+
+			{
+				"pId": "0",
+				"id": "200",
+				"name": "设备管理"
+			},
+			{
+				"pId": "200",
+				"id": "201",
+				"url":"device.html",
+				"name": "设备列表"
+			},
+			{
+				"pId": "200",
+				"id": "202",
+				"url":"param.html",
+				"name": "参数设置"
+			},
+			{
+				"pId": "0",
+				"id": "300",
+				"name": "文件管理"
+			},
+			{
+				"pId": "300",
+				"id": "301",
+				"url":"fileImport.html",
+				"name": "文件上传"
+			},
+			{
+				"pId": "0",
+				"id": "400",
+				"url":"limitBlack.html",
+				"name": "黑名单"
 			}
 
-		],
+
+		]
+	},
 		"total":1
 	}

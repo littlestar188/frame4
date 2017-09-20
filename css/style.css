@@ -3787,7 +3787,9 @@ button.close {
 
 .modal-primary .modal-header {
   color: #fff;
-  background-color: #20a8d8; }
+  -background-color: #20a8d8; 
+/*add property by caixx on 20170920*/
+  background-color: #20a8d8;}
 
 .modal-secondary .modal-content {
   border-color: #cfd8dc; }

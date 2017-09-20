@@ -8,7 +8,7 @@
 @param ajaxURL2 刷新表单接口
 */
 function delTip(tableElemId,dataId,ajaxURL1,ajaxURL2){
-	if(arguments.length == 3){
+	
 		BootstrapDialog.confirm({
 			title:"提示",
 			type:BootstrapDialog.TYPE_DANGER,
@@ -19,20 +19,23 @@ function delTip(tableElemId,dataId,ajaxURL1,ajaxURL2){
 					console.log(dataId)
 					$.ajax({
 						url:ajaxURL1,
-						data:dataId,
+						type:"post",
+						data:{
+							"id":dataId
+						},
 						success:function(res){
-							if(res.returnCode == 0){
-								//$("#"+tableElemId).bootstrapTable('refresh', {url:ajaxURL2});
+							if(res.success == true){
+								$("#"+tableElemId).bootstrapTable('refresh', {url:ajaxURL2});
 								successTip("删除成功！")
 							}else{
-								dangerTip("提示","删除失败！")
+								dangerTip("提示",res.msg+"！")
 							}
 						}
 					})
 				}
 			}
 		});
-	}	
+		
 }
 
 /*成功提示*/
@@ -90,6 +93,22 @@ function ztreeShow(title){
 	$('.table_wrapper').removeClass('col-lg-12').addClass('col-lg-9');
 	$('.ztree_wrapper').addClass('slideInRight').fadeIn();
 
+}
+
+function menuEditShow(title) {
+    $('.ztree_title_edit').html(title);
+    if(title == "详情"){
+        $('.ztree_roleInput').hide();
+        $('.ztree_wrapper .tree_save').hide();
+    }else{
+        $('.ztree_roleInput').show();
+        $('.ztree_wrapper .tree_save').show();
+    }
+
+    $('.ztree_tip').children().css('display','none');
+    $('.ztree_wrapper_edit').removeClass('fadeOutRight')
+    $('.table_wrapper').removeClass('col-lg-12').addClass('col-lg-9');
+    $('.ztree_wrapper_edit').addClass('slideInRight').fadeIn();
 }
 /*右侧权限树消失
   @param elem  btn-success/btn-cancel 

@@ -1318,6 +1318,7 @@
         }
 
         this.totalPages = 0;
+        console.info(this.options.totalRows)
         if (this.options.totalRows) {
             if (this.options.pageSize === this.options.formatAllRows()) {
                 this.options.pageSize = this.options.totalRows;
@@ -2384,9 +2385,17 @@
 
         // #431: support pagination
         if (this.options.sidePagination === 'server') {
-            this.options.totalRows = data[this.options.totalField];
-            fixedScroll = data.fixedScroll;
-            data = data[this.options.dataField];
+            //modified by cxx  20170909 start
+            // this.options.totalRows = data[this.options.totalField];
+            // fixedScroll = data.fixedScroll;
+            // data = data[this.options.dataField];
+            if(data.data != null){
+                this.options.totalRows = data.data[this.options.totalField];
+                fixedScroll = data.fixedScroll;
+                data = data.data.list;  
+            }    
+            
+            //modified by cxx  20170909 end
         } else if (!$.isArray(data)) { // support fixedScroll
             fixedScroll = data.fixedScroll;
             data = data.data;

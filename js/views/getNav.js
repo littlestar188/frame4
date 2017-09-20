@@ -8,7 +8,7 @@ $(function(){
 			zNodes = navData;
 			newNodes = perData;
 
-			console.log(zNodes,newNodes) 
+			//console.log(zNodes,newNodes) 
 					
 		    //ajax获取数据 模拟数据
 		    var setting = {
@@ -90,8 +90,8 @@ $(function(){
 		    	// })
 
 		    	//newNodes = treeObj.addNodes(,newNodes);	
-		    	console.log(newNodes)
-				console.log(secondNodes)
+		    	//console.log(newNodes)
+				//console.log(secondNodes)
 					
 
 		    		
@@ -224,7 +224,7 @@ function getStorage(name){
 
 	if(! window.localStorage){
 		alert('浏览器不支持localStorage');
-		return	
+		return;
 	}
 	if(localStorage.length>0 && localStorage.getItem(name) ){
 		var value = localStorage.getItem(name);

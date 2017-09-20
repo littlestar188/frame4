@@ -184,6 +184,42 @@ header.navbar .navbar-brand{
   right:10px;
   font-size: 10px;
 }
+
+
+
+
+.ztree_wrapper_edit{
+    margin-left:4.3%;
+    padding-bottom:20px;
+}
+.ztree_wrapper_edit .ztree_title{
+    padding:10px 0 10px 15px;
+    background-color:#20a8d8;
+    color:#fff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+#treePermission{
+    padding-bottom:15px;
+}
+.ztree_wrapper_edit .ztree_content{
+    min-height:100%;
+    margin-bottom:-35px;
+}
+.ztree_wrapper_edit .ztree_content:after{
+    content:"";
+    display: block;
+}
+.ztree_wrapper_edit .btnWrapper,.ztree_content:after{
+    height:35px;
+}
+.ztree_wrapper_edit .ztree_content .ztree_tip{
+    position:absolute;
+    top:55px;
+    right:10px;
+    font-size: 10px;
+}
 /* function button hide*/
 #searchBtn,#addBtn,#delGroupBtn{
   -display:none;

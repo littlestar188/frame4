@@ -8,19 +8,18 @@ $(function(){
 	
 	perArr = JSON.parse(getStorage("permission"));
 	navArr = JSON.parse(getStorage("nav"));
-	console.log(navArr)
+	//console.log(navArr)
 })
 
 var pathname = location.pathname;
 pathname = pathname.split('/')[2];
-console.log(pathname);
+//console.log(pathname);
 
 
 function navId(){
-  for(var i=0;i<navArr.length;i++){
+  for(var i=0,len=navArr.length;i<len;i++){
     if(navArr[i].url != undefined){
-      console.log(navArr[i].url)
-      console.log()
+     // console.log(navArr[i].url)
       if(navArr[i].url == pathname){         
         return navArr[i].id
       }
@@ -31,7 +30,7 @@ function navId(){
 
 var per = function(){
   var navid = navId(); 
-  console.log(navid)
+  //console.log(navid)
   var newPerArr = [];
   for(var j=0;j<perArr.length;j++){
   
@@ -40,7 +39,7 @@ var per = function(){
       newPerArr.push(perArr[j].id)
     }
   }
-  console.log(newPerArr)
+  //console.log(newPerArr)
   return newPerArr;
 }
 
@@ -143,7 +142,7 @@ function createOptBtn(id,btnType,btnName,btnClass){
 					.removeClass('btn-success')
 					.addClass(btnClass)
 					.text(btnName)
-					.css("display","none");
+					//.css("display","none");
 	return $newOptBtn;
 }
 

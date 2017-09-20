@@ -16,6 +16,12 @@
         "url":"navManage.html",      
         "name": "菜单管理"
     },
+      {
+        "pId": "101",
+        "id": "1011",
+        "url":"navManage.html",
+        "name": "菜单列表"
+      },
     {
         "pId": "100",
         "id": "102",
@@ -68,7 +74,14 @@
         "id": "400",
         "url":"limitBlack.html",
         "name": "黑名单"
-    }
+    },
+      {
+        "pId": "400",
+        "id": "401",
+        "url":"limitBlack.html",
+        "name": "黑名单2"
+      }
+
 
 ]
 }
