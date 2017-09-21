@@ -2,7 +2,11 @@ $(function(){
 	'use strict';
 	var $USERMODAL =$('#userModal');
 	var $USERTABLE = $('#userTable');
+	var $USERNAME = $('#username');
+	var $PHONE =$('#phone');
+	var $MAIL = $('#mail');
 	var $MAIN = $('.main');
+	var userData = {};
 	var initUsers = function(){
 		$USERTABLE.bootstrapTable({
 			locale: 'zh-CN',
@@ -48,10 +52,9 @@ $(function(){
 	var optPerform = function(){
 		//判断是否存在【新增】		
 		if($MAIN.find('#addBtn').length != 0){
+					
+			addUser();
 			
-			$('#saveBtn').on('click',function(){
-				addUser();
-			})
 		}
 
 		//判断是否存在【查询】
@@ -63,37 +66,20 @@ $(function(){
 		if($MAIN.find('#delGroupBtn').length!=0){
 			delGroupRole();
 		}
-
+		
 		$USERTABLE.on('click','.btn.btn-sm',function(){
 
 			var userId = $(this).attr("data-id");
 
 			//判断是否为【详情】
 			if($(this).is('#btn-watch')){
-				/*BootstrapDialog.confirm({
-					title:"重置密码",
-					type:BootstrapDialog.TYPE_PRIMARY,
-					size: BootstrapDialog.SIZE_SMALL,
-					message:$('<div></div>').load('resources/forms/passwordEdit.html'),
-					callback:function(res){
-
-					}
-				});	*/
+				
 				detailUser(userId);
 			}
 
 			//判断是否为【修改】
 			if($(this).is('#btn-edit')){
-				/*BootstrapDialog.confirm({
-					title:"修改信息",
-					type:BootstrapDialog.TYPE_PRIMARY,
-					message:$('<div></div>').load('resources/forms/userEdit.html'),
-					callback:function(res){
-
-					}
-				});	*/
 				var editName = $(this).parents('td').prev().html();
-				checkUserName(editName);
 				editUser(userId);
 
 			}
@@ -125,8 +111,7 @@ $(function(){
        			url:'/userPermission-controller/user/deleteBatch',
 		   		type:'post',
 		   		dataType:"json",
-		   		contentType:"application/json;charset=utf-8",
-		   		data:JSON.stringify(idList),
+		   		data:{"idList":idList},
 		   		success:function(res){
 		   			if(res.success == true){
 		   				successTip('删除成功！');
@@ -141,59 +126,47 @@ $(function(){
 		
 	}
 	/*新增用户*/
-	function addUser(){		
-		/*BootstrapDialog.confirm({
-			title:"新增用户",
-			type:BootstrapDialog.TYPE_PRIMARY,
-			message:$('<div></div>').load('resources/forms/userEdit.html'),
-			callback:function(res){
-				if(res){
-					console.log($("#userEdit").serialize())
-					$.ajax({
-						url:"resources/json/returnBack.json",							
-						data:$("#userEdit").serialize(),
-						success:function(res){
-							if(res.returnCode == 0){
-								successTip("新增成功！")
-							}else{
-								dangerTip("提示","新增失败！")
-							}
-						},
-						error:function(){
-							console.log("新增用户----后台报错")
-						}
+	function addUser(){
+			
+		$('#addBtn').on('click',function(){	
 
-					})
-				}
-			}
-		});		*/
-		$('#userForm').show();
-		$('#detailUser').hide();
-
-		var userData = {
-			"userName":$('#username').val(),
-			"roleName":$('#rolename option:selected').text()
-		}
-
-		$.ajax({
-			url:"/userPermission-controller/user/add",			
-			type:"post",
-			dataType:"json",
-			contentType:"application/json;charset=utf-8",
-			data:JSON.stringify(userData),
-			success:function(res){
-				if(res.success == true){
-					successTip("添加成功！");
-					$USERMODAL.modal('hide');						
-					clearModalData();
-					$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
-        			
-				}else{
-
-					dangerTip("提示",res.msg+"！")
-				}
-			}
+			$('#userForm').show();
+			$('#detailUser').hide();
+			$('#userModal').modal("show")
+					
 		})
+
+        $('.main').find('#userForm input').each(function(){
+			$(this).change(function(){
+				var checkUserObj = checkExist($(this).attr('id'),$(this).val());
+				this.userData = checkUserObj;
+			})
+		})
+
+        $("#saveBtn").off("click");
+		$("#saveBtn").on("click",function(){
+			console.log(this.userData)
+			$.ajax({
+				url:"/userPermission-controller/user/add",			
+				type:"post",
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				data:JSON.stringify(this.userData),
+				async:false,
+				success:function(res){
+					if(res.success == true){
+						successTip("添加成功！");
+						$USERMODAL.modal('hide');						
+						clearModalData();
+						$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
+			      			
+					}else{
+
+						dangerTip("提示",res.msg+"！")
+					}
+				}
+			})
+		})	
 
 	}
 
@@ -203,7 +176,7 @@ $(function(){
 		$('.modal-title').html('修改用户');
 		$('#userForm').show();
 		$('#detailUser').hide();
-
+		
 		$.ajax({
 			url:"/userPermission-controller/user/getDetail",			
 			type:"post",
@@ -211,15 +184,45 @@ $(function(){
 			data:{"id":userId},
 			success:function(res){
 				if(res.success == true){
-					$('#username').val(res.data.userName);
+					$USERNAME.val(res.data.userName);
 					$('#updateDate').val(res.data.updateDate);
 					
 				}
 			}
 		})
-		
-		$USERMODAL.modal('show');	
 
+		$USERMODAL.modal('show');
+
+		$('.main').find('#userForm input').each(function(){
+			$(this).change(function(){
+				var checkUserObj = checkExist($(this).attr('id'),$(this).val(),userId);
+				this.userData = checkUserObj;
+			})
+		})
+
+		$("#saveBtn").off("click");	
+		$("#saveBtn").on("click",function(){	
+			$.ajax({
+				url:"/userPermission-controller/user/update",			
+				type:"post",
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				data:JSON.stringify(this.userData),
+				async:false,
+				success:function(res){
+					if(res.success == true){
+						successTip("修改成功！");
+						$USERMODAL.modal('hide');						
+						clearModalData();
+						$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
+			      			
+					}else{
+
+						dangerTip("提示",res.msg+"！")
+					}
+				}
+			})
+		})
 	} 
 	/*用户详情*/
 	function detailUser(userId){
@@ -259,58 +262,55 @@ $(function(){
 
 	}
 
+	
+
 	/*输入框内容有变化 则验证
-	  @param  ajaxURL    /addCheck/updataCheck
-	  @param  valueName
+	  @param  columnName    
+	  @param  value
 	  @param  editId      
 	*/
-	function checkUserName(ajaxURL,valueName,editId){
-		var postData = {};
+	function checkExist(columnName,value,editId){
+		var dataExist = {};
 		//增
 		if(arguments.length == 2){				
-			postData = {"userName":valueName};														
+			dataExist = {"columnName":columnName,"value":value};														
 		}
 
 		//改
 		if(arguments.length == 3){				
-			postData = {"userName":valueName,"roleId":editId};							
+			dataExist = {"columnName":columnName,"value":value,"id":editId};							
 		}
 
-		sendCheck(ajaxURL,postData);
-		
+		sendCheck(dataExist);
 	}
 
 
 	/*发送角色名
-	  @param valueName
-	  @param ajaxURL
+	  @param valueNam
 	  @param data   	
 	*/
-	function sendCheck(ajaxURL,postData){
+	function sendCheck(dataExist){
 
-		console.log(ajaxURL,postData)		
-		if(postData.roleName != ""){
+		console.log(dataExist)
+		var returnFlag,returnCode ,returnMsg ;
+
+		if(dataExist.columnName != "" && dataExist.value != ""){
 			$.ajax({
-    			//url:"resources/json/addCheck.json",
-    			url:ajaxURL,
+    			url:"/userPermission-controller/user/checkExist",
     			type:"get",
-    			//contentType: 'application/json;charset=utf-8',
     			cache: false,
-    			//async : false,
-    			data:postData,
+    			data:dataExist,
     			success:function(res){
-    				var returnFlag = res.success;
-    				var returnCode = res.code;
-    				var returnMsg = res.msg;
-    				checkCallback(returnFlag,returnCode,returnMsg);
+    				returnFlag = res.success;
+    				returnCode = res.code;
+    				returnMsg = res.msg;
+    				//checkCallback(returnFlag,returnCode,returnMsg);
     				
     			}
     		})
+
+    		return {"dataExist":dataExist,"returnFlag":returnFlag};
 		
-		}else{
-			$('.correct').hide();
-			//$('.error i').html('用户名不能为空');
-			$('.error').show()
 		}
 
 		
@@ -319,13 +319,13 @@ $(function(){
 	  @paran returnFlag
 	  @param retrunCode
 	  @param renturnMsg
-	  @param valueName
 	*/
 	function checkCallback(returnFlag,returnCode,retrunMsg){
 
 		if(returnFlag == true){
 			$('.error').hide();
 			//$('.correct i').html(retrunMsg);//返回的错误信息提示
+
 			$('.correct').show();							
 		}else{
 			$('.correct').hide();

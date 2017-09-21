@@ -2,6 +2,7 @@ $(function(){
 	'use strict';
 	var $ROLETABLE = $('#roleTable');
 	var $MAIN = $('.main');
+	var menuTreeData;
 	var initRole = function(){
 		$ROLETABLE.bootstrapTable({
 			locale: 'zh-CN',
@@ -102,8 +103,7 @@ $(function(){
        			url:'/userPermission-controller/role/deleteBatch',
 		   		type:'post',
 		   		dataType:"json",
-		   		contentType:"application/json;charset=utf-8",
-		   		data:JSON.stringify(idList),
+		   		data:{"idList":idList},
 		   		success:function(res){
 		   			if(res.success == true){
 		   				successTip('删除成功！');
@@ -138,7 +138,7 @@ $(function(){
 			}
 	    };
 	    
-	  	$.ajax({
+	  	/*$.ajax({
 	   		
 	   		url:'/userPermission-controller/role/getDetail',
 	   		type:"get",
@@ -154,7 +154,7 @@ $(function(){
 	   		error:function(){
 	   			console.log("获取详情---后台报错")
 	   		}
-	    })
+	    })*/
 	   
 	   
 	   	//console.log($.extend(ajaxObj,params))
@@ -181,13 +181,14 @@ $(function(){
 			$('.ztree_roleInput').val("");
 
 			ztreeShow('新增');
-			getMenuTree();
+			judgeStorage("menuTree");
+			rebuildToZtreeData(menuTreeData);
 			//initZtree('resources/json/listNavs.json','get');
 	    	//checkAddRole($('.ztree_roleInput'),"/userPermission-controller/role/checkRoleNameExist");
 	    	$('.ztree_roleInput').off("change")
 	    	$('.ztree_roleInput').change(function(){
 				var valueName = $(this).val();
-				checkRole("/userPermission-controller/role/checkRoleNameExist",valueName);
+				checkRole(valueName);
 			})
 	    	
 	    	ztreeDateSave("/userPermission-controller/role/add");	
@@ -209,10 +210,10 @@ $(function(){
 		$('.ztree_roleInput').off("change")	;	
 		$('.ztree_roleInput').change(function(){
 			var valueName = $(this).val();
-			checkRole("/userPermission-controller/role/checkRoleNameExist",valueName,editId)
+			checkRole(valueName,editId)
 		})
 		
-		ztreeDateSave("resources/json/updateRole.json");
+		//ztreeDateSave("resources/json/updateRole.json");
 		
 	}
     /*所有菜单功能*/
@@ -227,8 +228,9 @@ $(function(){
 	   			console.log(res)
 	   	
 	   			if(res.success == true){
-	   				var data = res.data;
-	   				rebuildToZtreeData(data);	
+	   				var menuTreeData = res.data;	   				
+	   				setStorage("menuTree",menuTreeData)
+	   					
 	   			}   		
 	   		},
 	   		error:function(){
@@ -252,7 +254,16 @@ $(function(){
 	   	
 	   			if(res.success == true){
 	   				var menuFunList = res.data.roleMenuFunctionList;
-	   				detailRebuildToZtreeData(menuFunList);	
+	   				/*判断是否已经存在 menuTree 数据*/
+	   				judgeStorage("menuTree");
+	   				/*两组数据做对比*/
+	   				if(menuFunList !=null || menuFunList !=undefined){
+	   					//$.fn.zTree.getZTreeObj('treePermission').destroy(); 
+	   					// var zTreeObj = $.fn.zTree.getZTreeObj("treePermission");
+	   					// zTreeObj.destroy();
+	   					detailRebuildToZtreeData(menuFunList,menuTreeData);	
+	   				}
+	   				
 	   			}   		
 	   		},
 	   		error:function(){
@@ -328,8 +339,71 @@ $(function(){
 		initZtree(arr);
     }
 
-	/*详情/修改时 重新将数据还原成ztree默认格式*/
-    function detailRebuildToZtreeData(data){
+	/*详情/修改时 对比menuTree 和 menuFunctionList 
+	  找到存在id 重构成 {"id":id,"checked":"checked"}
+	*/
+    function detailRebuildToZtreeData(menuFunList,menuTreeData){
+
+    	console.log(menuFunList)
+    	
+    	var newMenuTreeData  =  menuTreeData;
+    	for(var i=0;i<newMenuTreeData.length;i++){
+
+    		for(var j=0;j<menuFunList.length;j++){
+
+    			/*在newMenuTreeData中先找到一级菜单*/
+    			if(menuFunList[j].menuId == (newMenuTreeData[i].id)){
+
+    				if(newMenuTreeData[i].parentId == null){
+    					newMenuTreeData[i].parentId = 0;
+    				}
+    				newMenuTreeData[i]['checked'] = "checked"
+    				
+    			}
+    		}	
+    		
+    		if(newMenuTreeData[i].subMenus!=null){
+
+    			for(var k=0;k<newMenuTreeData[i].subMenus.length;k++){
+
+    				for(var j=0;j<menuFunList.length;j++){
+    					/*在newMenuTreeData中先找到二级菜单*/
+    					if(menuFunList[j].menuId == (newMenuTreeData[i].subMenus[k].id)){
+
+    						if(newMenuTreeData[i].parentId == null){
+    							newMenuTreeData[i].parentId = 0;
+    						}
+    						newMenuTreeData[i].subMenus[k]['checked'] = "checked";
+
+    						
+    					}
+
+    					// /*找功能*/
+    					for(var m=0;m<newMenuTreeData[i].subMenus[k].funcs.length;m++){
+
+    						for(var j=0;j<menuFunList.length;j++){
+
+				    			/*在newMenuTreeData中先找到一级菜单*/
+				    			for(var n=0;n<menuFunList[j].funIdList.length;n++){
+
+				    				if(menuFunList[j].funIdList[n] == (newMenuTreeData[i].subMenus[k].funcs[m].id)){
+				    					newMenuTreeData[i].subMenus[k].funcs[m]["checked"]="checked";
+				    					
+				    				}
+				    			}
+				    			
+				    		}	
+    					}
+    				}	
+
+    			}
+
+    			
+    		}   		
+
+    	}
+    	rebuildToZtreeData(newMenuTreeData);
+    	console.log(newMenuTreeData)
     	
     }
 
@@ -391,19 +465,18 @@ $(function(){
 	  @param  valueName
 	  @param  editId      
 	*/
-	function checkRole(ajaxURL,valueName,editId){
+	function checkRole(valueName,editId){
 		var postData = {};
 		//增
-		if(arguments.length == 2){				
+		if(arguments.length == 1){				
 			postData = {"roleName":valueName};														
 		}
 
 		//改
-		if(arguments.length == 3){				
-			postData = {"roleName":valueName,"roleId":editId};							
+		if(arguments.length == 2){				
+			postData = {"roleName":valueName,"id":editId};							
 		}
-
-		sendCheck(ajaxURL,postData);
+		sendCheck(postData);
 		
 	}
 
@@ -413,23 +486,17 @@ $(function(){
 	  @param ajaxURL
 	  @param data   	
 	*/
-	function sendCheck(ajaxURL,postData){
+	function sendCheck(postData){
 
-		console.log(ajaxURL,postData)		
+		console.log(postData)		
 		if(postData.roleName != ""){
 			$.ajax({
-    			//url:"resources/json/addCheck.json",
-    			url:ajaxURL,
+    			url:"/userPermission-controller/role/checkRoleNameExist",
     			type:"get",
-    			//contentType: 'application/json;charset=utf-8',
     			cache: false,
-    			//async : false,
     			data:postData,
     			success:function(res){
-    				var returnFlag = res.success;
-    				var returnCode = res.code;
-    				var returnMsg = res.msg;
-    				checkCallback(returnFlag,returnCode,returnMsg);
+    				checkCallback(res.success,res.data,res.code,res.msg);
     				
     			}
     		})
@@ -448,16 +515,19 @@ $(function(){
 	  @param renturnMsg
 	  @param valueName
 	*/
-	function checkCallback(returnFlag,returnCode,retrunMsg){
+	function checkCallback(returnFlag,returnData,returnCode,retrunMsg){
 
 		if(returnFlag == true){
-			$('.error').hide();
-			//$('.correct i').html(retrunMsg);//返回的错误信息提示
-			$('.correct').show();							
-		}else{
-			$('.correct').hide();
-			//$('.error i').html(retrunMsg);
-			$('.error').show();
+			if(returnData == false){
+				$('.error').hide();
+				//$('.correct i').html(retrunMsg);//返回的错误信息提示
+				$('.correct').show();
+			}else{
+	
+				$('.correct').hide();			
+				$('.error').show();
+				//$('.error i').html(retrunMsg);
+			}										
 		}
 	}
 
@@ -685,6 +755,53 @@ $(function(){
 		ztreeCancelLeave();
 	}
 
+	var judgeStorage = function (name){	
+		if(name == "menuTree"){
+			if(getStorage(name)!= undefined){
+				var data1 = getStorage("menuTree");
+				menuTreeData = JSON.parse(data1)
+					
+			}else{
+			 	getMenuTree();
+			 
+			}
+	    }	     	    
+	};
 
+	/*写入本地存储数据
+	* @param name  命名
+	* @param data  
+	*/
+	function setStorage(name,data){
+		//判断json结构不严谨 
+		var value = typeof(data) == "object" ? JSON.stringify(data):data;
+
+		console.log('set localStorage----')
+		//console.log(typeof(value))
+		if(window.localStorage){
+			localStorage.setItem(name,value);	
+		}else{
+			alert('浏览器不支持localStorage');
+			return
+		}	
+	}
+	/*获取本地存储的数据
+	*@param name 命名
+	*/
+	function getStorage(name){
+
+		if(! window.localStorage){
+			alert('浏览器不支持localStorage');
+			return;
+		}
+		if(localStorage.length>0 && localStorage.getItem(name) ){
+			var value = localStorage.getItem(name);
+			//console.log('get---'+typeof(value))
+			//console.log(value)
+			return value;
+		}
+	}
 
 });
+
+
