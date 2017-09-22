@@ -2,11 +2,11 @@ $(function(){
 	'use strict';
 	var $USERMODAL =$('#userModal');
 	var $USERTABLE = $('#userTable');
-	var $USERNAME = $('#username');
+	var $USERNAME = $('#userName');
 	var $PHONE =$('#phone');
 	var $MAIL = $('#mail');
 	var $MAIN = $('.main');
-	var userData = {};
+	//var userData = {};
 	var initUsers = function(){
 		$USERTABLE.bootstrapTable({
 			locale: 'zh-CN',
@@ -17,17 +17,21 @@ $(function(){
 	      	sidePagination:'server',
 	      	height: '',
 	     	queryParams: function(params){
-	     		var paramResult = {
-	     	    username:"",		
-	     		pageNumber:	params.offset+1,
-	     		pageSize:params.limit
+	     		
+	     		var paramResult = {	
+	     			pageNumber:	params.offset+1,
+	     			pageSize:params.limit,
+	     			userName:$('#userName').val()
 	     		}
+
+	     		console.log(paramResult)	
+	     		
 	     		return JSON.stringify(paramResult)	     		
 	     	},
-
+	     	
 	     	striped: true,//使表格带有条纹
 	     	pagination: true,//设置True在表格底部显示分页工具栏
-	      	pageSize: 10,
+	      	pageSize: 2,
 	      	pageList: [10, 25, 50, 100],
 	      	toolbar:'#custom-toolbar',
 	      	columns: [
@@ -45,21 +49,23 @@ $(function(){
 			]
 		})
 	}();
-
+	
 	/*table中的按键功能实现
 
 	*/
 	var optPerform = function(){
 		//判断是否存在【新增】		
-		if($MAIN.find('#addBtn').length != 0){
-					
-			addUser();
-			
+		if($MAIN.find('#addBtn').length != 0){					
+			addUser();		
 		}
 
 		//判断是否存在【查询】
 		if($MAIN.find('#searchBtn').length != 0){
-			//searchUser();
+
+			$('#searchBtn').click(function(){
+				$USERTABLE.bootstrapTable('refresh');
+			})
+			
 		}
 
 		//判断是否存在【批量删除】
@@ -129,105 +135,57 @@ $(function(){
 	function addUser(){
 			
 		$('#addBtn').on('click',function(){	
-
+			clearModalData();
 			$('#userForm').show();
 			$('#detailUser').hide();
+			$("#saveBtn_add").show()
+			$("#saveBtn_edit").hide();
 			$('#userModal').modal("show")
 					
 		})
 
-        $('.main').find('#userForm input').each(function(){
-			$(this).change(function(){
-				var checkUserObj = checkExist($(this).attr('id'),$(this).val());
-				this.userData = checkUserObj;
-			})
-		})
-
-        $("#saveBtn").off("click");
-		$("#saveBtn").on("click",function(){
-			console.log(this.userData)
-			$.ajax({
-				url:"/userPermission-controller/user/add",			
-				type:"post",
-				dataType:"json",
-				contentType:"application/json;charset=utf-8",
-				data:JSON.stringify(this.userData),
-				async:false,
-				success:function(res){
-					if(res.success == true){
-						successTip("添加成功！");
-						$USERMODAL.modal('hide');						
-						clearModalData();
-						$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
-			      			
-					}else{
-
-						dangerTip("提示",res.msg+"！")
-					}
-				}
-			})
-		})	
-
+		saveUser('add');
 	}
 
 	/*用户修改*/
 	function editUser(userId){
 
+		clearModalData();
 		$('.modal-title').html('修改用户');
-		$('#userForm').show();
-		$('#detailUser').hide();
-		
-		$.ajax({
-			url:"/userPermission-controller/user/getDetail",			
-			type:"post",
-			dataType:"json",
-			data:{"id":userId},
-			success:function(res){
-				if(res.success == true){
-					$USERNAME.val(res.data.userName);
-					$('#updateDate').val(res.data.updateDate);
-					
-				}
-			}
-		})
-
+		$("#saveBtn_add").hide()
+		$("#saveBtn_edit").show();
 		$USERMODAL.modal('show');
+		$USERMODAL.on('shown.bs.modal',function(){
+			
+			$('#userForm').show();
+			$('#detailUser').hide();
 
-		$('.main').find('#userForm input').each(function(){
-			$(this).change(function(){
-				var checkUserObj = checkExist($(this).attr('id'),$(this).val(),userId);
-				this.userData = checkUserObj;
-			})
-		})
-
-		$("#saveBtn").off("click");	
-		$("#saveBtn").on("click",function(){	
 			$.ajax({
-				url:"/userPermission-controller/user/update",			
+				url:"/userPermission-controller/user/getDetail",			
 				type:"post",
 				dataType:"json",
-				contentType:"application/json;charset=utf-8",
-				data:JSON.stringify(this.userData),
-				async:false,
+				data:{"id":userId},
 				success:function(res){
 					if(res.success == true){
-						successTip("修改成功！");
-						$USERMODAL.modal('hide');						
-						clearModalData();
-						$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
-			      			
-					}else{
-
-						dangerTip("提示",res.msg+"！")
+						$USERNAME.val(res.data.userName);
+						$('#updateDate').val(res.data.updateDate);
+						
 					}
 				}
 			})
-		})
+
+			saveUser('edit',userId)
+		});
+
+		
 	} 
 	/*用户详情*/
 	function detailUser(userId){
+		clearModalData();
 		$('.modal-title').html('用户详情');
 		$('#userForm').hide();
+		$("#saveBtn_add").hide()
+		$("#saveBtn_edit").hide();
 		$('#detailUser').show();
 
 		$.ajax({
@@ -262,6 +220,93 @@ $(function(){
 
 	}
 
+	function saveUser(flag,userId){
+		
+			var checkUserObj={}		
+			if(flag=="add"){
+
+				$('.main').find('#userForm input').each(function(){
+					$(this).change(function(){	
+						checkUserObj = checkExist($(this).attr('id'),$(this).val());
+						console.log(checkUserObj)
+						
+					})	
+				})
+
+				
+				
+
+				$("#saveBtn_add").on('click',function(){
+					
+					$.ajax({
+						url:"/userPermission-controller/user/add",			
+						type:"post",
+						dataType:"json",
+						contentType:"application/json;charset=utf-8",
+						data:JSON.stringify(checkUserObj),
+						success:function(res){
+							if(res.success == true){
+								successTip("添加成功！");
+								$USERMODAL.modal('hide');						
+								clearModalData();
+								$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
+					      			
+							}else{
+
+								dangerTip("提示",res.msg+"！")
+							}
+						}
+					})
+					
+				})	
+			}
+			
+			if(flag=="edit"){	
+
+				$('.main').find('#userForm input').each(function(){
+					$(this).change(function(){	
+						checkUserObj = checkExist($(this).attr('id'),$(this).val(),userId);
+						
+						
+					})	
+				})
+
+				
+				
+
+				$("#saveBtn_edit").on('click',function(){		
+					
+					
+					$.ajax({
+						url:"/userPermission-controller/user/update",			
+						type:"post",
+						dataType:"json",
+						contentType:"application/json;charset=utf-8",
+						data:JSON.stringify(checkUserObj),
+						success:function(res){
+							if(res.success == true){
+								successTip("修改成功！");
+								$USERMODAL.modal('hide');						
+								clearModalData();
+								$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
+					      			
+							}else{
+
+								dangerTip("提示",res.msg+"！")
+							}
+						}
+					})
+						
+					
+				})
+
+
+			}	
+				
+
+		
+	}
+	
 	
 
 	/*输入框内容有变化 则验证
@@ -273,15 +318,19 @@ $(function(){
 		var dataExist = {};
 		//增
 		if(arguments.length == 2){				
-			dataExist = {"columnName":columnName,"value":value};														
+			dataExist = {"columnName":columnName,"value":value};
+			return sendCheck(dataExist);														
 		}
 
 		//改
 		if(arguments.length == 3){				
-			dataExist = {"columnName":columnName,"value":value,"id":editId};							
+			dataExist = {"columnName":columnName,"value":value,"id":editId};
+			var backData = sendCheck(dataExist);
+			backData["id"] = editId;
+			return 	backData;						
 		}
 
-		sendCheck(dataExist);
+		
 	}
 
 
@@ -293,23 +342,30 @@ $(function(){
 
 		console.log(dataExist)
 		var returnFlag,returnCode ,returnMsg ;
-
+		var trueDate = {};
 		if(dataExist.columnName != "" && dataExist.value != ""){
 			$.ajax({
     			url:"/userPermission-controller/user/checkExist",
     			type:"get",
     			cache: false,
     			data:dataExist,
+    			async : false,
     			success:function(res){
+    				console.log(res)
     				returnFlag = res.success;
     				returnCode = res.code;
     				returnMsg = res.msg;
-    				//checkCallback(returnFlag,returnCode,returnMsg);
+
+    				if(res.success == true){
+    					trueDate[dataExist.columnName] = dataExist.value 
+    				}
     				
+    				//checkCallback(returnFlag,returnCode,returnMsg);
     			}
     		})
-
-    		return {"dataExist":dataExist,"returnFlag":returnFlag};
+			return trueDate;	
+			
+    		
 		
 		}
 
@@ -335,7 +391,9 @@ $(function(){
 	}
 
 	function  clearModalData(){
+		$USERMODAL.modal('hide');
 		$USERMODAL.on('hidden.bs.modal',function(){
+			$USERMODAL.destory();
 			$USERMODAL.find('input[type=text]').each(function(){
 				$(this).val("")
 			})
