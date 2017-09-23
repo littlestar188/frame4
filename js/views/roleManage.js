@@ -7,7 +7,6 @@ $(function(){
 	var initRole = function(){
 		$ROLETABLE.bootstrapTable({
 			locale: 'zh-CN',
-			//url:'resources/json/listRoles.json',
 			url:"/userPermission-controller/role/getList",
 	     	sidePagination:'server',
 	      	cache: false,//设置False禁用AJAX请求的缓存
@@ -27,14 +26,9 @@ $(function(){
 	      	toolbar:'#custom-toolbar',
 	      	paginationDetailHAlign: 'left',
 	      	columns: [
-                {field: 'state',checkbox: true,formatter:function(row,value,index){
-                	
-                	}
-                },                  	   
+                {field: 'state',checkbox: true},                  	   
                 {field: 'roleName',title: '角色名称',align: 'center',valign: 'middle'},
-                {field: 'id',title: '操作',align: 'center',valign: 'middle',formatter:function(value){
-                	//console.log(value)
-                	//console.log(value)id 
+                {field: 'id',title: '操作',align: 'center',valign: 'middle',formatter:function(value){ 
                 	/*根据权限，显示/隐藏功能按键*/                    	
                 	return optShow(value);
                 	
@@ -80,7 +74,6 @@ $(function(){
 				var editName = $(this).parents('td').prev().html();
 				//console.log(editName)
 				$('.ztree_roleInput').val(editName)
-
 				editRoleTree(roleId);
 			}
 
@@ -96,6 +89,7 @@ $(function(){
 	/*角色批量删除*/
 	function delGroupRole(){
 		$('#delGroupBtn').click(function(){
+			//从table列表获取所有选中项
 			var selectedItems = $ROLETABLE.bootstrapTable('getSelections');
        		console.log(selectedItems)
        		var idList = selectedItems.map(function(item){
@@ -185,7 +179,6 @@ $(function(){
 	}
 	/*修改角色
 	  @param editId
-	  @param editName
 	*/
 	function editRoleTree(editId){
 	
@@ -226,7 +219,9 @@ $(function(){
 	   		}
 	    })
     }
-    /*修改/详情时 获取菜单、功能、角色名*/
+    /*修改/详情时 获取菜单、功能、角色名
+	@param editId	
+    */
     function getRoleMenuFunsData(editId){
     	var arrZtree;
     	$.ajax({
@@ -259,7 +254,7 @@ $(function(){
 	    })
 	    return arrZtree;
     }
-    /*创建类 用于重构菜单树数据结构*/
+    /*创建类（构造器） 用于重构菜单树数据结构*/
     function CreateSeriesItem(pId,id,name,url,type,checked){
     	this.pId = pId;
     	this.id = id;
@@ -385,59 +380,6 @@ $(function(){
     	console.log("修改 获取匹配checked data-------")
     	console.log(arr)   	
     }
-
-	/*查询角色*/
-	function searchRole(){
-		
-		$('#searchBtn').click(function(){
-			$ROLETABLE.bootstrapTable('refreshOptions', {
-				url:'/manage/role/listRoles',
-				queryParams:queryParams
-			});	
-			/*$.ajax({
-				url:"/manage/role/selectRoles",
-				dataType:"json",
-				type:"get",
-				data:queryParams,
-				success:function(res){
-					console.log(res.returnCode)
-
-					if(res.returnCode == 0){						
-						$("#roleTable").bootstrapTable('refresh', {
-							url:'/manage/role/listRoles'
-							
-						});						
-					}
-
-					if(res.returnCode == 1){
-						BootstrapDialog.alert({
-		        			title:"错误提示",
-		        			type:BootstrapDialog.TYPE_DANGER,
-		        			size: BootstrapDialog.SIZE_SMALL,
-		        			message:"查询失败！"
-		        		});	
-					}
-					
-				},
-				error:function(){
-					console.info('后台报错')
-				}
-			})*/
-		})
-
-	} 
-	/*查询参数*/
-	function queryParams(params){
-
-		var value = $('#roleSearch input[type=text]').val();
-		var temp = {
-			roleName:value,
-			limit:params.limit,
-			offset:params.offset,
-							
-		}
-		return temp;
-	}
 	
 	/*输入框内容有变化 则验证
 	  @param  ajaxURL    /addCheck/updataCheck
@@ -513,13 +455,9 @@ $(function(){
 	
 
 	/*初始化权限树
-	  @param ajaxURL 
-	  @param method  get/post
-	  @param id
+	  @param zNodes 节点数据
 	*/
-	function initZtree(/*ajaxURL,method,id*/zNodes){
-			
-		    //ajax获取数据 模拟数据
+	function initZtree(zNodes){	    
 		    var setting = {
 		   		view:{
 		   			showIcon:false,
@@ -540,34 +478,6 @@ $(function(){
 				}
 		    };
 		    
-		   //  var ajaxObj = {
-		   // 		url:ajaxURL,
-		   // 		type:method,
-		   // 		dataType:"json",
-		   // 		async : false,//必写
-		   // 		success:function(res){
-		   // 			//console.log(res)
-
-		   // 			//zNodes = res.menus;
-		   // 			zNodes = res.data
-					// console.log("获得数据");
-					// console.log(zNodes);
-		   // 			//callback();
-		   // 		}
-		   //  }
-		   //  var params = {
-		   // 		"id":id
-		   //  }
-
-		   //  if(method == "get"){
-		   // 		$.ajax(ajaxObj)
-		   //  }
-		   //  if(method == "post"){
-		   // 		$.ajax($.extend(ajaxObj,params))
-		   //  }
-		   
-		   	//console.log($.extend(ajaxObj,params))
-
 		    $.fn.zTree.init($('#treePermission'), setting, zNodes); 
 
 		    var zTreeObj = $.fn.zTree.getZTreeObj('treePermission'); 
@@ -576,8 +486,7 @@ $(function(){
 	    	if(checkedNodes.length !=0){	    			
 	    	  zTreeObj.updateNode(checkedNodes);
 	   		}
-		   
-		    
+		   		    
 		   	//必须有延迟才能实现初始化时全部展开	
 		    setTimeout(function(){
 		    	zTreeObj.expandAll(true);
@@ -644,10 +553,9 @@ $(function(){
 		}
 	}
 
-
-
 	/* 保存新增/修改权限树
-	@param ajaxURL 
+	@param ajaxURL
+	@param id 
 	*/
 	function ztreeDateSave(ajaxURL,id){
 
@@ -705,7 +613,12 @@ $(function(){
 		
 		ztreeCancelLeave();
 	}
-	/**/
+	/*判断修改或新增 向后台传递不同类型的参数结构
+	@param ajaxURL
+	@param checkFuncsData
+	@param name
+	@param id
+	*/
 	function sendSaveParam(ajaxURL,checkedFuncsData,name,id){
 		var param = {};
         if(arguments.length == 3){

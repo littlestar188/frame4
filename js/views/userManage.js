@@ -2,6 +2,7 @@ $(function(){
 	'use strict';
 	var $USERMODAL =$('#userModal');
 	var $USERTABLE = $('#userTable');
+	//user input
 	var $USERNAME = $('#userName');
 	var $PHONE =$('#phone');
 	var $MAIL = $('#mail');
@@ -19,9 +20,9 @@ $(function(){
 	     	queryParams: function(params){
 	     		
 	     		var paramResult = {	
-	     			pageNumber:	params.offset+1,
+	     			pageNumber:	params.offset/params.limit+1,
 	     			pageSize:params.limit,
-	     			userName:$('#userName').val()
+	     			userName:$('#username').val()
 	     		}
 
 	     		console.log(paramResult)	
@@ -31,7 +32,7 @@ $(function(){
 	     	
 	     	striped: true,//使表格带有条纹
 	     	pagination: true,//设置True在表格底部显示分页工具栏
-	      	pageSize: 2,
+	      	pageSize: 10,
 	      	pageList: [10, 25, 50, 100],
 	      	toolbar:'#custom-toolbar',
 	      	columns: [
@@ -55,8 +56,11 @@ $(function(){
 	*/
 	var optPerform = function(){
 		//判断是否存在【新增】		
-		if($MAIN.find('#addBtn').length != 0){					
-			addUser();		
+		if($MAIN.find('#addBtn').length != 0){
+
+			$('#addBtn').click(function(){					
+				addUser();
+			})		
 		}
 
 		//判断是否存在【查询】
@@ -85,7 +89,7 @@ $(function(){
 
 			//判断是否为【修改】
 			if($(this).is('#btn-edit')){
-				var editName = $(this).parents('td').prev().html();
+				// var editName = $(this).parents('td:nth-child(2)').prev().html();
 				editUser(userId);
 
 			}
@@ -96,6 +100,7 @@ $(function(){
 
 			}
 
+			//黑名单	
 			if($(this).is("#btn-limit")){
 
 			}	
@@ -125,7 +130,7 @@ $(function(){
 		   			}
 		   		},
 		   		error:function(){
-
+		   			console.log("后台出错")	
 		   		}
        		})
 		})
@@ -133,18 +138,19 @@ $(function(){
 	}
 	/*新增用户*/
 	function addUser(){
-			
-		$('#addBtn').on('click',function(){	
-			clearModalData();
-			$('#userForm').show();
-			$('#detailUser').hide();
-			$("#saveBtn_add").show()
-			$("#saveBtn_edit").hide();
-			$('#userModal').modal("show")
-					
-		})
 
-		saveUser('add');
+		clearModalData();
+		$('.modal-title').html('新增用户');
+		$('#userForm').show();
+		$('#detailUser').hide();
+		$("#saveBtn_add").show()
+		$("#saveBtn_edit").hide();
+		$('#userModal').modal({show:true})
+
+		$USERMODAL.on('shown.bs.modal',function(){
+			saveUser('add');
+		})
+		
 	}
 
 	/*用户修改*/
@@ -152,36 +158,34 @@ $(function(){
 
 		clearModalData();
 		$('.modal-title').html('修改用户');
-		$("#saveBtn_add").hide()
+		$('#userForm').show();
+		$('#detailUser').hide();
+		$("#saveBtn_add").hide();
 		$("#saveBtn_edit").show();
-		$USERMODAL.modal('show');
-		$USERMODAL.on('shown.bs.modal',function(){
-			
-			$('#userForm').show();
-			$('#detailUser').hide();
-
-			$.ajax({
-				url:"/userPermission-controller/user/getDetail",			
-				type:"post",
-				dataType:"json",
-				data:{"id":userId},
-				success:function(res){
-					if(res.success == true){
-						$USERNAME.val(res.data.userName);
-						$('#updateDate').val(res.data.updateDate);
-						
-					}
+				
+		$.ajax({
+			url:"/userPermission-controller/user/getDetail",			
+			type:"post",
+			dataType:"json",
+			data:{"id":userId},
+			async : false,
+			success:function(res){
+				if(res.success == true){
+					console.log(res.data.userName)
+					$('#userName').val(res.data.userName);
+					$('#phone').val(res.data.phone);
+					$('#updateDate').val(res.data.updateDate);
+					$USERMODAL.modal({show:true});
 				}
-			})
+			}
+		})
 
-			saveUser('edit',userId)
-		});
-
-		
+		saveUser('edit',userId)
+			
 	} 
 	/*用户详情*/
 	function detailUser(userId){
-		clearModalData();
+		
 		$('.modal-title').html('用户详情');
 		$('#userForm').hide();
 		$("#saveBtn_add").hide()
@@ -216,39 +220,54 @@ $(function(){
 			}
 		})
 
-		$USERMODAL.modal('show');	
-
-	}
-
+		$USERMODAL.modal({show:true});
+		$USERMODAL.on('hidden.bs.modal',function(){
+			$('#detailUser tbody ').find('tr').remove();
+		})
+    }
+	/*保存用户新增/修改信息
+     @param flag string add/edit
+     @param userId		
+	*/	
 	function saveUser(flag,userId){
 		
-			var checkUserObj={}		
+			
+			
+			/*新增保存*/
 			if(flag=="add"){
-
+				var checkUserList=[];	
 				$('.main').find('#userForm input').each(function(){
+					$(this).off('change')					
 					$(this).change(function(){	
-						checkUserObj = checkExist($(this).attr('id'),$(this).val());
+						var checkUserObj = checkExist($(this).attr('id'),$(this).val());
 						console.log(checkUserObj)
-						
-					})	
+						checkUserList.push(checkUserObj);
+					})
+					
+					console.log(checkUserList)		
 				})
 
-				
-				
+				$("#saveBtn_add").off('click')	
+				$("#saveBtn_add").on("click",function(){
+					var newCheckObj={};
 
-				$("#saveBtn_add").on('click',function(){
-					
+					for(var i=0;i<checkUserList.length;i++){
+						for(var key in checkUserList[i]){
+							newCheckObj[key] = checkUserList[i][key];
+						}
+					}
+
 					$.ajax({
 						url:"/userPermission-controller/user/add",			
 						type:"post",
 						dataType:"json",
 						contentType:"application/json;charset=utf-8",
-						data:JSON.stringify(checkUserObj),
+						data:JSON.stringify(newCheckObj),
+						async : false,
 						success:function(res){
 							if(res.success == true){
 								successTip("添加成功！");
-								$USERMODAL.modal('hide');						
-								clearModalData();
+								$USERMODAL.modal('hide').delay(500);														
 								$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
 					      			
 							}else{
@@ -261,33 +280,38 @@ $(function(){
 				})	
 			}
 			
+			/*修改保存*/
 			if(flag=="edit"){	
-
+				var checkUserList=[];	
 				$('.main').find('#userForm input').each(function(){
+					$(this).off('change')
 					$(this).change(function(){	
-						checkUserObj = checkExist($(this).attr('id'),$(this).val(),userId);
-						
+						var checkUserObj = checkExist($(this).attr('id'),$(this).val(),userId);
+						checkUserList.push(checkUserObj);
 						
 					})	
 				})
 
-				
-				
-
-				$("#saveBtn_edit").on('click',function(){		
-					
-					
+				$("#saveBtn_edit").off('click')	
+				$("#saveBtn_edit").on('click',function(){					
+					var newCheckObj={};
+					for(var i=0;i<checkUserList.length;i++){
+						for(var key in checkUserList[i]){
+							newCheckObj[key] = checkUserList[i][key];
+							newCheckObj["id"] = userId;
+						}
+					}
 					$.ajax({
 						url:"/userPermission-controller/user/update",			
 						type:"post",
 						dataType:"json",
 						contentType:"application/json;charset=utf-8",
-						data:JSON.stringify(checkUserObj),
+						data:JSON.stringify(newCheckObj),
+						async : false,
 						success:function(res){
 							if(res.success == true){
 								successTip("修改成功！");
-								$USERMODAL.modal('hide');						
-								clearModalData();
+								$USERMODAL.modal('hide').delay(500);;						
 								$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
 					      			
 							}else{
@@ -300,7 +324,6 @@ $(function(){
 					
 				})
 
-
 			}	
 				
 
@@ -309,7 +332,7 @@ $(function(){
 	
 	
 
-	/*输入框内容有变化 则验证
+	/*新增/修改 输入框内容有变化 则验证
 	  @param  columnName    
 	  @param  value
 	  @param  editId      
@@ -334,9 +357,8 @@ $(function(){
 	}
 
 
-	/*发送角色名
-	  @param valueNam
-	  @param data   	
+	/*向后台传验证数据
+	  @param dataExist  	
 	*/
 	function sendCheck(dataExist){
 
@@ -371,7 +393,7 @@ $(function(){
 
 		
 	}
-	/*后台反馈验证信息
+	/*后台反馈验证信息 
 	  @paran returnFlag
 	  @param retrunCode
 	  @param renturnMsg
@@ -391,13 +413,11 @@ $(function(){
 	}
 
 	function  clearModalData(){
-		$USERMODAL.modal('hide');
-		$USERMODAL.on('hidden.bs.modal',function(){
-			$USERMODAL.destory();
-			$USERMODAL.find('input[type=text]').each(function(){
-				$(this).val("")
-			})
+		
+		$USERMODAL.find('input').each(function(){
+			$(this).val("")
 		});
+		
 	}
 
 	/*详情table title中文化*/
@@ -448,5 +468,5 @@ $(function(){
 		    
 	}
 	return text;
-}
+	}
 });
