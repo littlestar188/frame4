@@ -2,12 +2,16 @@ $(function(){
 	'use strict';
 	var $ROLETABLE = $('#roleTable');
 	var $MAIN = $('.main');
-	var menuTreeData;
+	/*从本地缓存获取菜单树*/
+	var menuTreeData = JSON.parse(getStorage("menuZtree"));
+	console.log(menuTreeData)
+
 	var rebuildToZtreeData;
 	var initRole = function(){
 		$ROLETABLE.bootstrapTable({
 			locale: 'zh-CN',
 			url:"/userPermission-controller/role/getList",
+			//url:"http://192.168.1.69/userPermission-controller/common/getRoleList",
 	     	sidePagination:'server',
 	      	cache: false,//设置False禁用AJAX请求的缓存
 	      	height: '',
@@ -198,27 +202,27 @@ $(function(){
 	}
 
     /*所有菜单功能*/
-    function getMenuTree(){
-    	$.ajax({
-	   		//url:'resources/json/listDetailTree.json',
-	   		url:'/userPermission-controller/menu/tree',
-	   		type:"get",
-	   		dataType:"json",
-	   		async : false,//必写
-	   		success:function(res){
-	   			console.log(res)
+    // function getMenuTree(){
+    // 	$.ajax({
+	   // 		//url:'resources/json/listDetailTree.json',
+	   // 		url:'/userPermission-controller/menu/tree',
+	   // 		type:"get",
+	   // 		dataType:"json",
+	   // 		async : false,//必写
+	   // 		success:function(res){
+	   // 			console.log(res)
 	   	
-	   			if(res.success == true){
-	   				var menuTreeData = res.data;	   				
-	   				setStorage("menuTree",menuTreeData)
+	   // 			if(res.success == true){
+	   // 				var menuTreeData = res.data;	   				
+	   // 				setStorage("menuTree",menuTreeData)
 	   					
-	   			}   		
-	   		},
-	   		error:function(){
-	   			console.log("获取详情---后台报错")
-	   		}
-	    })
-    }
+	   // 			}   		
+	   // 		},
+	   // 		error:function(){
+	   // 			console.log("获取详情---后台报错")
+	   // 		}
+	   //  })
+    // }
     /*修改/详情时 获取菜单、功能、角色名
 	@param editId	
     */
@@ -254,90 +258,90 @@ $(function(){
 	    })
 	    return arrZtree;
     }
-    /*创建类（构造器） 用于重构菜单树数据结构*/
-    function CreateSeriesItem(pId,id,name,url,type,checked){
-    	this.pId = pId;
-    	this.id = id;
-        this.name = name;
-        this.url = url;
-        this.type = type;//0表示菜单 1表示功能，以便在传参过程中区分id类型
-        this.checked = checked
-        //this.isParent = isParent;        
-        //this.children = children;
+ //    /*创建类（构造器） 用于重构菜单树数据结构*/
+ //    function CreateSeriesItem(pId,id,name,url,type,checked){
+ //    	this.pId = pId;
+ //    	this.id = id;
+ //        this.name = name;
+ //        this.url = url;
+ //        this.type = type;//0表示菜单 1表示功能，以便在传参过程中区分id类型
+ //        this.checked = checked
+ //        //this.isParent = isParent;        
+ //        //this.children = children;
         
-    }
-    function SeriesItem(){
-        CreateSeriesItem.apply(this,arguments);
-    }
-    SeriesItem.prototype = new CreateSeriesItem();
-    SeriesItem.prototype.constructor = SeriesItem;
+ //    }
+ //    function SeriesItem(){
+ //        CreateSeriesItem.apply(this,arguments);
+ //    }
+ //    SeriesItem.prototype = new CreateSeriesItem();
+ //    SeriesItem.prototype.constructor = SeriesItem;
 
-    /*新增时 menu重新构造ztree型数据结构
-	*@param data menu/list 	
-    */	
-    function rebuildToZtreeData(data){
+ //    /*新增时 menu重新构造ztree型数据结构
+	// *@param data menu/list 	
+ //    */	
+ //    function rebuildToZtreeData(data){
 
-    	var arr = [];
+ //    	var arr = [];
 
-		for(var i=0;i<data.length;i++){
-			//自身是父节点
-			if(data[i].parentId == null ){
+	// 	for(var i=0;i<data.length;i++){
+	// 		//自身是父节点
+	// 		if(data[i].parentId == null ){
 
-			/*if(data[i].checked !="checked"){
-				data[i].checked = false
-			}*/
+	// 		/*if(data[i].checked !="checked"){
+	// 			data[i].checked = false
+	// 		}*/
 
-			var obj = new SeriesItem(0,data[i].id,data[i].menuName,data[i].menuUrl,0)
-			arr.push(obj);
+	// 		var obj = new SeriesItem(0,data[i].id,data[i].menuName,data[i].menuUrl,0)
+	// 		arr.push(obj);
 		
-			if(data[i].subMenus !== null){
-				//二级菜单子节点	
-					for(var j=0;j<data[i].subMenus.length;j++){
+	// 		if(data[i].subMenus !== null){
+	// 			//二级菜单子节点	
+	// 				for(var j=0;j<data[i].subMenus.length;j++){
 
-						/*if(data[i].subMenus[j].checked !="checked"){
-							data[i].subMenus[j].checked = false
-						}*/
+	// 					/*if(data[i].subMenus[j].checked !="checked"){
+	// 						data[i].subMenus[j].checked = false
+	// 					}*/
 
-					   var subObj = new SeriesItem(data[i].id,data[i].subMenus[j].id,data[i].subMenus[j].menuName,data[i].subMenus[j].menuUrl,0)
-					   arr.push(subObj);
+	// 				   var subObj = new SeriesItem(data[i].id,data[i].subMenus[j].id,data[i].subMenus[j].menuName,data[i].subMenus[j].menuUrl,0)
+	// 				   arr.push(subObj);
 
-					    //二级菜单的功能子节点	
-					 	if(data[i].subMenus[j].funcs !== null){
-							for(var n=0;n<data[i].subMenus[j].funcs.length;n++){
+	// 				    //二级菜单的功能子节点	
+	// 				 	if(data[i].subMenus[j].funcs !== null){
+	// 						for(var n=0;n<data[i].subMenus[j].funcs.length;n++){
 
-								/*if(data[i].subMenus[j].funcs[n].checked != "checked"){
-									data[i].subMenus[j].funcs[n].checked = false
-								}*/
+	// 							/*if(data[i].subMenus[j].funcs[n].checked != "checked"){
+	// 								data[i].subMenus[j].funcs[n].checked = false
+	// 							}*/
 
-								var subFuncsObj = new SeriesItem(data[i].subMenus[j].id,data[i].subMenus[j].funcs[n].id,data[i].subMenus[j].funcs[n].funName,data[i].subMenus[j].funcs[n].funUrl,1)
-						  		arr.push(subFuncsObj);
-							}
+	// 							var subFuncsObj = new SeriesItem(data[i].subMenus[j].id,data[i].subMenus[j].funcs[n].id,data[i].subMenus[j].funcs[n].funName,data[i].subMenus[j].funcs[n].funUrl,1)
+	// 					  		arr.push(subFuncsObj);
+	// 						}
 								
-						}
+	// 					}
 
-					}		   							
+	// 				}		   							
 
-			}else{
-				if(data[i].funcs!== null ){
-						//一级菜单对应的功能子节点	
-						for(var k=0;k<data[i].funcs.length;k++){
-							/*if(data[i].funcs[k].funName,data[i].funcs[k].checked != "checked"){
-									data[i].funcs[k].funName,data[i].funcs[k].checked = false
-								}*/
+	// 		}else{
+	// 			if(data[i].funcs!== null ){
+	// 					//一级菜单对应的功能子节点	
+	// 					for(var k=0;k<data[i].funcs.length;k++){
+	// 						/*if(data[i].funcs[k].funName,data[i].funcs[k].checked != "checked"){
+	// 								data[i].funcs[k].funName,data[i].funcs[k].checked = false
+	// 							}*/
 
-							var funcsObj = new SeriesItem(data[i].id,data[i].funcs[k].id,data[i].funcs[k].funName,data[i].funcs[k].funUrl,1)
-					  		arr.push(funcsObj);
-						}
-					}
-			}
+	// 						var funcsObj = new SeriesItem(data[i].id,data[i].funcs[k].id,data[i].funcs[k].funName,data[i].funcs[k].funUrl,1)
+	// 				  		arr.push(funcsObj);
+	// 					}
+	// 				}
+	// 		}
 					   						
-			}
+	// 		}
 
-		}
-		console.log("处理menutree data后-----")		
-		console.log(arr)
-		return arr;				
-    }
+	// 	}
+	// 	console.log("处理menutree data后-----")		
+	// 	console.log(arr)
+	// 	return arr;				
+ //    }
 
 	/*详情/修改时 对比menuTree 和 menuFunctionList 
 	  找到存在id 重构成 {"id":id,"checked":"checked"}
@@ -683,52 +687,52 @@ $(function(){
 	/*判断有否存在menuTree 数据
 	@param name 本地缓存的数据名
 	*/
-	var judgeStorage = function (name){	
-		if(name == "menuTree"){
-			if(getStorage(name)!= undefined){
-				var data1 = getStorage("menuTree");
-				menuTreeData = JSON.parse(data1)
+	// var judgeStorage = function (name){	
+	// 	if(name == "menuTree"){
+	// 		if(getStorage(name)!= undefined){
+	// 			var data1 = getStorage("menuTree");
+	// 			menuTreeData = JSON.parse(data1)
 					
-			}else{
-			 	getMenuTree();
+	// 		}else{
+	// 		 	getMenuTree();
 			 
-			}
-	    }	     	    
-	};
+	// 		}
+	//     }	     	    
+	// };
 
-	/*写入本地存储数据
-	* @param name  命名
-	* @param data  
-	*/
-	function setStorage(name,data){
-		//判断json结构不严谨 
-		var value = typeof(data) == "object" ? JSON.stringify(data):data;
+	// /*写入本地存储数据
+	// * @param name  命名
+	// * @param data  
+	// */
+	// function setStorage(name,data){
+	// 	//判断json结构不严谨 
+	// 	var value = typeof(data) == "object" ? JSON.stringify(data):data;
 
-		console.log('set localStorage----')
-		//console.log(typeof(value))
-		if(window.localStorage){
-			localStorage.setItem(name,value);	
-		}else{
-			alert('浏览器不支持localStorage');
-			return
-		}	
-	}
-	/*获取本地存储的数据
-	*@param name 命名
-	*/
-	function getStorage(name){
+	// 	console.log('set localStorage----')
+	// 	//console.log(typeof(value))
+	// 	if(window.localStorage){
+	// 		localStorage.setItem(name,value);	
+	// 	}else{
+	// 		alert('浏览器不支持localStorage');
+	// 		return
+	// 	}	
+	// }
+	// /*获取本地存储的数据
+	// *@param name 命名
+	// */
+	// function getStorage(name){
 
-		if(! window.localStorage){
-			alert('浏览器不支持localStorage');
-			return;
-		}
-		if(localStorage.length>0 && localStorage.getItem(name) ){
-			var value = localStorage.getItem(name);
-			//console.log('get---'+typeof(value))
-			//console.log(value)
-			return value;
-		}
-	}
+	// 	if(! window.localStorage){
+	// 		alert('浏览器不支持localStorage');
+	// 		return;
+	// 	}
+	// 	if(localStorage.length>0 && localStorage.getItem(name) ){
+	// 		var value = localStorage.getItem(name);
+	// 		//console.log('get---'+typeof(value))
+	// 		//console.log(value)
+	// 		return value;
+	// 	}
+	// }
 
 	//localStorage.clear();
 

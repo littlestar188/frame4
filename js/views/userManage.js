@@ -40,7 +40,9 @@ $(function(){
                 {field: 'userName',title: '用户名称',align: 'middle'},
                 {field: 'roleName',title: '角色名称',valign: 'middle'},
                 {field: 'phone',title: '手机',valign: 'middle'},
-                {field: 'updateDate',title: '更新日期',valign: 'middle'},
+                {field: 'updateDate',title: '更新日期',valign: 'middle',formatter:function(value){
+                	return getSmpFormatDate(value,true)
+                }},
                 {field: 'updateUser',title: '更新者',valign: 'middle'},
                 {field: 'remark',title: '备注',valign: 'middle'},
                	{field: 'id',title: '操作',align:"center",valign: 'middle',formatter:function(value){
@@ -210,7 +212,7 @@ $(function(){
 						//console.log(trc)
 					})
 
-					$('#detailUser>tbody').find('tr>td:nth-child(1)').each(function(){
+					$/*('#detailUser>tbody').find*/('tr>td:nth-child(1)').each(function(){
 						var txt = $(this).text();
 						var newTxt = redefine(txt);
 						$(this).text(newTxt);
@@ -412,6 +414,7 @@ $(function(){
 		}
 	}
 
+	/*清楚table表单里的内容*/
 	function  clearModalData(){
 		
 		$USERMODAL.find('input').each(function(){
@@ -419,7 +422,7 @@ $(function(){
 		});
 		
 	}
-
+		
 	/*详情table title中文化*/
 	function redefine(text){
 	switch(text){

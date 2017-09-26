@@ -75,24 +75,13 @@ $(function(){
 				
 
 		    	var treeObj = $.fn.zTree.init($('#leftTreeNav'), setting, zNodes);
-		    	
-		    	
-
+		    
 		    	var firstNodes = treeObj.getNodesByParam("level","0");
 		    	
 				var secondNodes = treeObj.getNodesByParam("level","1");
-				// 从树对象中获取一级导航的code 创建url字符串
-		    	// var urls = $.map(secondNodes,function(item){
+				var funcsNodes = treeObj.getNodesByParam("type","1");
 
-		    	// 	if( item.code != undefined){
-		    	// 		return item.code+".html"		    		
-		    	// 	}
-		    	// })
-
-		    	//newNodes = treeObj.addNodes(,newNodes);	
-		    	//console.log(newNodes)
-				//console.log(secondNodes)
-					
+				treeObj.hideNodes(funcsNodes)	
 
 		    		
 		    	
@@ -156,7 +145,7 @@ $(function(){
                 if(res.success == true){
 	   				var menuTreeData = res.data;	   				
 	   				setStorage("menuTree",menuTreeData)
-	   					
+	   				judgeStorage("menuZtree");	
 	   			}   
                 //获取数据,初始化ztree树
                 //zNodes = resetData(getData);
@@ -167,13 +156,97 @@ $(function(){
         })
 	}
 
+	//菜单树重构
+	function rebuildToZtreeData(data){
+
+    	var arr = [];
+
+		for(var i=0;i<data.length;i++){
+			//自身是父节点
+			if(data[i].parentId == null ){
+
+			/*if(data[i].checked !="checked"){
+				data[i].checked = false
+			}*/
+
+			var obj = new SeriesItem(0,data[i].id,data[i].menuName,null,0)
+			arr.push(obj);
+			
+			if(data[i].subMenus !== null){
+				//二级菜单子节点
+
+					for(var j=0;j<data[i].subMenus.length;j++){
+
+						/*if(data[i].subMenus[j].checked !="checked"){
+							data[i].subMenus[j].checked = false
+						}*/
+
+					   var subObj = new SeriesItem(data[i].id,data[i].subMenus[j].id,data[i].subMenus[j].menuName,data[i].subMenus[j].menuUrl,0)
+					   arr.push(subObj);
+
+					    //二级菜单的功能子节点	
+					 	if(data[i].subMenus[j].funcs !== null){
+							for(var n=0;n<data[i].subMenus[j].funcs.length;n++){
+
+								/*if(data[i].subMenus[j].funcs[n].checked != "checked"){
+									data[i].subMenus[j].funcs[n].checked = false
+								}*/
+
+								var subFuncsObj = new SeriesItem(data[i].subMenus[j].id,data[i].subMenus[j].funcs[n].id,data[i].subMenus[j].funcs[n].funName,data[i].subMenus[j].funcs[n].funUrl,1)
+						  		arr.push(subFuncsObj);
+							}
+								
+						}
+
+					}		   							
+
+			}else{
+				if(data[i].funcs!== null ){
+						//一级菜单对应的功能子节点	
+						for(var k=0;k<data[i].funcs.length;k++){
+							/*if(data[i].funcs[k].funName,data[i].funcs[k].checked != "checked"){
+									data[i].funcs[k].funName,data[i].funcs[k].checked = false
+								}*/
+
+							var funcsObj = new SeriesItem(data[i].id,data[i].funcs[k].id,data[i].funcs[k].funName,data[i].funcs[k].funUrl,1)
+					  		arr.push(funcsObj);
+						}
+					}
+			}
+					   						
+			}
+
+		}
+		console.log("处理menutree data后-----")		
+		console.log(arr)
+		setStorage("menuZtree",arr);
+		return arr;				
+    }
+
+    function CreateSeriesItem(pId,id,name,url,type,checked){
+    	this.pId = pId;
+    	this.id = id;
+        this.name = name;
+        this.url = url;
+        this.type = type;//0表示菜单 1表示功能，以便在传参过程中区分id类型
+        this.checked = checked
+        //this.isParent = isParent;        
+        //this.children = children;
+        
+    }
+    function SeriesItem(){
+        CreateSeriesItem.apply(this,arguments);
+    }
+    SeriesItem.prototype = new CreateSeriesItem();
+    SeriesItem.prototype.constructor = SeriesItem;
+
 	/*第一步：判断当前浏览器是否存在某数据缓存
 	*@param name
 	*/
 	var judgeStorage = function (name){
 		
 		//模拟菜单树
-		if(name == "nav"){
+	/*	if(name == "nav"){
 			if(getStorage(name)!= undefined){
     			var data1 = getStorage("nav");
     			navigation = JSON.parse(data1)
@@ -194,7 +267,7 @@ $(function(){
 			 	getPermission();
 			 
 			}
-	    }	    
+	    }*/	    
 
 	   	if(name == "username"){
 			if(getStorage(name)!= undefined && getStorage(name)!= null){
@@ -210,24 +283,41 @@ $(function(){
 	    if(name == "menuTree"){
 			if(getStorage(name)!= undefined){
 				var data1 = getStorage("menuTree");
-				menuTreeData = JSON.parse(data1)
-					
+				menuTreeData = JSON.parse(data1);
+				setStorage("menuZtree",rebuildToZtreeData(menuTreeData));
+				judgeStorage("menuZtree");
+
 			}else{
 			 	getMenuTree();
+
 			 
 			}
 	    }
 
-	    if(navigation && permission){
+    	//缓存重构后的menuZtreeData
+        if(name == "menuZtree"){
+    		if(getStorage(name)!= undefined){
+    			var data1 = getStorage("menuZtree");
+    			menuZtreeData = JSON.parse(data1)
+    			initNavZtree(menuZtreeData,permission);
+    				
+    		}else{
+    			judgeStorage("menuTree");  		 	
+    		 
+    		}
+        }
+	    		
 
-	    	initNavZtree(navigation,permission);
-	    }
+	    // if(navigation && permission){
+
+	    // 	initNavZtree(navigation,permission);
+	    // }
 	   
 	    
 	};
-	judgeStorage("menuTree");
-	judgeStorage("nav");
-	judgeStorage("permission");
+	judgeStorage("menuZtree");
+	// judgeStorage("nav");
+	// judgeStorage("permission");
 
 	
 	
@@ -274,3 +364,53 @@ function getStorage(name){
 	// localStorage.removeItem("nav");
 	// localStorage.removeItem("permission");
 }*/
+
+
+/*传参密码 加密函数*/
+function encrypt(str){
+    var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    function base64encode(str) {
+       var out, i, len;
+       var c1, c2, c3;
+       len = str.length;
+       i = 0;
+       out = "";
+       while(i < len) {
+           c1 = str.charCodeAt(i++) & 0xff;
+           if(i == len)
+           {
+               out += base64EncodeChars.charAt(c1 >> 2);
+               out += base64EncodeChars.charAt((c1 & 0x3) << 4);
+               out += "==";
+               break;
+           }
+           c2 = str.charCodeAt(i++);
+           if(i == len)
+           {
+               out += base64EncodeChars.charAt(c1 >> 2);
+               out += base64EncodeChars.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+               out += base64EncodeChars.charAt((c2 & 0xF) << 2);
+               out += "=";
+               break;
+           }
+           c3 = str.charCodeAt(i++);
+           out += base64EncodeChars.charAt(c1 >> 2);
+           out += base64EncodeChars.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+           out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >>6));
+           out += base64EncodeChars.charAt(c3 & 0x3F);
+       }
+       return out;
+    }
+}
+
+/*时间控件 转换格式*/
+function getSmpFormatDate(date, isFull) {
+    if(date == null || date == undefined){
+        return "-";
+    }
+    if (isFull == true || isFull == undefined) {
+        return moment(date).format("YYYY-MM-DD HH:mm");
+    } else {
+        return moment(date).format("YYYY-MM-DD");
+    }
+}
