@@ -62,22 +62,22 @@ $(function(){
 
 			$('#addBtn').click(function(){					
 				addUser();
-			})		
-		}
+			});		
+		};
 
 		//判断是否存在【查询】
 		if($MAIN.find('#searchBtn').length != 0){
 
 			$('#searchBtn').click(function(){
 				$USERTABLE.bootstrapTable('refresh');
-			})
+			});
 			
-		}
+		};
 
 		//判断是否存在【批量删除】
 		if($MAIN.find('#delGroupBtn').length!=0){
 			delGroupRole();
-		}
+		};
 		
 		$USERTABLE.on('click','.btn.btn-sm',function(){
 
@@ -87,25 +87,25 @@ $(function(){
 			if($(this).is('#btn-watch')){
 				
 				detailUser(userId);
-			}
+			};
 
 			//判断是否为【修改】
 			if($(this).is('#btn-edit')){
 				// var editName = $(this).parents('td:nth-child(2)').prev().html();
 				editUser(userId);
 
-			}
+			};
 
 			//判断是否为【删除】
 			if($(this).is('#btn-del')){
 				delTip("userTable",userId,"/userPermission-controller/user/delete","/userPermission-controller/user/getList");
 
-			}
+			};
 
 			//黑名单	
 			if($(this).is("#btn-limit")){
 
-			}	
+			};	
 
 		})
 
@@ -114,11 +114,11 @@ $(function(){
 	function delGroupRole(){
 		$('#delGroupBtn').click(function(){
 			var selectedItems = $USERTABLE.bootstrapTable('getSelections');
-       		console.log(selectedItems)
+       		console.log(selectedItems);
        		var idList = selectedItems.map(function(item){
        			return item.id
-       		})
-       		console.log(idList)
+       		});
+       		console.log(idList);
 
        		$.ajax({
        			url:'/userPermission-controller/user/deleteBatch',
@@ -134,8 +134,8 @@ $(function(){
 		   		error:function(){
 		   			console.log("后台出错")	
 		   		}
-       		})
-		})
+       		});
+		});
 		
 	}
 	/*新增用户*/
@@ -147,11 +147,12 @@ $(function(){
 		$('#detailUser').hide();
 		$("#saveBtn_add").show()
 		$("#saveBtn_edit").hide();
-		$('#userModal').modal({show:true})
+		$('#userModal').modal({show:true});
+		getSelectRoleList();
 
 		$USERMODAL.on('shown.bs.modal',function(){
 			saveUser('add');
-		})
+		});
 		
 	}
 
@@ -173,18 +174,20 @@ $(function(){
 			async : false,
 			success:function(res){
 				if(res.success == true){
-					console.log(res.data.userName)
+					console.log(res.data.userName);
 					$('#userName').val(res.data.userName);
 					$('#phone').val(res.data.phone);
+
+					//$('#rolename').select2('val',res.data.roleName);角色名称写入
 					$('#updateDate').val(res.data.updateDate);
 					$USERMODAL.modal({show:true});
-				}
+				};
 			}
-		})
+		});
 
-		saveUser('edit',userId)
+		saveUser('edit',userId);
 			
-	} 
+	}; 
 	/*用户详情*/
 	function detailUser(userId){
 		
@@ -210,54 +213,85 @@ $(function(){
 						//console.log(i,n)
 						trc.appendTo('#detailUser>tbody');
 						//console.log(trc)
-					})
+					});
 
 					$/*('#detailUser>tbody').find*/('tr>td:nth-child(1)').each(function(){
 						var txt = $(this).text();
 						var newTxt = redefine(txt);
 						$(this).text(newTxt);
-						console.log(txt)
-					})
+						console.log(txt);
+					});
 				}
 			}
-		})
+		});
 
 		$USERMODAL.modal({show:true});
 		$USERMODAL.on('hidden.bs.modal',function(){
 			$('#detailUser tbody ').find('tr').remove();
-		})
-    }
+		});
+    };
+
+    /*select框  获取用户所属的角色名称*/
+	function getSelectRoleList(){
+		$('#rolename').empty();
+		$.ajax({
+   			url:'/userPermission-controller/common/getRoleList',
+	   		type:'get',
+	   		dataType:"json",
+	   		success:function(res){
+	   			console.log(res);
+	   			if(res.success == true){
+	   				var optionStr ="";	
+	   				for(var i=0;i<res.data.length;i++){
+
+	   					optionStr += '<option value="'+res.data[i].id+'">'+res.data[i].roleName+'<option/>';
+	   				};
+	   				console.log(optionStr);
+	   				$('#rolename').append(optionStr).select2();
+	   				
+	   			};
+	   		},
+	   		error:function(){
+
+	   		}
+		});
+	};
 	/*保存用户新增/修改信息
      @param flag string add/edit
      @param userId		
 	*/	
-	function saveUser(flag,userId){
-		
-			
-			
+	function saveUser(flag,userId){	
+			//表单中所有的 input select 输入框
+			//var $INPUT = $('.main').find('#userForm .form-group').children().not('label').children().not('.select2-container');		
 			/*新增保存*/
 			if(flag=="add"){
-				var checkUserList=[];	
+				var checkUserList=[];
 				$('.main').find('#userForm input').each(function(){
-					$(this).off('change')					
-					$(this).change(function(){	
+					$(this).off('change');					
+					$(this).change(function(){
+						//校验输入内容 除了角色名称	
 						var checkUserObj = checkExist($(this).attr('id'),$(this).val());
-						console.log(checkUserObj)
+						console.log(checkUserObj);
+						if(checkUserObj == null){
+							dangerTip("提示",$(this).parent().prev().html()+'【'+$(this).val()+'】重复！')
+							return;
+						}
 						checkUserList.push(checkUserObj);
 					})
 					
-					console.log(checkUserList)		
-				})
+					console.log(checkUserList);		
+				});
 
-				$("#saveBtn_add").off('click')	
+				$("#saveBtn_add").off('click');
 				$("#saveBtn_add").on("click",function(){
 					var newCheckObj={};
-
+					console.log($('#rolename').val().toString());
 					for(var i=0;i<checkUserList.length;i++){
-						for(var key in checkUserList[i]){
+						for(var key in checkUserList[i]){							
 							newCheckObj[key] = checkUserList[i][key];
-						}
-					}
+							newCheckObj["roleId"] = $('#rolename').val().toString();							
+						};
+					};
 
 					$.ajax({
 						url:"/userPermission-controller/user/add",			
@@ -274,35 +308,36 @@ $(function(){
 					      			
 							}else{
 
-								dangerTip("提示",res.msg+"！")
-							}
+								dangerTip("提示",res.msg+"！");
+							};
 						}
-					})
+					});
 					
-				})	
-			}
+				});	
+			};
 			
 			/*修改保存*/
 			if(flag=="edit"){	
 				var checkUserList=[];	
 				$('.main').find('#userForm input').each(function(){
-					$(this).off('change')
+					$(this).off('change');
 					$(this).change(function(){	
 						var checkUserObj = checkExist($(this).attr('id'),$(this).val(),userId);
 						checkUserList.push(checkUserObj);
 						
-					})	
-				})
+					});	
+				});
 
-				$("#saveBtn_edit").off('click')	
+				$("#saveBtn_edit").off('click');	
 				$("#saveBtn_edit").on('click',function(){					
-					var newCheckObj={};
+					var newCheckObj={};					
 					for(var i=0;i<checkUserList.length;i++){
 						for(var key in checkUserList[i]){
 							newCheckObj[key] = checkUserList[i][key];
 							newCheckObj["id"] = userId;
-						}
-					}
+							newCheckObj["roleId"] = $('#rolename').val().toString();
+						};
+					};
 					$.ajax({
 						url:"/userPermission-controller/user/update",			
 						type:"post",
@@ -318,10 +353,10 @@ $(function(){
 					      			
 							}else{
 
-								dangerTip("提示",res.msg+"！")
-							}
+								dangerTip("提示",res.msg+"！");
+							};
 						}
-					})
+					});
 						
 					
 				})
@@ -364,9 +399,9 @@ $(function(){
 	*/
 	function sendCheck(dataExist){
 
-		console.log(dataExist)
-		var returnFlag,returnCode ,returnMsg ;
-		var trueDate = {};
+		console.log(dataExist);
+		var returnFlag,returnData,returnMsg ;
+		var trueData = {};
 		if(dataExist.columnName != "" && dataExist.value != ""){
 			$.ajax({
     			url:"/userPermission-controller/user/checkExist",
@@ -376,21 +411,24 @@ $(function(){
     			async : false,
     			success:function(res){
     				console.log(res)
-    				returnFlag = res.success;
-    				returnCode = res.code;
+    				returnData = res.data;
     				returnMsg = res.msg;
 
     				if(res.success == true){
-    					trueDate[dataExist.columnName] = dataExist.value 
+    					trueData[dataExist.columnName] = dataExist.value; 
     				}
     				
     				//checkCallback(returnFlag,returnCode,returnMsg);
     			}
-    		})
-			return trueDate;	
-			
-    		
-		
+    		});
+    		console.log(returnData)
+    		console.log(trueData)
+    		if(!returnData){
+    			return trueData;
+    		};
+
+    						
+				
 		}
 
 		
@@ -418,58 +456,58 @@ $(function(){
 	function  clearModalData(){
 		
 		$USERMODAL.find('input').each(function(){
-			$(this).val("")
+			$(this).val("");
 		});
 		
 	}
 		
 	/*详情table title中文化*/
 	function redefine(text){
-	switch(text){
-		case "id":
-		     text = "用户ID";
-		     break;
-		case "userName":
-		     text = "用户姓名";
-		     break;
-		case "realName":
-			text = "真实姓名"
-		    break;
-		case "roleName":
-			text = "角色名";
-			 break;
-		case "type":
-			text = "角色类型"
-		    break;
-	    case "password":
-	    	text = "密码"
-	        break;
-		case "phone":
-			text = "电话"
-		    break;
-		case "mail":
-			text = "邮箱"
-		    break;
-		case "createDate":
-			text = "创建时间"
-		    break;
-		case "lastLoginTime":
-			text = "最后登录时间"
-		    break;
-		case "lastLoginIp":
-			text = "最后登录IP"
-		    break;
-		case "count":
-			text = "登录次数"
-		    break;
-		case "limit":
-			text = "权限区域"
-		    break;
-		case "remark":
-			text = "备注"
-		    break;
-		    
-	}
-	return text;
-	}
+		switch(text){
+			case "id":
+			     text = "用户ID";
+			     break;
+			case "userName":
+			     text = "用户姓名";
+			     break;
+			case "realName":
+				text = "真实姓名";
+			    break;
+			case "roleName":
+				text = "角色名";
+				 break;
+			case "type":
+				text = "角色类型";
+			    break;
+		    case "password":
+		    	text = "密码";
+		        break;
+			case "phone":
+				text = "电话";
+			    break;
+			case "mail":
+				text = "邮箱";
+			    break;
+			case "createDate":
+				text = "创建时间";
+			    break;
+			case "lastLoginTime":
+				text = "最后登录时间";
+			    break;
+			case "lastLoginIp":
+				text = "最后登录IP";
+			    break;
+			case "count":
+				text = "登录次数";
+			    break;
+			case "limit":
+				text = "权限区域";
+			    break;
+			case "remark":
+				text = "备注";
+			    break;
+			    
+		};
+		return text;
+	};
 });

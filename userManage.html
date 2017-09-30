@@ -21,12 +21,11 @@
     <link href="css/bootstrap-table.css" rel="stylesheet" >
     <link href="css/bootstrap-dialog.css" rel="stylesheet" >
     <link href="plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" >
+    <link href="plugins/select2/select2.css" rel="stylesheet" >
     <link href="css/style.css" rel="stylesheet">
     <link href="css/public.css" rel="stylesheet">
 
 </head>
-
-
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
     <!-- topNav -->
@@ -109,20 +108,17 @@
                            </div>
                        </div>
 
-                       <div class="form-group">
+                      <!--  <div class="form-group">
                            <label class="control-label col-sm-3"><font color="#c00">*</font>用户昵称:</label>
                            <div class="col-sm-6">
                                <input type="text" id="name" class="form-control" placeholder="请输入姓名">
                            </div>
-                       </div>
+                       </div> -->
 
                        <div class="form-group">
                            <label class="control-label col-sm-3"><font color="#c00">*</font>角色名称:</label>
                            <div class="col-sm-6">
-                               <select class="form-control" id="rolename">
-                                   <option value="1">超级管理员</option>
-                                   <option value="0">普通管理员</option>
-                               </select>
+                             <select id="rolename" class="js-example-basic-multiple" name="states[]" multiple="multiple" style="width:100%"></select>
                            </div>
                        </div>
                        <div class="form-group">
@@ -131,18 +127,18 @@
                                <input type="text" id="phone" class="form-control" placeholder="手机号码">
                            </div>
                        </div> 
-                       <div class="form-group">
+                       <!-- <div class="form-group">
                            <label class="control-label col-sm-3">&nbsp;邮箱地址:</label>
                            <div class="col-sm-6">
                                <input type="text" id="mail" class="form-control" placeholder="邮箱地址">
                            </div>
-                       </div> 
-                       <div class="form-group">
+                       </div>  -->
+                       <!-- <div class="form-group">
                            <label class="control-label col-sm-3">&nbsp;更新日期:</label>
                            <div class="col-sm-6">
                                <input type="text" id="updateDate" class="form-control" placeholder="更新日期">
                            </div>
-                       </div>               
+                       </div>   -->             
                      </form>
                      <!-- 详情列表 -->
                      <table id="detailUser">
@@ -180,14 +176,17 @@
 	<script src="js/pace.min.js"></script>
   <!-- ztree -->
   <script src="js/ztree.min.js"></script>
-   <!-- moment -->
-   <script src="plugins/daterangepicker/moment.js"></script>
-	 <!-- Custom scripts required by this view -->
+  <!-- moment -->
+  <script src="plugins/daterangepicker/moment.js"></script>
+  <!-- select2 -->
+  <script src="plugins/select2/select2.full.js"></script>
+	<!-- Custom scripts required by this view -->
 	<script src="js/app.js"></script>
 
   <script src="js/views/common.js"></script>
   <script src="js/views/optShow.js"></script>
   <script src="js/views/dialogShow.js"></script>
+  <script src="js/views/getNav.js"></script>
 	<script src="js/views/userManage.js"></script>
 </body>
 </html>

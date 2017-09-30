@@ -2,7 +2,7 @@
 	Createed by caixx on 2017-08
 */
 
-var perArr,navArr;
+/*var perArr,navArr;
 
 $(function(){
 	
@@ -42,7 +42,7 @@ var per = function(){
   //console.log(newPerArr)
   return newPerArr;
 }
-
+*/
 
 /*
 *@param id 角色id
@@ -60,9 +60,9 @@ function optShow(id){
 	var $editBtn = createOptBtn(id,'btn-edit','修改','btn-info');
 	
 	var $watchBtn = createOptBtn(id,'btn-watch','详情');
-	if(pathname.indexOf("userManage") != -1){
-		$watchBtn = createOptBtn(id,'btn-watch','重置密码');
-	}
+	// if(pathname.indexOf("userManage") != -1){
+	// 	$watchBtn = createOptBtn(id,'btn-watch','重置密码');
+	// }
 	$watchBtn.css("display","inline-block")
 	var $delBtn = createOptBtn(id,'btn-del','删除','btn-danger');
 	var $limitBtn = createOptBtn(id,'btn-limit','黑名单','btn-black');
@@ -83,7 +83,7 @@ function optShow(id){
 	// 	//console.log(html)	
 	// 	console.log(opts,[$addBtn,$delBtn,$editBtn])
 	// }()
-	var perFunArr = per();	
+	/*var perFunArr = per();	
 	for(var key=0;key<perFunArr.length;key++){
 
 			//增
@@ -113,7 +113,7 @@ function optShow(id){
 			if(perFunArr[key].indexOf("1014")!= -1 ){
 				$limitBtn.show();
 			}
-	}
+	}*/
 
 	
 	

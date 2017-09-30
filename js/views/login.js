@@ -11,10 +11,11 @@ $(function(){
 			},
 			password:{
 				required:true
-			},
+			}
+			/*,
 			code:{
 				required:true
-			}
+			}*/
 
 		},
 		messages:{
@@ -25,10 +26,11 @@ $(function(){
 			},
 			password:{
 				required:"密码不能为空"
-			},
+			}
+			/*,
 			code:{
 				required:"验证码不能为空"
-			}
+			}*/
 
 		},
 		errorPlacement: function(error, element) {				
@@ -38,7 +40,7 @@ $(function(){
 			alert('submitted!');
 
 		}
-	})
+	});
 	
 	var validator = $('#loginform_username').validate({
 		focusInvalid:false,
@@ -48,11 +50,12 @@ $(function(){
 			},
 			password:{
 				required:true
-			},
+			}
+			/*,
 			code:{
 				required:true,
 				number:true
-			}
+			}*/
 
 		},
 		messages:{
@@ -61,11 +64,12 @@ $(function(){
 			},
 			password:{
 				required:"密码不能为空"
-			},
+			}
+			/*,
 			code:{
 				required:"验证码不能为空",
 				number:"验证码格式不正确"
-			}
+			}*/
 
 		},
 		errorPlacement: function(error, element) {
@@ -98,65 +102,65 @@ $(function(){
 			var param = $('#loginform_username input').map(function(){
 					//console.log($(this).val());
 					return $(this).val();
-				}).get()
-			console.log(param)
+			}).get();
+
+			console.log(param);
 			var data = {
 				userName:param[0],
-				passWord:param[1],
-				checkCode:param[2]
-			}
-
+				password:base64encode(param[1])
+				//,checkCode:param[2]
+			};
+			console.log(data)
 			$.ajax({
-				url:'/manage/user/login',
+				url:'/userPermission-controller/user/login',
 				type:"post",
 				cache:false,
 				dataType:"json",
 				data:data,
 				success:function(result){
 					console.log(result)
-					var message = result.message;
+					var msgCode = result.code;
 					var tip="";
-					if(result.returnCode == 1 ){								
-						switch(message){
-							case "0":
-								tip = "账号不存在";
-								$('#username').parent().next().next().html(tip)
-								break;
-							case "1":
-								tip = "验证码错误";
-								$('#code').parent().next().next().html(tip)
-								break;	
-							case "2":
-								tip = "用户名或密码错误";
-								$('#username').parent().next().next().html(tip)
-								break;
-						}
-						
-					}
-					if(result.returnCode == 0){
+					if(result.success == true){
 						localStorage.removeItem("menuTree");
 						localStorage.removeItem("menuZtree");
+						console.log(result.data.menuFunctionVOList)
+						setStorage('menuTree',result.data.menuFunctionVOList);
+						setStorage('username',result.data.userName);
 						localStorage.removeItem("nav");
 						localStorage.removeItem("permission");
 						window.location.href="index.html"  ;
+					}else{
+						/*switch(msgCode){
+							case "0":
+								tip = "账号不存在";
+								$('#username').parent().next().next().html(tip);
+								break;
+							case "1":
+								tip = "验证码错误";
+								$('#code').parent().next().next().html(tip);
+								break;	
+							case "2":
+								tip = "用户名或密码错误";
+								$('#username').parent().next().next().html(tip);
+								break;
+						};*/
 					}
 				},
 				error:function(){
-					alert("提交异常！")
+					alert("提交异常！");
 				}
-			})
+			});
 		}
-	})
+	});
 
 	var clear = function(){
 		$('input').each(function(){
 			$(this).on("focus",function(){
 				$(this).parent().siblings().html("");
-			})
-		})
-	}()
+			});
+		});
+	}();
 	
-})
+});
 
-localStorage.removeItem("menuTree");
-localStorage.removeItem("menuZtree");

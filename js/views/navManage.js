@@ -1,9 +1,10 @@
-var zTreeObj1 = "";
-var zTreeObj2 = "";
-var modifyObj = {};
-var checkNameBack;
+ var zTreeObj1 = "";
+ var zTreeObj2 = "";
+ var modifyObj = {};
+ var checkNameBack;
 $(function () {
     'use strict';
+   
     var $MENUS = $('#navTable');
     var initNav = function () {
         $MENUS.bootstrapTable({
