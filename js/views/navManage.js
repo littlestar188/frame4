@@ -30,12 +30,29 @@ $(function () {
             columns: [
                 {field: 'state', checkbox: true},
                 {field: 'menuName', title: '菜单名称',valign: 'middle'},
-                {
-                    field: 'id', title: '操作', valign: 'middle', formatter: function (value) {
+                {field: 'parentId', title: '父级菜单',valign: 'middle'},
+                {field: 'menuUrl', title: '菜单地址',valign: 'middle',formatter: function (value){                   
+                    return value.split('.')[0];}
+                },
+                {field: 'status', title: '可用状态',valign: 'middle',formatter: function (value){ 
+                    var filterValue = "";
+                    if(value != "" || value != undefined){
+                        switch(value){
+                            case "0":
+                            filterValue ="可用";
+                            break;
+                            case "1":
+                            filterValue = "禁用";
+                            break;
+
+                        };
+                    };                                    
+                    return value;}
+                },
+                {field: 'id', title: '操作', valign: 'middle', formatter: function (value){
                     console.log("返回的操作数据是------");
                     console.log(value);
-                    return optShow(value);
-                }
+                    return optShow(value);}
                 }
             ]
         })

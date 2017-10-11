@@ -7,15 +7,7 @@ $(function(){
 	var originMenuTreeData = JSON.parse(getStorage("menuZtree"));
 	console.log(originMenuTreeData);
 
-	//克隆数组对象 保留原数据对象 避免原始数据被修改
-	var objDeepCopy = function (source) {
-	    var sourceCopy = source instanceof Array ? [] : {};
-	    for (var item in source) {
-	        sourceCopy[item] = typeof source[item] === 'object' ? objDeepCopy(source[item]) : source[item];
-	    };
-	    return sourceCopy;
-	};
-
+	//克隆menuTree数组对象 保留原数据对象 避免原始数据被修改
 	var menuTreeData = objDeepCopy(originMenuTreeData);
 	//console.log(menuTreeData)
 
@@ -283,7 +275,7 @@ $(function(){
 			console.log(m + ':' + menuTreeData[m].id);
 			for(var n=0;n<ids.length;n++){
 				if(ids[n]==(menuTreeData[m].id) ||ids[n]==(menuTreeData[m].pId)){  
-					console.log('xx:' + menuTreeData[m].id);
+					//console.log('xx:' + menuTreeData[m].id);
 					menuTreeData[m]["checked"] = true;
 					break;
 				};

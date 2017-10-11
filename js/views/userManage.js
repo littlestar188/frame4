@@ -148,7 +148,7 @@ $(function(){
 		$("#saveBtn_add").show()
 		$("#saveBtn_edit").hide();
 		$('#userModal').modal({show:true});
-		getSelectRoleList();
+		getSelectRoleList("null");
 
 		$USERMODAL.on('shown.bs.modal',function(){
 			saveUser('add');
@@ -180,6 +180,11 @@ $(function(){
 
 					//$('#rolename').select2('val',res.data.roleName);角色名称写入
 					$('#updateDate').val(res.data.updateDate);
+
+					//获取当前用户对应的角色名称
+					var roleIds = res.data.roleId.split(',');
+					getSelectRoleList(roleIds);
+
 					$USERMODAL.modal({show:true});
 				};
 			}
@@ -205,9 +210,9 @@ $(function(){
 			data:{"id":userId},
 			success:function(res){
 				if(res.success == true){
-					
+					var filterData = detailDataFilter(res.data);
 					var tr = $('<tr><td></td><td></td></tr>');
-					$.each(res.data,function(i,n){
+					$.each(filterData,function(i,n){
 						var trc = tr.clone();
 						trc.find('td:nth-child(1)').text(i);						
 						trc.find('td:nth-child(2)').text(n);
@@ -222,7 +227,7 @@ $(function(){
 						$(this).text(newTxt);
 						console.log(txt);
 					});
-				}
+				};
 			}
 		});
 
@@ -233,7 +238,7 @@ $(function(){
     };
 
     /*select框  获取用户所属的角色名称*/
-	function getSelectRoleList(){
+	function getSelectRoleList(roleIds){
 		$('#rolename').empty();		
 		$.ajax({
    			url:'/userPermission-controller/common/getRoleList',
@@ -247,14 +252,17 @@ $(function(){
 
 	   					optionStr +='<option value="'+res.data[i].id+'">'+res.data[i].roleName+'</option>';
 	   				};
-	   				console.log(optionStr);
-	   				$('#rolename').append(optionStr).select2({
+	   				//console.log(optionStr);
+	   				var selectRole = $('#rolename').append(optionStr).select2({
 	   					placeholder: "选择角色",
 	   					allowClear: true
 	   				});
-	   				//去除多余的空option
 
-	   				
+	   				//【修改】显示对应角色名	   				
+   					if(roleIds.length!=0 || roleIds!=undefined ||roleIds!="null"){
+   						selectRole.val(roleIds).trigger('change');
+   						selectRole.change();
+   					};	   				
 	   			};
 	   		},
 	   		error:function(){
@@ -262,6 +270,8 @@ $(function(){
 	   		}
 		});
 	};
+
+
 	/*保存用户新增/修改信息
      @param flag string add/edit
      @param userId		
@@ -279,46 +289,50 @@ $(function(){
 						var checkUserObj = checkExist($(this).attr('id'),$(this).val());
 						console.log(checkUserObj);
 						if(checkUserObj == null){
-							dangerTip("提示",$(this).parent().prev().html()+'【'+$(this).val()+'】重复！')
+							dangerTip("提示",$(this).parent().prev().html()+'【'+$(this).val()+'】重复！');
 							return;
 						}
 						checkUserList.push(checkUserObj);
-					})
+					});
 					
-					console.log(checkUserList);		
+					//console.log(checkUserList);		
 				});
 
 				$("#saveBtn_add").off('click');
 				$("#saveBtn_add").on("click",function(){
 					var newCheckObj={};
-					console.log($('#rolename').val().toString());
+					
 					for(var i=0;i<checkUserList.length;i++){
 						for(var key in checkUserList[i]){							
 							newCheckObj[key] = checkUserList[i][key];
 							newCheckObj["roleId"] = $('#rolename').val().toString();							
 						};
 					};
+					//判断用户名和角色名称不能为空
+					if(newCheckObj.roleId != "" && newCheckObj.userName !=""){
+						$.ajax({
+							url:"/userPermission-controller/user/add",			
+							type:"post",
+							dataType:"json",
+							contentType:"application/json;charset=utf-8",
+							data:JSON.stringify(newCheckObj),
+							async : false,
+							success:function(res){
+								if(res.success == true){
+									successTip("添加成功！");
+									$USERMODAL.modal('hide').delay(500);														
+									$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
+						      			
+								}else{
 
-					$.ajax({
-						url:"/userPermission-controller/user/add",			
-						type:"post",
-						dataType:"json",
-						contentType:"application/json;charset=utf-8",
-						data:JSON.stringify(newCheckObj),
-						async : false,
-						success:function(res){
-							if(res.success == true){
-								successTip("添加成功！");
-								$USERMODAL.modal('hide').delay(500);														
-								$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
-					      			
-							}else{
-
-								dangerTip("提示",res.msg+"！");
-							};
-						}
-					});
-					
+									dangerTip("提示",res.msg+"！");
+								};
+							}
+						});
+					}else{
+						dangerTip("提示","用户名和角色名称不能为空！");
+					};
+										
 				});	
 			};
 			
@@ -336,42 +350,47 @@ $(function(){
 
 				$("#saveBtn_edit").off('click');	
 				$("#saveBtn_edit").on('click',function(){					
-					var newCheckObj={};					
-					for(var i=0;i<checkUserList.length;i++){
-						for(var key in checkUserList[i]){
-							newCheckObj[key] = checkUserList[i][key];
-							newCheckObj["id"] = userId;
-							newCheckObj["roleId"] = $('#rolename').val().toString();
-						};
-					};
-					$.ajax({
-						url:"/userPermission-controller/user/update",			
-						type:"post",
-						dataType:"json",
-						contentType:"application/json;charset=utf-8",
-						data:JSON.stringify(newCheckObj),
-						async : false,
-						success:function(res){
-							if(res.success == true){
-								successTip("修改成功！");
-								$USERMODAL.modal('hide').delay(500);;						
-								$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
-					      			
-							}else{
-
-								dangerTip("提示",res.msg+"！");
+					//console.log(checkUserList.length);
+					//判断是否有做修改 checkUserList.length>0则有
+					if(checkUserList.length!== 0){
+						var newCheckObj={};
+						for(var i=0;i<checkUserList.length;i++){
+							for(var key in checkUserList[i]){
+								newCheckObj[key] = checkUserList[i][key];
+								newCheckObj["id"] = userId;
+								newCheckObj["roleId"] = $('#rolename').val().toString();	
 							};
-						}
-					});
+						};
+						$.ajax({
+							url:"/userPermission-controller/user/update",			
+							type:"post",
+							dataType:"json",
+							contentType:"application/json;charset=utf-8",
+							data:JSON.stringify(newCheckObj),
+							async : false,
+							success:function(res){
+								if(res.success == true){
+									successTip("修改成功！");
+									$USERMODAL.modal('hide').delay(500);						
+									$USERTABLE.bootstrapTable('refresh', {url:'/userPermission-controller/user/getList'});
+						      			
+								}else{
+
+									dangerTip("提示",res.msg+"！");
+								};
+							}
+						});
+					}else{
+						successTip("信息没有做修改！");
+						$USERMODAL.modal('hide').delay(500);
+					};					
+					
 						
 					
-				})
+				});
 
-			}	
-				
-
-		
-	}
+			};			
+	};
 	
 	
 
@@ -386,7 +405,7 @@ $(function(){
 		if(arguments.length == 2){				
 			dataExist = {"columnName":columnName,"value":value};
 			return sendCheck(dataExist);														
-		}
+		};
 
 		//改
 		if(arguments.length == 3){				
@@ -394,10 +413,10 @@ $(function(){
 			var backData = sendCheck(dataExist);
 			backData["id"] = editId;
 			return 	backData;						
-		}
+		};
 
 		
-	}
+	};
 
 
 	/*向后台传验证数据
@@ -422,23 +441,20 @@ $(function(){
 
     				if(res.success == true){
     					trueData[dataExist.columnName] = dataExist.value; 
-    				}
+    				};
     				
     				//checkCallback(returnFlag,returnCode,returnMsg);
     			}
     		});
-    		console.log(returnData)
-    		console.log(trueData)
+    		console.log(returnData);
+    		console.log(trueData);
     		if(!returnData){
     			return trueData;
-    		};
-
-    						
-				
-		}
+    		};				
+		};
 
 		
-	}
+	};
 	/*后台反馈验证信息 
 	  @paran returnFlag
 	  @param retrunCode
@@ -449,14 +465,13 @@ $(function(){
 		if(returnFlag == true){
 			$('.error').hide();
 			//$('.correct i').html(retrunMsg);//返回的错误信息提示
-
 			$('.correct').show();							
 		}else{
 			$('.correct').hide();
 			//$('.error i').html(retrunMsg);
 			$('.error').show();
-		}
-	}
+		};
+	};
 
 	/*清楚table表单里的内容*/
 	function  clearModalData(){
@@ -466,57 +481,78 @@ $(function(){
 		});
 
 		//清空多选角色框
-		$('#rolename').select2("val","");
+		//$('#rolename').find('option:selected').val("");
 		
-	}
+	};
 		
 	/*详情table title中文化*/
 	function redefine(text){
 		switch(text){
 			case "id":
-			     text = "用户ID";
+			     text = "用户ID：";
 			     break;
 			case "userName":
-			     text = "用户姓名";
+			     text = "用户姓名：";
 			     break;
-			case "realName":
-				text = "真实姓名";
+			case "createUser":
+				text = "创建者：";
+			    break;
+			case "updateUser":
+				text = "更新者：";
 			    break;
 			case "roleName":
-				text = "角色名";
+				text = "角色名：";
 				 break;
 			case "type":
-				text = "角色类型";
-			    break;
-		    case "password":
-		    	text = "密码";
-		        break;
+				text = "角色类型：";
+			    break;		    
 			case "phone":
-				text = "电话";
+				text = "电话：";
 			    break;
 			case "mail":
-				text = "邮箱";
+				text = "邮箱：";
 			    break;
-			case "createDate":
-				text = "创建时间";
+			case "updateDate":
+				text = "更新时间：";
 			    break;
+		    case "createDate":
+		    	text = "创建时间：";
+		        break;
 			case "lastLoginTime":
-				text = "最后登录时间";
+				text = "最后登录时间：";
 			    break;
 			case "lastLoginIp":
-				text = "最后登录IP";
+				text = "最后登录IP：";
 			    break;
 			case "count":
-				text = "登录次数";
-			    break;
-			case "limit":
-				text = "权限区域";
-			    break;
+				text = "登录次数：";
+			    break;			
 			case "remark":
-				text = "备注";
+				text = "备注：";
 			    break;
 			    
 		};
 		return text;
+	};
+
+	//过滤详情数据
+	function detailDataFilter(data){
+		
+		console.log(data)
+		data.createDate = getSmpFormatDate(data.createDate)
+		data.updateDate = getSmpFormatDate(data.updateDate)
+		//使用delete 不会对原始数据做修改
+		delete data.password;
+		delete data.version;
+		delete data.status;
+		delete data.userType;
+		delete data.password;
+		delete data.roleId;
+		delete data.userAlias;
+		delete data.expireTime;
+		delete data.pageNumber;
+		delete data.pageSize;
+		console.log(data)
+		return data;
 	};
 });

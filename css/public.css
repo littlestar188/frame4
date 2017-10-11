@@ -232,7 +232,7 @@ header.navbar .navbar-brand{
 }
 /*modal dialog*/
 .modal-dialog{
-	top:100px;
+	top:200px;
 }
 /*login*/
 #login_wrapper .card-header{

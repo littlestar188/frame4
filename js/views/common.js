@@ -33,6 +33,15 @@ function getStorage(name){
 	}
 }
 
+//克隆数组对象 保留原数据对象 避免原始数据被修改
+var objDeepCopy = function (source) {
+    var sourceCopy = source instanceof Array ? [] : {};
+    for (var item in source) {
+        sourceCopy[item] = typeof source[item] === 'object' ? objDeepCopy(source[item]) : source[item];
+    };
+    return sourceCopy;
+};
+
 /*时间控件 转换格式*/
 function getSmpFormatDate(date, isFull) {
     if(date == null || date == undefined){

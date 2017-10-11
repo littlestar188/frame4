@@ -82,10 +82,24 @@ $(function(){
 
 				treeObj.hideNodes(funcsNodes);	
 		    	
+		    	expandMenu();
+		    	
+	    		setTimeout(function(){
+	    	    	zTreeObj.expandAll(true);
+	    	    },500);
 		    });		
 	};
 
-	
+	/*对应当前url地址 相应的菜单呈现展开状态*/
+	function expandMenu(){
+		//获取当前地址
+		var pathname = location.pathname;
+		pathname = pathname.split('/');
+		pathname = pathname[pathname.length-1];
+
+
+		console.log(pathname)
+	}
 
 	/*获取导航树*/
 	function getNav(){
