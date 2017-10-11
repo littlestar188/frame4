@@ -1,10 +1,10 @@
- var zTreeObj1 = "";
- var zTreeObj2 = "";
- var modifyObj = {};
- var checkNameBack;
+ 
 $(function () {
     'use strict';
-   
+    var zTreeObj1 = "";
+    var zTreeObj2 = "";
+    var modifyObj = {};
+    var checkNameBack;
     var $MENUS = $('#navTable');
     var initNav = function () {
         $MENUS.bootstrapTable({
@@ -49,15 +49,15 @@ $(function () {
         //判断是否存在【新增】
         if ($('.main').find('#addBtn').length != 0) {
             addNav(menuId);
-        }
+        };
 
         //判断是否存在【查询】
         if ($('.main').find('#searchBtn').length != 0) {
             //searchNav();
             $("#searchBtn").click(function () {
                 $MENUS.bootstrapTable("refresh");
-            })
-        }
+            });
+        };
 
         $MENUS.on('click', '.btn.btn-sm', function () {
             //判断是否为【详情】
@@ -69,7 +69,7 @@ $(function () {
                     message: ""
 
                 });
-            }
+            };
             //判断是否为【修改】
             if ($(this).is('#btn-edit')) {
                 menuId = $(this).attr("data-id");
@@ -88,13 +88,13 @@ $(function () {
                         //修改菜单
                         modifyMenu(menuOne, menuId);
                     }
-                })
-            }
+                });
+            };
             //判断是否为【删除】
             if ($(this).is('#btn-del')) {
                 var navId = $(this).attr("data-id");
-
-                BootstrapDialog.confirm({
+                delTip("navTable",navId,"/userPermission-controller/menu/deleteOne","/userPermission-controller/menu/table");
+                /*BootstrapDialog.confirm({
                     title: "提示",
                     type: BootstrapDialog.TYPE_DANGER,
                     size: BootstrapDialog.SIZE_SMALL,
@@ -122,13 +122,11 @@ $(function () {
                             })
                         }
                     }
-                });
-            }
-        })
+                });*/
+            };
+        });
     }();
-    // function ajaxDelete(url,id){
-    //
-    // }
+    
     //批量删除
     $("#delGroupBtn").click(function () {
         var selected = $('.selected .bs-checkbox').parent().find('#btn-watch');
@@ -231,6 +229,7 @@ $(function () {
     $("#submitOk").click(function () {
         updateMenu();
     })
+    
     function updateMenu() {
         var menuName = $(".commitModal").val();
         var menuId = $(".commitModal").attr("id");

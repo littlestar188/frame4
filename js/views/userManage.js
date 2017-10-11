@@ -195,7 +195,8 @@ $(function(){
 		$('#userForm').hide();
 		$("#saveBtn_add").hide()
 		$("#saveBtn_edit").hide();
-		$('#detailUser').show();
+		//显示详情列表
+		$('#detailUser').show();		
 
 		$.ajax({
 			url:"/userPermission-controller/user/getDetail",			
@@ -233,7 +234,7 @@ $(function(){
 
     /*select框  获取用户所属的角色名称*/
 	function getSelectRoleList(){
-		$('#rolename').empty();
+		$('#rolename').empty();		
 		$.ajax({
    			url:'/userPermission-controller/common/getRoleList',
 	   		type:'get',
@@ -244,10 +245,15 @@ $(function(){
 	   				var optionStr ="";	
 	   				for(var i=0;i<res.data.length;i++){
 
-	   					optionStr += '<option value="'+res.data[i].id+'">'+res.data[i].roleName+'<option/>';
+	   					optionStr +='<option value="'+res.data[i].id+'">'+res.data[i].roleName+'</option>';
 	   				};
 	   				console.log(optionStr);
-	   				$('#rolename').append(optionStr).select2();
+	   				$('#rolename').append(optionStr).select2({
+	   					placeholder: "选择角色",
+	   					allowClear: true
+	   				});
+	   				//去除多余的空option
+
 	   				
 	   			};
 	   		},
@@ -458,6 +464,9 @@ $(function(){
 		$USERMODAL.find('input').each(function(){
 			$(this).val("");
 		});
+
+		//清空多选角色框
+		$('#rolename').select2("val","");
 		
 	}
 		

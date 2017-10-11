@@ -311,8 +311,9 @@ $(function(){
 	    
 	};
 	judgeStorage("menuZtree");
-	judgeStorage("nav");
-	judgeStorage("permission");
+	/*judgeStorage("nav");
+	judgeStorage("permission");*/
+	judgeStorage("username");
 	
 	
 	
