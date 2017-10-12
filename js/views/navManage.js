@@ -38,16 +38,16 @@ $(function () {
                     var filterValue = "";
                     if(value != "" || value != undefined){
                         switch(value){
-                            case "0":
+                            case 1:
                             filterValue ="可用";
                             break;
-                            case "1":
+                            case  0:
                             filterValue = "禁用";
                             break;
 
                         };
                     };                                    
-                    return value;}
+                    return filterValue;}
                 },
                 {field: 'id', title: '操作', valign: 'middle', formatter: function (value){
                     console.log("返回的操作数据是------");

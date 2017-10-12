@@ -2,6 +2,7 @@
 $(function(){
 	var navigation,permission,menuTreeData;
 
+	/*初始化左侧导航*/
 	var initNavZtree = function(navData,perData){
 			var zNodes = [];
 			var newNodes = [];
@@ -41,13 +42,25 @@ $(function(){
 		    function onClick(e,treeId, treeNode) {
 		     	var treeObj = $.fn.zTree.getZTreeObj("leftTreeNav");
 				treeObj.expandNode(treeNode);
+
+				var siblingsTreeNodes = treeObj.getNodesByFilter(filterNode)
+
+				function filterNode(node){
+					return (node.id !== treeNode.id && node.pId == 0)
+				};
+
+				$.each(siblingsTreeNodes,function(index,value){
+					treeObj.expandNode(value, false, true, true)
+				})	
+				//console.log(siblingsTreeNodes)
+
 			};
 
 			/*自定义一级导航icon*/
 			function addDiyDom(treeId, treeNode){				
 				var treeObj = $.fn.zTree.getZTreeObj("leftTreeNav");
 				if (treeNode.parentNode && treeNode.parentNode.id!=0) return;
-				console.log(treeNode);
+				//console.log(treeNode);
 
 				var aObj = $("#" + treeNode.tId + '_a');
 				var bObj = $("#" + treeNode.tId + '_a.level0');
@@ -66,11 +79,8 @@ $(function(){
 				//console.log(bObj)
 				//console.log(treeNode,treeNode.id)				
 			};
-
 			
 
-			
-			
 			$(document).ready(function(){
 				
 		    	var treeObj = $.fn.zTree.init($('#leftTreeNav'), setting, zNodes);
@@ -82,24 +92,39 @@ $(function(){
 
 				treeObj.hideNodes(funcsNodes);	
 		    	
-		    	expandMenu();
-		    	
-	    		setTimeout(function(){
-	    	    	zTreeObj.expandAll(true);
-	    	    },500);
+		    	/*对应当前url地址 相应的菜单呈现展开状态*/		    	 
+		    	ExpandNodeFilter(treeObj)
+	    		
 		    });		
 	};
 
-	/*对应当前url地址 相应的菜单呈现展开状态*/
-	function expandMenu(){
-		//获取当前地址
-		var pathname = location.pathname;
+	/*判断当前url地址 
+	  对应的父级菜单呈现展开状态
+	  对应子级菜单 添加css样式	
+	*/
+	function ExpandNodeFilter(treeObj){
+    	//获取当前地址
+    	var pathname = location.pathname;
 		pathname = pathname.split('/');
 		pathname = pathname[pathname.length-1];
-
-
 		console.log(pathname)
-	}
+
+		//筛选节点 父级菜单展开
+		var currentChildNode = treeObj.getNodesByParam("url",pathname);
+		if(currentChildNode.length>0){
+			if(currentChildNode[0].isParent == false){
+				//获取当前子节点的父节点
+				var currentParentNode = currentChildNode[0].getParentNode();
+				setTimeout(function(){
+					treeObj.expandNode(currentParentNode, true, true, true)
+				},500);
+			};
+		};
+
+		/*筛选dom对象 子级菜单加css*/
+
+
+	};
 
 	/*获取导航树*/
 	function getNav(){
