@@ -89,3 +89,26 @@ var base64encode = function (str) {
    }
    return out;
 };
+
+/*card-actions*/
+//minisize
+var collapse = function(){
+    
+    $(".btn-minisize").on('click',function() {
+        var $BOX_PANEL = $(this).closest('.block-detail'),
+            $ICON = $(this).find('i'),
+            $BOX_CONTENT = $BOX_PANEL.find('.item-box');
+        // fix for some div with hardcoded fix class
+        if ($BOX_PANEL.attr('style')) {//现状是打开 再次点击是关闭
+            $BOX_CONTENT.slideToggle(200, function(){
+                $BOX_PANEL.removeAttr('style');
+            });
+
+        } else {//现状是关闭，再次点击是打开
+            $BOX_CONTENT.slideToggle(200);
+            $BOX_PANEL.css('height', 'auto');
+        };
+
+        $ICON.toggleClass('icon-arrow-up icon-arrow-down');
+    });
+}();

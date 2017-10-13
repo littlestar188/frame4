@@ -1,4 +1,11 @@
 /* Created by caixx  */
+ul,li{
+  margin:0;
+  padding:0;
+}
+li{
+  list-style: none;
+}
 
 *:before, *:after{
 	-webkit-box-sizing: border-box;
@@ -449,3 +456,43 @@ header.navbar .navbar-brand{
 	border:1px solid #39b2d5;
 }
 
+/* menu blocks */
+.card{
+  padding-top:10px;
+}
+.card .btn-select{
+  text-align:right;
+  padding-right:15px;
+}
+.card .btn-select input[type=checkbox]{
+  width:20px;
+  height:20px;
+  background:none;  
+  outline:none;  
+  border:0px;
+  background:#fff;  
+}
+.card .card-block{
+  padding:0rem 1.25rem;
+}
+.card .card-block .mb-0{
+  line-height:2.3;
+}
+.card .block-detail{
+  width:100%;
+  padding:10px;
+  background-color:#fff;
+  color:#737373;
+  font-size:16px;
+}
+.card .block-detail .block-header .card-actions{
+  text-align:right;
+  padding-right:5px;
+}
+.card .block-detail ul{
+  padding:0 1.25rem;
+  overflow:hidden;
+}
+.card .block-detail ul li.detail-item{
+  padding: 3px 0;
+}

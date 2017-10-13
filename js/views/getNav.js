@@ -73,7 +73,7 @@ $(function(){
 				//添加icon 重构后的treeNode多一个icon属性 
 				bObj.each(function(){
 					var iconHtml = '<i class="icon-star"></i>';//改变'<i class="'+$(this).icon+'"></i>'
-					$(this).prepend(iconHtml)
+					$(this).prepend(iconHtml);
 				});
 				
 				//console.log(bObj)
@@ -90,10 +90,18 @@ $(function(){
 				var secondNodes = treeObj.getNodesByParam("level","1");
 				var funcsNodes = treeObj.getNodesByParam("type","1");
 
-				treeObj.hideNodes(funcsNodes);	
+				//若存在功能子节点 移除功能子节点
+				if(funcsNodes&&funcsNodes.length>0){
+					$.each(funcsNodes,function(index,value){
+						treeObj.removeNode(value);
+					});					
+				};
+
+				/*对应当前url地址 相应的菜单呈现展开状态*/		    	 
+		    	ExpandNodeFilter(treeObj);
+					
 		    	
-		    	/*对应当前url地址 相应的菜单呈现展开状态*/		    	 
-		    	ExpandNodeFilter(treeObj)
+		    	
 	    		
 		    });		
 	};
