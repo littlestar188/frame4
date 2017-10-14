@@ -1,14 +1,11 @@
-
+ 
 $(function () {
     'use strict';
     var zTreeObj1 = "";
     var zTreeObj2 = "";
     var modifyObj = {};
-    var newNode = {};
     var checkNameBack;
     var $MENUS = $('#navTable');
-    
-    /*初始化navigation table*/
     var initNav = function () {
         $MENUS.bootstrapTable({
             locale: 'zh-CN',
@@ -17,13 +14,12 @@ $(function () {
             cache: false,//设置False禁用AJAX请求的缓存
             height: '',
             queryParams: function (params) {
-               /* console.log("获取页数");
-                console.log(params);*/
+                console.log("获取页数");
+                console.log(params);
                 return {
                     pageNumber: params.offset / params.limit + 1,
                     pageSize: params.limit,
                     menuName: $('#menuNameSearch').val()
-                    //withFunction:false
                 }
             },
             striped: true,//使表格带有条纹
@@ -33,44 +29,33 @@ $(function () {
             paginationDetailHAlign: 'left',
             columns: [
                 {field: 'state', checkbox: true},
-                {field: 'menuName', title: '菜单名称', valign: 'middle'},
-                {field:'parentId',title:'父级菜单',valign:'middle',formatter:function(value,row,index){
-                    var menuName ="";
-                    var menuOne = '';
-                    var self_index = index;
-                    if(value!=null){
-                        $.ajax({
-                            url: "/userPermission-controller/menu/detail",
-                            data: {"menuId": value},
-                            dataType:'json',
-                            type:'GET',
-                            async: true,
-                            cache: false,
-                            success: function (res) {
-                             //   console.log("菜单详情----");
-                               // console.log(res);
-                                menuOne = res.data;
-                                menuName = menuOne.menuName;
-                               // console.log(slef_index);
-                                $($('tr[data-index='+self_index+']').find('td')[2]).text(menuName);
-                            }
-                          });
-                        }
-                    }
-                },
-                {field:'menuUrl',title:'菜单地址',valign:'middle',formatter:function(value){
+                {field: 'menuName', title: '菜单名称',valign: 'middle'},
+                {field: 'parentId', title: '父级菜单',valign: 'middle'},
+                {field: 'menuUrl', title: '菜单地址',valign: 'middle',formatter: function (value){                   
                     return value.split('.')[0];}
                 },
-                {field:'status',title:'可用状态',valign:'middle',formatter:function(value){                  
-                   return availableJudge(value);}
+                {field: 'status', title: '可用状态',valign: 'middle',formatter: function (value){ 
+                    var filterValue = "";
+                    if(value != "" || value != undefined){
+                        switch(value){
+                            case 1:
+                            filterValue ="可用";
+                            break;
+                            case  0:
+                            filterValue = "禁用";
+                            break;
+
+                        };
+                    };                                    
+                    return filterValue;}
                 },
-                {field: 'id', title: '操作', valign: 'middle', formatter: function (value) {
-                  //  console.log("返回的操作数据是------");
-                  //  console.log(value);
+                {field: 'id', title: '操作', valign: 'middle', formatter: function (value){
+                    console.log("返回的操作数据是------");
+                    console.log(value);
                     return optShow(value);}
                 }
             ]
-        });
+        })
     }();
 
     /*table中的按键功能实现
@@ -81,34 +66,27 @@ $(function () {
         //判断是否存在【新增】
         if ($('.main').find('#addBtn').length != 0) {
             addNav(menuId);
-        }
+        };
 
         //判断是否存在【查询】
         if ($('.main').find('#searchBtn').length != 0) {
             //searchNav();
             $("#searchBtn").click(function () {
                 $MENUS.bootstrapTable("refresh");
-            })
-        }
+            });
+        };
 
         $MENUS.on('click', '.btn.btn-sm', function () {
             //判断是否为【详情】
             if ($(this).is('#btn-watch')) {
-                menuId = $(this).attr("data-id");
-                var name = $(this).attr("title");
-                console.log(menuId,name);
-                $.ajax({
-                    url: "/userPermission-controller/menu/detail",
-                    data: {"menuId": menuId},
-                    success: function (result) {
-                        console.log("菜单详情");
-                        console.log(result.data);
-                        var menuOne = result.data;
-                        //菜单详情
-                        MenuDetail(menuOne, menuId);
-                    }
-                })
-            }
+                BootstrapDialog.show({
+                    title: "详情",
+                    type: BootstrapDialog.TYPE_PRIMARY,
+                    size: BootstrapDialog.SIZE_SMALL,
+                    message: ""
+
+                });
+            };
             //判断是否为【修改】
             if ($(this).is('#btn-edit')) {
                 menuId = $(this).attr("data-id");
@@ -127,13 +105,13 @@ $(function () {
                         //修改菜单
                         modifyMenu(menuOne, menuId);
                     }
-                })
-            }
+                });
+            };
             //判断是否为【删除】
             if ($(this).is('#btn-del')) {
                 var navId = $(this).attr("data-id");
-
-                BootstrapDialog.confirm({
+                delTip("navTable",navId,"/userPermission-controller/menu/deleteOne","/userPermission-controller/menu/table");
+                /*BootstrapDialog.confirm({
                     title: "提示",
                     type: BootstrapDialog.TYPE_DANGER,
                     size: BootstrapDialog.SIZE_SMALL,
@@ -161,45 +139,13 @@ $(function () {
                             })
                         }
                     }
-                });
-            }
-        })
+                });*/
+            };
+        });
     }();
-    //菜单详情
-    function MenuDetail(menuOne,menuId) {
-        var selectOneMenu =[];
-        var zNodes = [];
-        ztreeShow("详情");
-        zNodes = listOneMenu(menuOne);
-        console.log("详情数组");
-        console.log(zNodes);
-        initMenuZtree(menuId, zNodes,true);
-    };
-    //ztree 菜单详情
-    function listOneMenu(data){
-        var zNodes = [];
-        if (data.parentId == null || data.parentId == 0 || data.parentId !== null) {
-            var obj = new ztreeObj(0, data.id, data.menuName, data.menuUrl);
-            zNodes.push(obj);
-            if (data.funcs !== null) {
-                //二级菜单子节点
-                for (var j = 0; j < data.funcs.length; j++) {
-                    var subObj = new ztreeObj(data.id, data.funcs[j].id, data.funcs[j].funName, data.funcs[j].funUrl,data.funcs[j].funType);
-                    zNodes.push(subObj);
-                }
-            }
-        }
-        return zNodes;
-    };
+    
     //批量删除
     $("#delGroupBtn").click(function () {
-
-        // var selectedItems = $ROLETABLE.bootstrapTable('getSelections');
-        // console.log(selectedItems);
-        // var idList = selectedItems.map(function(item){
-        //     return item.id
-        // });
-        // console.log(idList);
         var selected = $('.selected .bs-checkbox').parent().find('#btn-watch');
         if (selected.length > 0) {
             var menuIds = [];
@@ -257,8 +203,9 @@ $(function () {
             var selectMenu = {};
             var zNodes = [];
             ztreeShow("新增");
-            //ajax获取数据            
-            initMenuZtree(menuId, getMenu());
+            //ajax获取数据 模拟数据
+            zNodes = getMenu();
+            initMenuZtree(menuId, zNodes);
         })
     }
    //点击取消按钮
@@ -266,78 +213,43 @@ $(function () {
         $('#menuName').val('');
         $("#parentInput").text('父级菜单');
         ztreeCancelLeave();
-    });
+    })
     //修改菜单
     function modifyMenu(menuOne, menuId) {
         var menuName = menuOne.menuName;
-        var menuUrl = menuOne.menuUrl;
-        var menuStatus = menuOne.status;
-        var StatusValue ='';
-        switch (menuStatus){
-            case 0:
-                $(':radio[name="Status"]').eq(1).attr("checked",false);
-                $(':radio[name="Status"]').eq(0).attr("checked",true);
-                // StatusValue = '可用';
-            case 1:
-                $(':radio[name="Status"]').eq(0).attr("checked",false);
-                $(':radio[name="Status"]').eq(1).attr("checked",true);
-               //  StatusValue = '禁用';
-        }
-        //$("#navName").val(menuName);
         $("#navName2").text(menuName);
-        $("#menuUrl2").val(menuUrl);
-        StatusValue = $(':radio[name="Status"]:checked').val();
-        $("#status2").val(StatusValue);
+        $("#navName").val(menuName);
         var menuOnePid = menuOne.parentId;
         if (menuOnePid == null) {
             //修改一级菜单的弹出框
-            update(menuName,menuUrl,StatusValue,menuId);
+            update(menuName, menuId);
         } else {
+
             editMenu(menuId);
         }
     }
     //修改一级菜单的弹出框
-    function update(obj,menuUrl,StatusValue,val) {
+    function update(obj, val) {
         $('#update').modal('show');
-        $(".commitModalName").val(obj);
-        $(".commitModalName").attr("id", val);
-        $(".commitModalUrl").val(menuUrl);
-        switch (StatusValue){
-            case '0':
-                $(':radio[name="Status"]').eq(1).attr("checked",false);
-                $(':radio[name="Status"]').eq(0).attr("checked",true);
-            // StatusValue = '可用';
-            case '1':
-                $(':radio[name="Status"]').eq(0).attr("checked",false);
-                $(':radio[name="Status"]').eq(1).attr("checked",true);
-               // StatusValue = '禁用';
-        }
-       // $(".commitModalStatus").val(StatusValue);
+        $(".commitModal").val(obj);
+        $(".commitModal").attr("id", val);
     }
     //修改二级菜单
     function editMenu(menuId) {
         ztreeShow('修改');
-        var zNodes = [];      
-        initMenuZtree(menuId, getMenu());
+        var zNodes = [];
+        zNodes = getMenu();
+        initMenuZtree(menuId, zNodes);
     }
 
     //点击提交修改一级菜单
     $("#submitOk").click(function () {
         updateMenu();
-    });
-    //点击提交修改一级菜单
+    })
+    
     function updateMenu() {
-        var menuName = $(".commitModalName").val();
-        var menuId = $(".commitModalName").attr("id");
-        var menuUrl  = $(".commitModalUrl").val();
-        var menuStatus  = $(".commitModalStatus").val();
-        var StatusValue ='';
-        switch (menuStatus){
-            case '0':
-                StatusValue = 0;
-            case '1':
-                StatusValue = 1;
-        }
+        var menuName = $(".commitModal").val();
+        var menuId = $(".commitModal").attr("id");
         // alert(menuId);
         modifyCheckName("menuName", menuName);
         if (checkNameBack === "true") {
@@ -360,9 +272,9 @@ $(function () {
                         modifyObj = {
                             "id": menuId,
                             "menuName": menuName,
-                            "menuUrl": menuUrl,
+                            "menuUrl": menuOne.menuUrl,
                             "parentId": menuOne.parentId,
-                            "status": StatusValue,
+                            "status": menuOne.status,
                             "funcs": menuOne.funcs
                         };
                         console.log(modifyObj);
@@ -387,15 +299,6 @@ $(function () {
         console.log("想要修改的菜单对象");
         console.log(treeNode);
         var menuId = treeNode.id;
-        var menuUrl = $("#menuUrl2").val();
-        var  menuStatus = $("#menuUrl2").val();
-        var StatusValue ='';
-        switch (menuStatus){
-            case '0':
-                StatusValue = 0;
-            case '1':
-                StatusValue = 1;
-        }
         checkNameBack = modifyCheckName("menuName", newName);
         if (checkNameBack === "true") {
             $.ajax({
@@ -417,9 +320,9 @@ $(function () {
                         modifyObj = {
                             "id": menuId,
                             "menuName": newName,
-                            "menuUrl": menuUrl,
+                            "menuUrl": treeNode.url,
                             "parentId": treeNode.pId,
-                            "status": StatusValue,
+                            "status": menuOne.status,
                             "funcs": menuOne.funcs
                         };
                         console.log(modifyObj);
@@ -466,22 +369,13 @@ $(function () {
 
     //通过拖拽修改菜单的父级菜单
     function modifyNewMenu(treeNodes) {
-        var name = '', menuId = '', url = '', parentid = '',menuStatus ='';
+        var name = '', menuId = '', url = '', parentid = '';
         console.log(treeNodes);
         for (var i = 0, l = treeNodes.length; i < l; i++) {
             name = treeNodes[i].name;
             menuId = treeNodes[i].id;
-          //  url = treeNodes[i].url;
+            url = treeNodes[i].url;
             parentid = treeNodes[i].pId;
-        }
-        url = $("#menuUrl2").val();
-        menuStatus = $("#menuUrl2").val();
-        var StatusValue ='';
-        switch (menuStatus){
-            case '0':
-                StatusValue = 0;
-            case '1':
-                StatusValue = 1;
         }
         $.ajax({
             url: "/userPermission-controller/menu/detail",
@@ -504,7 +398,7 @@ $(function () {
                         "menuName": name,
                         "menuUrl": url,
                         "parentId": parentid,
-                        "status": StatusValue,
+                        "status": menuOne.status,
                         "funcs": menuOne.funcs
                     };
                     console.log(modifyObj);
@@ -520,12 +414,11 @@ $(function () {
         var modifyNewsMenu = {};
         //通过拖拽修改菜单的父级菜单
         modifyNewsMenu = modifyNewMenu(treeNodes);
-    }
+    };
    // ajax 点击确定修改保存
     $('#modifySave').click(function () {
         ajaxSave("/userPermission-controller/menu/update", modifyObj);
     });
-    /*菜单名称校验*/
     function modifyCheckName(name, val) {
         console.log(name);
         console.log(val);
@@ -589,7 +482,7 @@ $(function () {
         }
     }
 
-
+    var newNode = {};
     //保存新的菜单
     function addSaveMenu(selectMenu) {
         var zTree = $.fn.zTree.getZTreeObj("treeMenu");
@@ -635,8 +528,6 @@ $(function () {
     //点击保存
     $('#savetree').click(function () {
         var childName = $('#menuName').val();
-        var menuUrl = $('#menuUrl').val();
-        var status = $('#status').val();
         var parentName = $('#parentInput').text();
         var checkMenuName = '';
         //父级菜单不为空
@@ -646,9 +537,11 @@ $(function () {
             console.log(newNode.menuName);
             console.log("提交后的数据-----");
             checkName("menuName", newNode.menuName);
+
         } else if (childName === "") {
             dangerTip("错误提示", "菜单名称不能空");
         } else if (childName !== "" && parentName == "父级菜单") {//添加一级菜单
+
             newNode = {
                 "parentId": null,
                 "menuUrl": "navManage.html",
@@ -701,10 +594,6 @@ $(function () {
                                 ztreeSaveLeave();
                                 $("#navTable").bootstrapTable('refresh', {url: '/userPermission-controller/menu/table'});
                                 $('#menuName').val('');
-                                $('#menuUrl').val('');
-                               // $('input[name="Status"]:eq(0):checked');
-                                $(':radio[name="Status"]').eq(0).attr("checked",true);
-                                console.log(  $('input[name="Status"]:checked').val());
                                 $("#parentInput").text('父级菜单');
                             }
                         }]
@@ -722,19 +611,7 @@ $(function () {
 
     // 添加新的根节点到菜单下面
     function selectRootOne(zTree, nodes, lastZnodesId, parentNode, newNode) {
-        var childName = $('#menuName').val();
-        var menuUrl = $('#menuUrl').val();
-
-        var StatusValue =  $('input[name="Status"]:checked').val();
-        var status = '';
-        if(StatusValue !="" || StatusValue != undefined){
-            switch (StatusValue){
-                case '0':
-                    status = 0;
-                case '1':
-                    status = 1;
-            }
-        }
+        var childName = $('#parentInput').text();
         var newMenuId = "";
         for (var i = 0, len = nodes.length; i < len; i++) {
             newMenuId = nodes[i].id;
@@ -742,9 +619,9 @@ $(function () {
         console.log("选中的id---" + newMenuId);
         newNode = {
             "parentId": newMenuId,
-            "menuUrl": menuUrl,
+            "menuUrl": "navManage.html",
             "menuName": childName,
-            "status": status,
+            "status": 1,
             "funcs": [{
                 "funName": "添加",
                 "funType": 2,
@@ -777,15 +654,14 @@ $(function () {
             success: function (res) {
                 console.log("获得数据");
                 console.log(res.data);
-                /*var getData = res.data;
+                var getData = res.data;
                 //获取数据,初始化ztree树
-                zNodes = resetData(getData);*/
-                zNodes = res.data;
+                zNodes = resetData(getData);
             },
             error: function () {
                 console.log("获取新增---后台报错")
             }
-        });
+        })
         return zNodes;
     }
 
@@ -795,7 +671,6 @@ $(function () {
         this.id = arguments[1];
         this.name = arguments[2];
         this.url = arguments[3];
-        this.type = arguments[4];
     }
    // ztree 树的形成
     function resetData(data) {
@@ -814,6 +689,8 @@ $(function () {
                 }
             }
         }
+        // console.log("kjkjkjkj------");
+        //console.log(zNodes);
         return zNodes;
 
     }
@@ -841,7 +718,7 @@ $(function () {
                 //beforeDrop:beforeDrop,
                 onDrop: zTreeOnDrop,
                 beforeRename: zTreeBeforeRename,
-                beforeEditName: zTreeBeforeEditName
+                beforeEditName: zTreeBeforeEditName,
                 // onRename: zTreeOnRename
             },
             edit: {
@@ -855,33 +732,18 @@ $(function () {
         };
 
 
-        
-
-        if (menuId == null&&arguments.length ==2) {
-            //list列表
+        if (menuId == null) {
             console.log("最后传入的ztree1");
             console.log(zNodes);
             $.fn.zTree.init($('#treeMenu'), setting, zNodes);
             zTreeObj1 = $.fn.zTree.getZTreeObj('treeMenu');
-            zTreeObj1.setEditable(false);
             //必须有延迟才能实现初始化时全部展开
             setTimeout(function () {
                 zTreeObj1.expandAll(true);
             }, 500);
-
-        } else if(menuId!==null &&arguments.length ==2) {
-            //修改菜单列表
-            $.fn.zTree.init($('#treeMenu2'), setting, zNodes, menuId);
-            zTreeObj2 = $.fn.zTree.getZTreeObj('treeMenu2');                    
-            //必须有延迟才能实现初始化时全部展开
-            setTimeout(function () {
-                zTreeObj2.expandAll(true);
-            }, 500);
-        }else if(menuId!==null &&arguments.length ==3){
-            //菜单详情列表
+        } else {
             $.fn.zTree.init($('#treeMenu2'), setting, zNodes, menuId);
             zTreeObj2 = $.fn.zTree.getZTreeObj('treeMenu2');
-            zTreeObj2.setEditable(false);
             //必须有延迟才能实现初始化时全部展开
             setTimeout(function () {
                 zTreeObj2.expandAll(true);

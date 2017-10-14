@@ -4,14 +4,14 @@ $(function(){
 	var $MAIN = $('.main');
 	/*从本地缓存获取菜单树*/
 	//var menuTreeData = JSON.parse(getStorage("menuZtree"));
-	var originMenuTreeData = JSON.parse(getStorage("menuZtree"));
-	console.log(originMenuTreeData);
+	/*var originMenuTreeData = JSON.parse(getStorage("menuZtree"));
+	console.log(originMenuTreeData);*/
+	var originMenuTreeData=[];
 
-	//克隆menuTree数组对象 保留原数据对象 避免原始数据被修改
-	var menuTreeData = objDeepCopy(originMenuTreeData);
+	
 	//console.log(menuTreeData)
 
-	var rebuildToZtreeData;
+	//var rebuildToZtreeData;
 	var initRole = function(){
 		$ROLETABLE.bootstrapTable({
 			locale: 'zh-CN',
@@ -36,8 +36,8 @@ $(function(){
 	      	paginationDetailHAlign: 'left',
 	      	columns: [
                 {field: 'state',checkbox: true},                  	   
-                {field: 'roleName',title: '角色名称',align: 'center',valign: 'middle'},
-                {field: 'id',title: '操作',align: 'center',valign: 'middle',formatter:function(value){ 
+                {field: 'roleName',title: '角色名称',valign: 'middle'},
+                {field: 'id',title: '操作',valign: 'middle',formatter:function(value){ 
                 	/*根据权限，显示/隐藏功能按键*/                    	
                 	return optShow(value);
                 	
@@ -146,7 +146,7 @@ $(function(){
 	    };
 	    
 	    function filterMenu(node){
-	    	return (node.level == 2 && node.checked == false)
+	    	return (node.checked != true)
 	    };
 
 	    $.fn.zTree.init($('#treePermission'), setting, getRoleMenuFunsData(id)); 
@@ -174,7 +174,10 @@ $(function(){
 			ztreeShow('新增');
 			
 			
-			initZtree(originMenuTreeData);
+			
+			var newNodes = getMenuData();
+			initZtree(newNodes);
+
 			console.log(originMenuTreeData);
 			
 	    	//checkAddRole($('.ztree_roleInput'),"/userPermission-controller/role/checkRoleNameExist");
@@ -188,6 +191,31 @@ $(function(){
 			
 		});
 	};
+
+	/*获取原始菜单数据*/
+	function getMenuData(){
+		
+		$.ajax({
+		    url: '/userPermission-controller/menu/tree',
+		    dataType: "json",
+		    data:{
+		    	withFunction:true
+		    },
+		    async: false,//必写
+		    success: function (res) {
+		        console.log("获得数据");
+		        console.log(res.data);
+		       
+		        //获取数据,初始化ztree树
+		       //originMenuTreeData = rebuildToZtreeData(res.data);//rebuildToZtreeData on common.js
+		       originMenuTreeData = res.data
+		    },
+		    error: function () {
+		        console.log("获取新增---后台报错")
+		    }
+		});
+		return originMenuTreeData;
+	}
 	/*修改角色
 	  @param editId
 	*/
@@ -230,7 +258,10 @@ $(function(){
 	   				var menuFunList = res.data.roleMenuFunctionList;
 	   				/*两组数据做对比*/
 	   				if(menuFunList !=null || menuFunList !=undefined){
-	   					//arrZtree = detailRebuildToZtreeData(menuFunList,rebuildToZtreeData(menuTreeData));
+	   					
+	   					//克隆menuTree数组对象 保留原数据对象 避免原始数据被修改
+	   					var originMenuTreeData = getMenuData();
+						var menuTreeData = objDeepCopy(originMenuTreeData);//objDeepCopy on common.js
 	   					arrZtree = detailRebuildToZtreeData(menuFunList,menuTreeData);
 	   						
 	   				};
@@ -267,24 +298,30 @@ $(function(){
 	@param menuTreeData   已完成ztree数据重构的menuTree
 	*/
     function detailRebuildToZtreeData(menuFunList,menuTree){
-    	//console.log(menuTreeData);
+    	//console.log(menuTree);
     	var ids = doWitchDetailData(menuFunList);
     	var menuTreeData = objDeepCopy(menuTree); 
-    	//console.log(ids,menuTreeData);
-		for(var m=0;m<menuTreeData.length;m++){
-			console.log(m + ':' + menuTreeData[m].id);
+  
+		var pIds = [];
+		$.each(menuTreeData,function(index,item){
 			for(var n=0;n<ids.length;n++){
-				if(ids[n]==(menuTreeData[m].id) ||ids[n]==(menuTreeData[m].pId)){  
-					//console.log('xx:' + menuTreeData[m].id);
-					menuTreeData[m]["checked"] = true;
+				if(ids[n]==(item.id) ){
+					pIds.push(item.pId);
+					item["checked"] = true;
 					break;
 				};
-				/*else{
-					arr[m]["checked"] = false;//便于【详情】隐藏无权限的菜单和功能
+			};						
+		});
+
+		$.each(menuTreeData,function(index,item){
+			for(var n=0;n<pIds.length;n++){
+				if(pIds[n]==(item.id) ){
+					item["checked"] = true;
 					break;
-				}*/
-			};
-		};
+				};
+			};						
+		});
+
 		console.log("修改 获取匹配checked data-------");
     	console.log(menuTreeData);
 		return menuTreeData;
@@ -362,7 +399,6 @@ $(function(){
 		};
 	};
 
-	
 
 	/*初始化权限树
 	  @param zNodes 节点数据

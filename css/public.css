@@ -455,44 +455,56 @@ header.navbar .navbar-brand{
 	background-color:#39b2d5;
 	border:1px solid #39b2d5;
 }
-
-/* menu blocks */
-.card{
-  padding-top:10px;
+/* navigation manage */
+.radio-list{
+  padding:0;
 }
-.card .btn-select{
+.list-radio{
+  padding:10px;
+  width:100%;
+}
+/* menu blocks */
+.card.menu-list{
+    padding:10px 0;
+}
+.card.menu-list .btn-select{
   text-align:right;
   padding-right:15px;
 }
-.card .btn-select input[type=checkbox]{
-  width:20px;
-  height:20px;
+.card.menu-list .btn-select input[type=checkbox]{
+  width:15px;
+  height:15px;
   background:none;  
   outline:none;  
   border:0px;
   background:#fff;  
 }
-.card .card-block{
-  padding:0rem 1.25rem;
-}
-.card .card-block .mb-0{
+.card.menu-list .card-block{
+    padding:0rem 1.25rem;
+} 
+.card.menu-list .card-block .mb-0{
   line-height:2.3;
+  text-align:center;
 }
-.card .block-detail{
+.card.menu-list .block-detail{
   width:100%;
   padding:10px;
   background-color:#fff;
   color:#737373;
   font-size:16px;
 }
-.card .block-detail .block-header .card-actions{
+.card.menu-list .block-detail .block-header .card-actions{
   text-align:right;
   padding-right:5px;
 }
-.card .block-detail ul{
+.card.menu-list .block-detail ul{
   padding:0 1.25rem;
   overflow:hidden;
 }
-.card .block-detail ul li.detail-item{
+.card.menu-list .block-detail ul li.detail-item{
   padding: 3px 0;
 }
+.menu-finish{
+  margin:0 50%;
+}
+

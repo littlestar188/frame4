@@ -56,7 +56,7 @@
                             <div class="form-group"> 
                               <div class="input-group">  
                                    <input type="text" id="menuNameSearch" name="menuName" class="form-control" value="" placeholder="菜单名称">
-                              </div>
+                                </div>    
                             </div>
                             <div class="form-group">
                               <div class="col-sm-6">
@@ -73,6 +73,7 @@
                            <button type="button" class="btn btn-primary" id="delGroupBtn"><i class="fa fa-trash-o fa-lg"></i> 批量删除</button>
                         </div>
                				</div>
+                      
                			</div>                  
                		</div>
                   <!-- table_wrapper end -->
@@ -82,20 +83,6 @@
                        <div class="row ztree_title"><b>新增</b></div>
                        <div class="row inputWrapper">
                            <input type="text" class="form-control ztree_roleInput" id="menuName" placeholder="菜单名称" data-id>
-                           <input type="text" class="form-control ztree_roleInput" id="menuUrl" placeholder="菜单地址" data-id>
-                              <div class="list-radio">
-                                  <div><label class="control-label col-sm-12">可用状态:</label></div>
-                                  <div class="col-sm-12">
-                                      <div class="col-sm-6 radio-list">
-                                          <input type="radio"   name="Status" class="radio-inline" checked value="0"> 可用
-                                      </div>
-                                      <div class="col-sm-6 radio-list">
-                                          <input type="radio"   name="Status" class="radio-inline" value="1">禁用
-                                      </div>
-                                  </div>
-                              </div>
-                           <!--<input type="text" class="form-control ztree_roleInput" id="status" placeholder="可用状态" data-id>-->
-                           <!--<input type="text" class="form-control ztree_roleInput" id="start" placeholder="菜单icon" data-id>-->
                            <div class="ztree_tip">
                                <span class="correct" style="display:none;color:green"><i class="fa fa-check"></i></span>
                                <span class="error"  style="display:none;color:#c33"><i class="fa fa-close"></i></span>
@@ -120,21 +107,7 @@
                        <div class="ztree_content">
                            <div class="row  ztree_title  ztree_title_edit"><b>修改</b></div>
                            <div class="row inputWrapper">
-
                                <div class="form-control ztree_roleInput"  id="navName2" >菜单名称</div>
-                               <input type="text" class="form-control ztree_roleInput" id="menuUrl2"  name="menuUrl" placeholder="菜单地址" data-id>
-                               <div class="list-radio">
-                                   <div><label class="control-label col-sm-12">可用状态:</label></div>
-                                   <div class="col-sm-12">
-                                       <div class="col-sm-6 radio-list">
-                                           <input type="radio"   name="Status" class="radio-inline"  value="0"> 可用
-                                       </div>
-                                       <div class="col-sm-6 radio-list">
-                                           <input type="radio"   name="Status" class="radio-inline" value="1">禁用
-                                       </div>
-                                   </div>
-                               </div>
-                               <!--<input type="text" class="form-control ztree_roleInput" id="status2" name="status" placeholder="可用状态" data-id>-->
                                <!--<input type="text" class="form-control ztree_roleInput" id="navName2" placeholder="菜单名称" data-id>-->
                                <div class="ztree_tip">
                                    <span class="correct" style="display:none;color:green"><i class="fa fa-check"></i></span>
@@ -180,27 +153,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">菜单名称</label>
                             <div class="input-group col-sm-6">
-                                <input type="text" id="NavName"  name="menuName" class="form-control commitModalName" value="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">菜单地址</label>
-                            <div class="input-group col-sm-6">
-                                <input type="text" id="NavUrl"  name="menuUrl" class="form-control commitModalUrl" value="">
-                            </div>
-                        </div>
-                      <!--  <div class="form-group">
-                            <label class="control-label col-sm-3">可用状态</label>
-                            <div class="input-group col-sm-6">
-                                <input type="text"   name="Status" class="form-control commitModalStatus" value="">
-                            </div>
-                        </div>-->
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">可用状态</label>
-                            <div class="input-group col-sm-6">
-                                <input type="radio"   name="Status" class="form-control commitModalStatus" checked value="0"> 可用
-                                <input type="radio"   name="Status" class="form-control commitModalStatus" value="1">禁用
+                                <input type="text" id="newNavName"  name="navName" class="form-control commitModal" value="">
                             </div>
                         </div>
                     </form>
@@ -227,10 +180,12 @@
   <script src="js/ztree.min.js"></script>
 	<!-- Custom scripts required by this view -->
 	<script src="js/app.js"></script>
+  
+  <!-- <script src="js/views/getNav.js"></script> -->
   <script src="js/views/common.js"></script>
-  <script src="js/views/getNav.js"></script>
   <script src="js/views/optShow.js"></script>
   <script src="js/views/dialogShow.js"></script>
+  <script src="js/views/getNav.js"></script>
   <script src="js/views/navManage.js"></script>
 <script>
 

@@ -3,11 +3,18 @@ $(function(){
 	var initFun = function(){
 		$('#funTable').bootstrapTable({
 			locale: 'zh-CN',
-			url:'resources/json/listFunction.json',
+			//url:'resources/json/listFunction.json',
+			url:'/userPermission-controller/function/table',
 	     	sidePagination:'server',
 	      	cache: false,//设置False禁用AJAX请求的缓存
 	      	height: '',
-	     	 //queryParams: ,
+	     	queryParams: function(params){
+	     		return {
+	     		pageNumber:	params.offset/params.limit+1,
+	     		pageSize:params.limit,
+	     		funName:$('#funName').val()	     		
+	     		}	     		
+	     	},
 	     	striped: true,//使表格带有条纹
 	     	pagination: true,//设置True在表格底部显示分页工具栏
 	      	pageSize: 10,
@@ -15,10 +22,14 @@ $(function(){
 	      	toolbar:'#custom-toolbar',
 	      	columns: [
                 {field: 'state',checkbox: true},
-                {field: 'funName',title: '功能名称',align: 'center',valign: 'middle'},
-               	{field: 'funId',title: '操作',align: 'center',valign: 'middle',formatter:function(value){
-                	return optShow(value);
-                }
+                {field: 'funName',title: '功能名称',valign: 'middle'},
+                {field: 'menuName',title: '菜单名称',valign: 'middle'},
+                {field: 'funUrl',title: '功能URL',valign: 'middle'},
+                {field: 'status',title: '可用状态',valign: 'middle',formatter:function(value){
+                	return availableJudge(value);
+                }},
+               	{field: 'funId',title: '操作',valign: 'middle',formatter:function(value){
+                	return optShow(value);}
                 }
 			]
 		})

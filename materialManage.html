@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="resources/img/favicon.png">
+
+    <title>Material Manage</title>
+
+    <!-- Icons -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application -->
+    <link href="css/bootstrap-modal.css" rel="stylesheet" >
+    <link href="css/bootstrap-table.css" rel="stylesheet" >
+    <link href="css/bootstrap-dialog.css" rel="stylesheet" >
+    <link href="plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" >
+    <link href="plugins/select2/select2.css" rel="stylesheet" >
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/public.css" rel="stylesheet">
+
+</head>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <!-- topNav -->
+    <header class="app-header navbar" id="navbar"></header>
+
+    <div class="app-body">
+    	<!-- sidebar menu -->
+        <div class="sidebar" id="sidebar">
+          <div class="ztree" id="leftTreeNav"></div>
+        </div>
+        <!-- Main content -->
+        <main class="main">
+            <div class="container-fluid">
+
+               <div class="row">
+               		<div class="col-lg-12">
+               			<div class="card">
+               				<div class="card-header">
+               					<i class="fa fa-align-justify"></i>原料管理
+               				</div>
+               				<div class="card-block">
+                      <!-- search -->
+                          <form id="#custom-toolbar" class="form-inline">
+                          
+                          <div class="form-group"> 
+                            <div class="input-group col-sm-6" style="padding-left:0">  
+                                  <input type="text" id="username" name="username" class="form-control" value="" placeholder="原料名称">
+                              </div>    
+                          </div>                          
+                          <div class="form-group"> 
+                            <div class="col-sm-6">   
+                                <select class="form-control">
+                                    <option>原料类型名称</option>
+                                    <option></option>
+                                    <option></option>  
+                                </select>
+                              </div>      
+                          </div>
+                          
+                          <div class="form-group">
+                            <div class="col-sm-6">
+                                <button type="button" class="btn btn-info" id="searchBtn">查询</button>
+                              </div>
+                          </div>                      
+                          <!--  -->                       
+                        </form>
+                        <!-- table -->
+               					<table id="userTable"></table>
+                        <!-- option buttons -->
+                        <div class="option_box">
+                          <button type="button" class="btn btn-primary" id="addBtn">
+                          <i class="fa fa-plus fa-lg"></i> 新增
+                          </button>
+                           <button type="button" class="btn btn-primary" id="delGroupBtn"><i class="fa fa-trash-o fa-lg"></i> 批量删除</button>
+                        </div>
+                        <!-- /. option buttons end -->
+               				</div>
+               			</div>
+               		</div>
+               </div>
+
+            </div>
+            <!-- /.conainer-fluid -->
+
+            <!-- .modal-->
+            <div class="modal fade bs-modal" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md modal-primary">
+                <div class="modal-content">
+                  <div class="modal-header">                    
+                    <h4 class="modal-title" id="userModalLabel">新增原料</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  </div>
+                  <div class="modal-body">
+                     <!-- 新增/修改 表单 -->
+                     <form class="form-horizontal" role="form" id="userForm">
+                       <div class="form-group">
+                           <label class="control-label col-sm-3"><font color="#c00">*</font>用户名:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="userName" class="form-control" placeholder="请输入用户名">
+                           </div>
+                       </div>
+
+                      <!--  <div class="form-group">
+                           <label class="control-label col-sm-3"><font color="#c00">*</font>用户昵称:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="name" class="form-control" placeholder="请输入姓名">
+                           </div>
+                       </div> -->
+
+                       <div class="form-group">
+                           <label class="control-label col-sm-3"><font color="#c00">*</font>原料名称:</label>
+                           <div class="col-sm-6">
+                             <select id="rolename" class="js-example-basic-multiple" name="states[]" multiple="multiple" style="width:100%"></select>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label class="control-label col-sm-3">&nbsp;手机号码:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="phone" class="form-control" placeholder="手机号码">
+                           </div>
+                       </div> 
+                       <!-- <div class="form-group">
+                           <label class="control-label col-sm-3">&nbsp;邮箱地址:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="mail" class="form-control" placeholder="邮箱地址">
+                           </div>
+                       </div>  -->
+                       <!-- <div class="form-group">
+                           <label class="control-label col-sm-3">&nbsp;更新日期:</label>
+                           <div class="col-sm-6">
+                               <input type="text" id="updateDate" class="form-control" placeholder="更新日期">
+                           </div>
+                       </div>   -->             
+                     </form>
+                     <!-- 详情列表 -->
+                     <table id="detailUser">
+                       <tbody></tbody>
+                     </table> 
+                   <!-- /form end -->
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn_add">保存</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn_edit"">保存</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- /.modal-->
+        </main>
+
+
+    </div>
+	<!-- footer -->
+    <footer class="app-footer" id="footer"></footer>
+	
+	<!-- Bootstrap and necessary plugins -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/tether.min.js"></script>
+	<script src="js/bootstrap-3.3.7.min.js"></script>
+  <!-- Plugins and scripts required by all views -->  
+  <script src="js/bootstrap-dialog.js"></script>
+  <!-- table -->
+  <script src="js/bootstrap-table.js"></script>
+  <script src="js/bootstrap-table-locale-all.js"></script>
+  <!-- validate -->
+  <script src="plugins/jquery-validate/jquery.validate.min.js"></script>	
+	<script src="js/pace.min.js"></script>
+  <!-- ztree -->
+  <script src="js/ztree.min.js"></script>
+  <!-- moment -->
+  <script src="plugins/daterangepicker/moment.js"></script>
+  <!-- select2 -->
+  <script src="plugins/select2/select2.full.js"></script>
+	<!-- Custom scripts required by this view -->
+	<script src="js/app.js"></script>
+
+  <script src="js/views/common.js"></script>
+  <script src="js/views/optShow.js"></script>
+  <script src="js/views/dialogShow.js"></script>
+  <script src="js/views/getNav.js"></script>
+	<script src="js/views/materialManage.js"></script>
+</body>
+</html>
